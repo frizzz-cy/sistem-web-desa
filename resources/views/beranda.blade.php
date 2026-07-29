@@ -207,7 +207,7 @@
       <span></span><span></span><span></span>
     </button>
     <div class="menu" id="menu">
-      <a href="/" class="active">Beranda</a>
+      <a href="/" class="active">Beranda12</a>
       <a href="/peta">Peta &amp; Potensi</a>
       <a href="/profil-desa" onclick="return pindahHalus(event, '/profil-desa')">Profil Desa</a>
     </div>
