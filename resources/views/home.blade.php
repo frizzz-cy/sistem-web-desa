@@ -183,7 +183,7 @@
     background:var(--moss); transform:scaleY(0); transform-origin:top;
     transition:transform .2s ease;
   }
-  .potensi-card:hover{transform:translateY(-3px); box-shadow:0 14px 28px rgba(46,42,31,0.12);}
+  .potensi-card:hover{box-shadow:0 4px 12px rgba(46,42,31,0.08);}
   .potensi-card:hover::before{transform:scaleY(1);}
   .potensi-card:focus-visible{outline:2px solid var(--clay); outline-offset:2px;}
   .potensi-card .foto{
@@ -235,7 +235,7 @@
   }
   .modal-overlay.show{display:flex;}
   .modal-box{
-    background:var(--paper-2); border-radius:10px; max-width:440px; width:100%;
+    background:var(--paper-2); border-radius:5px; max-width:440px; width:100%;
     padding:0 0 22px; position:relative; max-height:85vh; overflow-y:auto;
   }
   .modal-close{

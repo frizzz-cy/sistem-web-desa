@@ -85,17 +85,17 @@
     color:#fff; padding:64px 20px 90px; text-align:center; overflow:hidden;
   }
   .hero::before{
-    content:''; position:absolute; inset:0; opacity:.08;
+    content:''; position:absolute; inset:0; opacity:.08; z-index:1;
     background-image:
       linear-gradient(90deg, #fff 1px, transparent 1px),
       linear-gradient(0deg, #fff 1px, transparent 1px);
     background-size:44px 44px;
   }
-  .hero-inner{position:relative; z-index:1; max-width:760px; margin:0 auto;}
+  .hero-inner{position:relative; z-index:2; max-width:760px; margin:0 auto;}
   .hero-badge{
     display:inline-block; background:rgba(212,160,23,0.18); border:1px solid rgba(212,160,23,0.5);
     color:var(--emas); font-size:11.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
-    padding:6px 16px; border-radius:20px; margin-bottom:20px;
+    padding:6px 16px; border-radius:6px; margin-bottom:20px;
   }
   .hero h1{font-size:clamp(28px,5.5vw,44px); font-weight:800; line-height:1.2;}
   .hero p{font-size:clamp(13.5px,2vw,15px); color:#C9DCEA; margin-top:14px; max-width:540px; margin-left:auto; margin-right:auto; line-height:1.65;}
@@ -104,9 +104,31 @@
     font-size:13.5px; font-weight:700; padding:13px 26px; border-radius:8px;
     transition:transform .15s ease, box-shadow .15s ease;
   }
-  .hero-cta a:hover{transform:translateY(-2px);}
+  .hero-cta a:hover{opacity:0.9;}
   .btn-utama{background:var(--emas); color:var(--biru-tua); box-shadow:0 6px 16px rgba(212,160,23,0.35);}
   .btn-luar{background:rgba(255,255,255,0.08); color:#fff; border:1.5px solid rgba(255,255,255,0.35);}
+
+  /* ============ HERO CAROUSEL (slide foto otomatis) ============ */
+  .hero{ min-height:520px; display:flex; align-items:center; padding:90px 20px 70px; }
+  .hero-slides{ position:absolute; inset:0; z-index:0; }
+  .hero-slide{
+    position:absolute; inset:0; opacity:0; transition:opacity 1.2s ease;
+    background-size:cover; background-position:center;
+  }
+  .hero-slide.aktif{ opacity:1; }
+  .hero-slide::after{
+    content:''; position:absolute; inset:0;
+    background:linear-gradient(135deg, rgba(11,59,96,0.88) 0%, rgba(8,40,63,0.92) 100%);
+  }
+  .hero-dots{
+    position:absolute; bottom:22px; left:0; right:0; z-index:3;
+    display:flex; justify-content:center; gap:8px;
+  }
+  .hero-dots .hd{
+    width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.35);
+    cursor:pointer; transition:background .2s ease, transform .2s ease; border:none;
+  }
+  .hero-dots .hd.aktif{ background:var(--emas); transform:scale(1.25); }
 
   /* ============ STAT CARDS ============ */
   .stat-strip{
@@ -115,7 +137,7 @@
   }
   @media (min-width:700px){ .stat-strip{grid-template-columns:repeat(4,1fr);} }
   .stat-card{
-    background:var(--putih); border-radius:12px; padding:22px 16px; text-align:center;
+    background:var(--putih); border-radius:6px; padding:22px 16px; text-align:center;
     box-shadow:0 10px 28px rgba(11,59,96,0.12); border:1px solid var(--border);
   }
   .stat-card .s-icon{font-size:22px; margin-bottom:8px;}
@@ -125,6 +147,31 @@
   /* ============ SECTION UMUM ============ */
   main{max-width:1180px; margin:0 auto; padding:70px 20px 20px;}
   .sect-head{text-align:center; margin-bottom:34px;}
+
+  /* ============ TENTANG DESA ============ */
+  .tentang{
+    max-width:820px; margin:0 auto 64px; text-align:center;
+  }
+  .tentang p{font-size:14px; color:var(--teks-muted); line-height:1.75; margin-bottom:14px;}
+  .tentang p:first-of-type{font-size:15.5px; color:var(--teks); font-weight:500;}
+
+  /* ============ SAMBUTAN KEPALA DESA ============ */
+  .sambutan{
+    background:var(--putih); border:1px solid var(--border); border-radius:6px;
+    max-width:900px; margin:0 auto 64px; overflow:hidden;
+    display:grid; grid-template-columns:1fr;
+  }
+  @media (min-width:680px){ .sambutan{grid-template-columns:220px 1fr;} }
+  .sambutan-foto{
+    background:var(--biru-muda); aspect-ratio:1/1; display:flex; align-items:center; justify-content:center;
+    color:var(--biru); font-size:13px; font-weight:600; position:relative; overflow:hidden;
+  }
+  .sambutan-foto img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+  .sambutan-body{padding:26px 28px;}
+  .sambutan-body .quote-mark{font-size:34px; color:var(--emas); font-weight:800; line-height:1; margin-bottom:6px;}
+  .sambutan-body p{font-size:13.5px; color:var(--teks-muted); line-height:1.75; margin-bottom:14px; font-style:italic;}
+  .sambutan-nama{font-size:14.5px; font-weight:800; color:var(--biru-tua);}
+  .sambutan-jabatan{font-size:11.5px; color:var(--teks-muted); text-transform:uppercase; letter-spacing:.04em; font-weight:600;}
   .sect-head .eyebrow{
     font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--merah);
     margin-bottom:8px;
@@ -137,12 +184,12 @@
   @media (min-width:640px){ .portal-grid{grid-template-columns:repeat(2,1fr);} }
   @media (min-width:960px){ .portal-grid{grid-template-columns:repeat(3,1fr);} }
   .portal-card{
-    background:var(--putih); border:1px solid var(--border); border-radius:12px;
+    background:var(--putih); border:1px solid var(--border); border-radius:6px;
     padding:26px 22px; transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
   }
-  .portal-card:hover{transform:translateY(-4px); box-shadow:0 16px 32px rgba(11,59,96,0.12); border-color:var(--biru);}
+  .portal-card:hover{box-shadow:0 4px 12px rgba(11,59,96,0.10); border-color:var(--biru);}
   .portal-card .p-badge{
-    width:52px; height:52px; border-radius:10px; background:var(--biru-muda);
+    width:52px; height:52px; border-radius:5px; background:var(--biru-muda);
     display:flex; align-items:center; justify-content:center; font-size:24px; margin-bottom:16px;
   }
   .portal-card h3{font-size:16.5px; font-weight:800; color:var(--biru-tua); margin-bottom:8px;}
@@ -157,7 +204,7 @@
   /* ============ BERITA ============ */
   .berita-grid{display:grid; grid-template-columns:1fr; gap:18px;}
   @media (min-width:640px){ .berita-grid{grid-template-columns:repeat(3,1fr);} }
-  .berita-card{background:var(--putih); border:1px solid var(--border); border-radius:12px; overflow:hidden;}
+  .berita-card{background:var(--putih); border:1px solid var(--border); border-radius:6px; overflow:hidden;}
   .berita-thumb{
     aspect-ratio:16/10; background:var(--biru-muda); display:flex; align-items:center; justify-content:center;
     color:var(--biru); font-size:11px; font-weight:600;
@@ -207,7 +254,7 @@
       <span></span><span></span><span></span>
     </button>
     <div class="menu" id="menu">
-      <a href="/" class="active">Beranda12</a>
+      <a href="/" class="active">Beranda</a>
       <a href="/peta">Peta &amp; Potensi</a>
       <a href="/profil-desa" onclick="return pindahHalus(event, '/profil-desa')">Profil Desa</a>
     </div>
@@ -215,15 +262,22 @@
 </nav>
 
 <header class="hero">
+  <div class="hero-slides" id="hero-slides">
+    <div class="hero-slide aktif" style="background-color:#0B3B60;" data-src="/images/carousel/slide-1.jpg"></div>
+    <div class="hero-slide" style="background-color:#0B3B60;" data-src="/images/carousel/slide-2.jpg"></div>
+    <div class="hero-slide" style="background-color:#0B3B60;" data-src="/images/carousel/slide-3.jpg"></div>
+    <div class="hero-slide" style="background-color:#0B3B60;" data-src="/images/carousel/slide-4.jpg"></div>
+  </div>
   <div class="hero-inner">
     <div class="hero-badge">Portal Resmi Pemerintah Desa</div>
-    <h1>Desa Munungkerep</h1>
+    <h1>Selamat Datang di Desa Munungkerep</h1>
     <p>Kecamatan Kabuh, Kabupaten Jombang, Jawa Timur — melayani informasi profil, peta wilayah, dan potensi desa secara terbuka untuk seluruh warga dan masyarakat umum.</p>
     <div class="hero-cta">
       <a href="/peta" class="btn-utama">Lihat Peta Desa</a>
       <a href="/profil-desa" class="btn-luar">Profil Desa</a>
     </div>
   </div>
+  <div class="hero-dots" id="hero-dots"></div>
 </header>
 
 <div class="stat-strip">
@@ -236,7 +290,34 @@
 <main>
 
   <div class="sect-head">
-    <div class="eyebrow">Layanan Informasi</div>
+    <div class="eyebrow">Selamat Datang</div>
+    <h2>Mengenal Desa Munungkerep</h2>
+  </div>
+  <div class="tentang">
+    <p>Desa Munungkerep merupakan salah satu desa di Kecamatan Kabuh, Kabupaten Jombang, Jawa Timur, yang berada di kawasan dataran tinggi dengan kondisi tanah kering pada musim kemarau.</p>
+    <p>Desa ini terdiri dari 7 dusun — Munungkerep, Karanggebang, Duren, Slumbung, Kalipang, Kadenan, dan Jatirubuh — dengan mayoritas warga berprofesi sebagai petani. Tembakau menjadi komoditas unggulan yang ditanam warga saat musim kemarau, didampingi pandan sebagai komoditas pendukung yang tumbuh merata di seluruh wilayah desa.</p>
+    <p>Melalui portal ini, kami berupaya menghadirkan informasi desa secara terbuka — mulai dari peta wilayah, potensi ekonomi, struktur pemerintahan, hingga data profil desa — agar mudah diakses oleh warga dan masyarakat umum.</p>
+  </div>
+
+  <div class="sect-head">
+    <div class="eyebrow">Sambutan</div>
+    <h2>Kepala Desa Munungkerep</h2>
+  </div>
+  <div class="sambutan">
+    <div class="sambutan-foto">
+      <img src="/images/perangkat/kepala desa.png" alt="Sutrismi" onerror="this.remove()">
+      <span>Foto menyusul</span>
+    </div>
+    <div class="sambutan-body">
+      <div class="quote-mark">&ldquo;</div>
+      <p>Assalamu'alaikum Warahmatullahi Wabarakatuh. Selamat datang di portal resmi Desa Munungkerep. Sambutan lengkap dari Kepala Desa akan menyusul diisi di bagian ini.</p>
+      <div class="sambutan-nama">Sutrismi</div>
+      <div class="sambutan-jabatan">Kepala Desa Munungkerep</div>
+    </div>
+  </div>
+
+  <div class="sect-head">
+    <div class="eyebrow">Layanan &amp; Informasi Desa</div>
     <h2>Jelajahi Desa Munungkerep</h2>
     <p class="desc">Akses cepat ke seluruh informasi resmi Desa Munungkerep</p>
   </div>
@@ -318,6 +399,47 @@
 </footer>
 
 <script>
+  // Carousel foto hero — otomatis geser, coba muat foto asli, fallback warna solid kalau belum ada
+  (function(){
+    const container = document.getElementById('hero-slides');
+    const dotsWrap = document.getElementById('hero-dots');
+    if (!container) return;
+    const slides = Array.from(container.querySelectorAll('.hero-slide'));
+    let indexAktif = 0;
+
+    // Coba muat tiap foto; kalau berhasil, pasang sebagai background-image
+    slides.forEach(slide => {
+      const src = slide.dataset.src;
+      if (!src) return;
+      const img = new Image();
+      img.onload = () => { slide.style.backgroundImage = `url('${src}')`; };
+      img.onerror = () => { /* biarkan warna solid fallback yang tampil */ };
+      img.src = src;
+    });
+
+    // Bikin titik navigasi
+    slides.forEach((_, i) => {
+      const dot = document.createElement('button');
+      dot.className = 'hd' + (i === 0 ? ' aktif' : '');
+      dot.onclick = () => tampilkanSlide(i);
+      dotsWrap.appendChild(dot);
+    });
+
+    function tampilkanSlide(i){
+      slides[indexAktif].classList.remove('aktif');
+      dotsWrap.children[indexAktif].classList.remove('aktif');
+      indexAktif = i;
+      slides[indexAktif].classList.add('aktif');
+      dotsWrap.children[indexAktif].classList.add('aktif');
+    }
+
+    if (slides.length > 1){
+      setInterval(() => {
+        tampilkanSlide((indexAktif + 1) % slides.length);
+      }, 5000);
+    }
+  })();
+
   function pindahHalus(event, url){
     event.preventDefault();
     document.body.style.transition = 'opacity .25s ease, transform .25s ease';
