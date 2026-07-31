@@ -150,15 +150,15 @@
   .potensi-header h2{font-size:clamp(24px,4.5vw,32px); font-weight:800; color:var(--ground);}
   .potensi-header p{color:var(--ink-soft); font-size:13.5px; margin-top:8px;}
 
-  .potensi-carousel-wrap{ position:relative; }
+  .potensi-carousel-wrap{ position:relative; overflow:hidden; }
   .potensi-grid{
-    display:flex; gap:20px; overflow-x:auto;
-    -webkit-overflow-scrolling:touch; scrollbar-width:none; padding-bottom:4px;
+    display:flex; gap:20px; overflow-x:hidden;
+    scrollbar-width:none; padding:12px 0;
     touch-action:pan-y; /* blokir swipe geser horizontal manual, scroll vertikal halaman tetap normal */
   }
   .potensi-grid::-webkit-scrollbar{display:none;}
   .potensi-card-wrap{
-    flex:0 0 calc(100% - 40px); scroll-snap-align:center;
+    flex:0 0 calc(100% - 40px);
   }
   @media (min-width:600px){ .potensi-card-wrap{flex:0 0 calc(50% - 10px);} }
 
@@ -355,8 +355,8 @@
           </div>
         </button>
       </div>
-      <div class="potensi-card-wrap" data-terkait="anyaman">
-        <div class="hover-preview">PADII</div>
+      <div class="potensi-card-wrap" data-terkait="padi">
+        <div class="hover-preview">Komoditas pangan utama, ditanam di lahan basah/sawah saat musim hujan. Ketuk untuk detail lengkap.</div>
         <button class="potensi-card" onclick="bukaPopupPotensi('padi')">
           <div class="foto"><img src="/images/padi.jpg" alt="Padi"></div>
           <div class="info">
@@ -673,34 +673,99 @@
         'Anyaman dirapikan dan tepinya dikunci/dijahit agar tidak mudah lepas',
         'Produk jadi bisa diberi finishing tambahan seperti pewarnaan atau aksesoris sebelum dipasarkan'
       ]
+    },
+    padi: {
+      tag: 'Produk Olahan',
+      judul: 'Padi',
+      foto: ['/images/padi.jpg'],
+      isi: 'Padi merupakan salah satu hasil pertanian utama di Desa Munungkerep yang ditanam oleh warga pada musim hujan di lahan basah/sawah. Hasil panen padi menjadi komoditas pangan pokok warga desa dan sebagian dipasarkan ke luar daerah.',
+      manfaat: [
+        'Sumber makanan pokok utama bagi warga Desa Munungkerep',
+        'Diolah menjadi beras konsumsi dan dipasarkan untuk meningkatkan ekonomi keluarga petani',
+        'Jerami sisa panen diolah menjadi pakan ternak sapi atau kambing',
+        'Sisa sekam padi digunakan sebagai bahan bakar pembuatan batu bata atau media tanam'
+      ],
+      catatan: '📝 Masih perlu: produktivitas panen per hektar dan data pemasaran beras',
+      produk: ['Beras', 'Tepung Beras', 'Pakan Ternak', 'Sekam Bakar'],
+      cara: [
+        'Pembibitan dan penanaman padi di sawah tadah hujan pada awal musim penghujan',
+        'Perawatan berkala meliputi pemupukan, pengairan yang cukup, dan penyiangan gulma',
+        'Pemanenan padi menggunakan sabit atau mesin combine harvester saat bulir padi menguning',
+        'Perontokan bulir padi dan penjemuran gabah hingga kadar air cukup rendah',
+        'Penggilingan gabah menjadi beras siap konsumsi'
+      ]
     }
   };
 
 
-  // Carousel Potensi Ekonomi — geser halus terus-menerus ke kanan, berhenti sementara saat di-hover
+  // Carousel Potensi Ekonomi — geser halus terus-menerus ke kanan (sabuk/infinity loop)
   (function(){
     const wadahGrid = document.getElementById('potensi-grid');
     if (!wadahGrid) return;
 
+    // Kloning semua item kartu sebanyak dua kali untuk memastikan konten melebihi lebar layar
+    // dan bisa membuat efek loop tak terbatas yang mulus
+    const originalCards = Array.from(wadahGrid.children);
+    originalCards.forEach(card => {
+      const clone = card.cloneNode(true);
+      wadahGrid.appendChild(clone);
+    });
+    originalCards.forEach(card => {
+      const clone = card.cloneNode(true);
+      wadahGrid.appendChild(clone);
+    });
+
     let jalan = true;
-    const kecepatan = 0.4; // px per frame — kecilin/besarin ini buat atur pelan-cepatnya
+    const kecepatan = 0.8; // px per frame
+
+    let originalWidth = 0;
+
+    // Hitung lebar total satu set kartu asli (termasuk gap)
+    function hitungLebar() {
+      const firstClone = wadahGrid.children[originalCards.length];
+      if (firstClone) {
+        originalWidth = firstClone.offsetLeft - originalCards[0].offsetLeft;
+      }
+    }
+
+    // Jalankan hitung lebar pada load/resize dan pasang event listener
+    window.addEventListener('load', hitungLebar);
+    window.addEventListener('resize', hitungLebar);
+    
+    if (document.readyState === 'complete') {
+      hitungLebar();
+    } else {
+      document.addEventListener('DOMContentLoaded', hitungLebar);
+    }
 
     function langkahGeser(){
-      if (jalan){
-        const maksimum = wadahGrid.scrollWidth - wadahGrid.clientWidth;
-        if (wadahGrid.scrollLeft >= maksimum - 1){
-          wadahGrid.scrollLeft = 0; // sampai ujung, balik lagi ke awal
-        } else {
-          wadahGrid.scrollLeft += kecepatan;
+      if (originalWidth === 0) {
+        hitungLebar();
+      }
+
+      if (jalan && originalWidth > 0){
+        wadahGrid.scrollLeft += kecepatan;
+      }
+
+      // Bungkus scroll secara mulus saat mencapai batas
+      if (originalWidth > 0) {
+        if (wadahGrid.scrollLeft >= originalWidth * 2) {
+          wadahGrid.scrollLeft -= originalWidth;
+        } else if (wadahGrid.scrollLeft < originalWidth) {
+          wadahGrid.scrollLeft += originalWidth;
         }
       }
       requestAnimationFrame(langkahGeser);
     }
     requestAnimationFrame(langkahGeser);
 
-    // Berhenti sementara kalau mouse diarahkan ke area carousel, lanjut lagi kalau mouse pergi
+    // Pause on hover
     wadahGrid.addEventListener('mouseenter', () => { jalan = false; });
     wadahGrid.addEventListener('mouseleave', () => { jalan = true; });
+
+    // Pause on touch
+    wadahGrid.addEventListener('touchstart', () => { jalan = false; }, { passive: true });
+    wadahGrid.addEventListener('touchend', () => { jalan = true; }, { passive: true });
   })();
 
   function bukaPopupPotensi(kunci){

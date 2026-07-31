@@ -289,49 +289,32 @@
     </div>
     
     <div class="berita-grid">
-      
-      <!-- Card Template 1 -->
+      @forelse($beritas as $item)
       <div class="berita-card">
-        <img src="https://placehold.co/600x400/e2e8f0/94a3b8?text=Gambar+Berita+2" alt="Thumbnail Berita" class="berita-img">
+        <img src="{{ $item->foto ? asset('storage/'.$item->foto) : 'https://placehold.co/600x400/e2e8f0/94a3b8?text=Gambar+Berita' }}" alt="{{ $item->judul }}" class="berita-img">
         <div class="berita-content">
-          <span class="berita-badge">Umum</span>
-          <h3 class="berita-title">[Judul Berita 2 Akan Muncul Di Sini]</h3>
-          <div class="berita-date">DD Bulan YYYY</div>
-          <p class="berita-excerpt">[Cuplikan isi berita atau paragraf pembuka akan ditampilkan di sini...]</p>
-          <a class="berita-link" onclick="bukaBerita(event)">Baca Selengkapnya 
+          <span class="berita-badge">{{ $item->kategori }}</span>
+          <h3 class="berita-title">{{ $item->judul }}</h3>
+          <div class="berita-date">{{ date('d M Y', strtotime($item->tanggal)) }}</div>
+          <p class="berita-excerpt">{{ Str::limit(strip_tags($item->isi), 120) }}</p>
+          <a class="berita-link" onclick="bukaBerita(this)" 
+             data-id="{{ $item->id }}"
+             data-judul="{{ $item->judul }}"
+             data-kategori="{{ $item->kategori }}"
+             data-tanggal="{{ date('d M Y', strtotime($item->tanggal)) }}"
+             data-foto="{{ $item->foto ? asset('storage/'.$item->foto) : 'https://placehold.co/900x480/e2e8f0/94a3b8?text=Gambar+Berita' }}"
+             data-views="{{ $item->views }}">
+            Baca Selengkapnya 
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+            <span class="berita-isi-full" style="display:none;">{{ $item->isi }}</span>
           </a>
         </div>
       </div>
-
-      <!-- Card Template 2 -->
-      <div class="berita-card">
-        <img src="https://placehold.co/600x400/e2e8f0/94a3b8?text=Gambar+Berita+2" alt="Thumbnail Berita" class="berita-img">
-        <div class="berita-content">
-          <span class="berita-badge">Umum</span>
-          <h3 class="berita-title">[Judul Berita 2 Akan Muncul Di Sini]</h3>
-          <div class="berita-date">DD Bulan YYYY</div>
-          <p class="berita-excerpt">[Cuplikan isi berita atau paragraf pembuka akan ditampilkan di sini...]</p>
-          <a class="berita-link" onclick="bukaBerita(event)">Baca Selengkapnya 
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
-          </a>
-        </div>
+      @empty
+      <div class="empty-state" style="text-align: center; padding: 40px 20px; color: var(--teks-muted); font-size: 14px; background: #fff; border-radius: 12px; border: 1px dashed var(--border); grid-column: 1 / -1;">
+        Belum ada berita desa terbaru yang dipublikasikan.
       </div>
-
-      <!-- Card Template 3 -->
-      <div class="berita-card">
-        <img src="https://placehold.co/600x400/e2e8f0/94a3b8?text=Gambar+Berita+3" alt="Thumbnail Berita" class="berita-img">
-        <div class="berita-content">
-          <span class="berita-badge">Umum</span>
-          <h3 class="berita-title">[Judul Berita 3 Akan Muncul Di Sini]</h3>
-          <div class="berita-date">DD Bulan YYYY</div>
-          <p class="berita-excerpt">[Cuplikan isi berita atau paragraf pembuka akan ditampilkan di sini...]</p>
-          <a class="berita-link" onclick="bukaBerita(event)">Baca Selengkapnya 
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
-          </a>
-        </div>
-      </div>
-
+      @endforelse
     </div>
   </div>
 
@@ -347,26 +330,22 @@
 
   <!-- Kartu Artikel Pembungkus -->
   <div class="berita-detail-card">
-    <div class="bd-badge">UMUM</div>
+    <div class="bd-badge" id="detail-bd-badge">UMUM</div>
     
-    <h1 class="bd-title">Resmi Dibuka! Kelompok 5 KPM Unipdu 2026 Siap Berkolaborasi dan Mengabdi di Desa Munungkerep</h1>
+    <h1 class="bd-title" id="detail-bd-title">Judul Berita</h1>
     
     <div class="bd-meta">
-      <span>Dipublikasikan: 25 Jul 2026</span>
+      <span id="detail-bd-date">Dipublikasikan: -</span>
       <span>&bull;</span>
-      <span>Dilihat: 177x</span>
+      <span id="detail-bd-views">Dilihat: 0x</span>
     </div>
 
     <!-- Gambar Artikel -->
-    <img src="https://placehold.co/900x480/e2e8f0/94a3b8?text=Gambar+Full+Berita" alt="Gambar Detail Berita" class="bd-img">
+    <img src="" alt="Gambar Detail Berita" class="bd-img" id="detail-bd-img">
 
     <!-- Isi Artikel -->
-    <div class="bd-content">
-      <p><strong>JOMBANG</strong> – Suasana hangat, penuh antusiasme, dan semangat kebersamaan menyelimuti Balai Desa Munungkerep pada Rabu (08/07/2026). Jajaran Pemerintah Desa bersama mahasiswa <strong>Universitas Pesantren Tinggi Darul 'Ulum (Unipdu)</strong> Jombang resmi menggelar acara Pembukaan <strong>Kuliah Pengabdian Masyarakat (KPM) 2026</strong> untuk Kelompok 5.</p>
-      
-      <p>[Teks dummy/placeholder untuk isi paragraf selanjutnya...] Dalam sambutannya, Kepala Desa menyampaikan apresiasi atas kehadiran mahasiswa yang diharapkan dapat memberikan kontribusi inovasi dan pendampingan di sektor pertanian maupun pemberdayaan UMKM yang ada di lingkungan desa.</p>
-      
-      <p>[Teks dummy/placeholder untuk paragraf penutup...] Kegiatan KPM ini akan berlangsung selama satu bulan penuh, dengan fokus pada program-program pengabdian yang terintegrasi dengan kebutuhan masyarakat. Selamat bertugas kepada Kelompok 5, semoga sukses dan membawa manfaat bagi Desa Munungkerep.</p>
+    <div class="bd-content" id="detail-bd-content">
+      <!-- Paragraf isi berita dimasukkan secara dinamis -->
     </div>
   </div>
 </div>
@@ -385,8 +364,37 @@
 
 <script>
   // ================= LOGIKA BUKA/TUTUP HALAMAN BERITA =================
-  function bukaBerita(event) {
-    if(event) event.preventDefault(); // Mencegah pindah URL
+  function bukaBerita(link) {
+    const id = link.getAttribute('data-id');
+    const judul = link.getAttribute('data-judul');
+    const kategori = link.getAttribute('data-kategori');
+    const tanggal = link.getAttribute('data-tanggal');
+    const foto = link.getAttribute('data-foto');
+    const views = link.getAttribute('data-views');
+    const isi = link.querySelector('.berita-isi-full').textContent;
+    
+    document.getElementById('detail-bd-badge').textContent = kategori;
+    document.getElementById('detail-bd-title').textContent = judul;
+    document.getElementById('detail-bd-date').textContent = `Dipublikasikan: ${tanggal}`;
+    document.getElementById('detail-bd-views').textContent = `Dilihat: ${views}x`;
+    document.getElementById('detail-bd-img').src = foto;
+    document.getElementById('detail-bd-img').alt = judul;
+    
+    const contentDiv = document.getElementById('detail-bd-content');
+    contentDiv.innerHTML = isi;
+    
+    // Kirim request AJAX (fetch) untuk menambah jumlah tayang secara asinkronus
+    if (id) {
+      fetch(`/berita/${id}/view`)
+        .then(response => response.json())
+        .then(data => {
+          // Perbarui teks tayangan di halaman detail
+          document.getElementById('detail-bd-views').textContent = `Dilihat: ${data.views}x`;
+          // Perbarui nilai data-views pada kartu berita agar jika diklik ulang datanya sinkron
+          link.setAttribute('data-views', data.views);
+        })
+        .catch(err => console.error('Gagal memperbarui jumlah tayangan:', err));
+    }
     
     // Sembunyikan Halaman Utama (Hero + Main Konten)
     document.getElementById('hero-header').style.display = 'none';

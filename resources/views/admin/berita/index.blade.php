@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <title>Kelola Produk - Admin Desa</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola Berita - Admin Desa</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: #F4F6F8; margin: 0; padding: 20px; }
@@ -22,16 +24,16 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Kelola Produk UMKM</h1>
+            <h1>Kelola Berita Desa</h1>
             <div>
                 <a href="/" class="btn btn-secondary">Lihat Web</a>
-                <a href="/admin/produk/create" class="btn btn-primary">+ Tambah Produk</a>
+                <a href="/admin/berita/create" class="btn btn-primary">+ Tambah Berita</a>
             </div>
         </div>
 
         <div class="admin-nav" style="display: flex; gap: 8px; border-bottom: 2px solid #E2E8F0; margin-bottom: 24px; padding-bottom: 1px;">
-            <a href="/admin/produk" class="admin-nav-item" style="padding: 10px 16px; font-weight: 700; text-decoration: none; color: #1668A3; border-bottom: 2px solid #1668A3; margin-bottom: -2px; font-size: 14px;">Produk UMKM</a>
-            <a href="/admin/berita" class="admin-nav-item" style="padding: 10px 16px; font-weight: 700; text-decoration: none; color: #64748B; border-bottom: 2px solid transparent; margin-bottom: -2px; font-size: 14px; transition: all 0.15s ease;">Berita Desa</a>
+            <a href="/admin/produk" class="admin-nav-item" style="padding: 10px 16px; font-weight: 700; text-decoration: none; color: #64748B; border-bottom: 2px solid transparent; margin-bottom: -2px; font-size: 14px; transition: all 0.15s ease;">Produk UMKM</a>
+            <a href="/admin/berita" class="admin-nav-item" style="padding: 10px 16px; font-weight: 700; text-decoration: none; color: #1668A3; border-bottom: 2px solid #1668A3; margin-bottom: -2px; font-size: 14px;">Berita Desa</a>
             <a href="/admin/kegiatan" class="admin-nav-item" style="padding: 10px 16px; font-weight: 700; text-decoration: none; color: #64748B; border-bottom: 2px solid transparent; margin-bottom: -2px; font-size: 14px; transition: all 0.15s ease;">Galeri & Kegiatan</a>
         </div>
 
@@ -43,31 +45,37 @@
             <thead>
                 <tr>
                     <th>Foto</th>
-                    <th>Nama Produk</th>
-                    <th>Penjual</th>
-                    <th>Harga</th>
+                    <th>Judul Berita</th>
+                    <th>Kategori</th>
+                    <th>Tanggal</th>
+                    <th>Dilihat</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($produks as $item)
+                @forelse($beritas as $item)
                 <tr>
                     <td>
-                        <img src="{{ $item->foto_produk ? asset('storage/'.$item->foto_produk) : 'https://placehold.co/100' }}" width="60" style="border-radius: 6px; object-fit: cover; aspect-ratio: 1/1;">
+                        <img src="{{ $item->foto ? asset('storage/'.$item->foto) : 'https://placehold.co/100?text=Berita' }}" width="60" style="border-radius: 6px; object-fit: cover; aspect-ratio: 1/1;">
                     </td>
-                    <td><b>{{ $item->nama_produk }}</b><br><small style="color:#64748B;">{{ $item->kategori }}</small></td>
-                    <td>{{ $item->nama_penjual }}</td>
-                    <td>{{ $item->harga }}</td>
+                    <td><b>{{ $item->judul }}</b></td>
+                    <td><span style="background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase;">{{ $item->kategori }}</span></td>
+                    <td>{{ date('d M Y', strtotime($item->tanggal)) }}</td>
+                    <td>{{ $item->views }}x</td>
                     <td>
-                        <a href="/admin/produk/{{ $item->id }}/edit" class="btn btn-warning" style="padding: 6px 12px;">Edit</a>
-                        <form action="/admin/produk/{{ $item->id }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus produk ini?');">
+                        <a href="/admin/berita/{{ $item->id }}/edit" class="btn btn-warning" style="padding: 6px 12px;">Edit</a>
+                        <form action="/admin/berita/{{ $item->id }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus berita ini?');">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger" style="padding: 6px 12px;">Hapus</button>
                         </form>
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="6" style="text-align: center; color: #64748B; padding: 30px;">Belum ada berita yang ditulis.</td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
