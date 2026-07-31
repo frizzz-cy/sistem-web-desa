@@ -84,13 +84,53 @@
             theme: 'snow',
             placeholder: 'Tulis isi berita selengkapnya disini...',
             modules: {
-                toolbar: [
-                    ['bold', 'italic', 'underline', 'strike'],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    ['clean']
-                ]
+                toolbar: {
+                    container: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        ['image'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['clean']
+                    ],
+                    handlers: {
+                        image: imageHandler
+                    }
+                }
             }
         });
+
+        function imageHandler() {
+            const input = document.createElement('input');
+            input.setAttribute('type', 'file');
+            input.setAttribute('accept', 'image/*');
+            input.click();
+
+            input.onchange = async () => {
+                const file = input.files[0];
+                if (!file) return;
+
+                const formData = new FormData();
+                formData.append('image', file);
+                formData.append('_token', '{{ csrf_token() }}');
+
+                try {
+                    const response = await fetch('/admin/berita/upload-image', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        const range = quill.getSelection();
+                        quill.insertEmbed(range.index, 'image', result.url);
+                    } else {
+                        alert('Gagal mengunggah gambar. Pastikan ukuran file di bawah 2MB.');
+                    }
+                } catch (error) {
+                    console.error('Error uploading image:', error);
+                    alert('Terjadi kesalahan saat mengunggah gambar.');
+                }
+            };
+        }
 
         // Sync Quill content to hidden input on form submit
         document.querySelector('form').onsubmit = function() {

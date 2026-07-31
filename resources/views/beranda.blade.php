@@ -176,6 +176,7 @@
   .bd-content { font-size: 15px; color: #333; line-height: 1.75; }
   .bd-content p { margin-bottom: 16px; }
   .bd-content strong { color: #111; font-weight: 700; }
+  .bd-content img { max-width: 100%; height: auto; display: block; margin: 20px auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
 
   /* ============ MODAL LAYANAN ADMINISTRASI ============ */
   .modal-layanan-overlay{ display:none; position:fixed; inset:0; z-index:3000; background:rgba(11,40,63,0.75); align-items:center; justify-content:center; padding:20px; }

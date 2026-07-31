@@ -35,6 +35,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth');
 
 Route::middleware('auth')->prefix('admin')->group(function () {
     Route::resource('produk', AdminProdukController::class);
+    Route::post('berita/upload-image', [AdminBeritaController::class, 'uploadImage']);
     Route::resource('berita', AdminBeritaController::class)->parameters(['berita' => 'berita']);
     Route::resource('kegiatan', AdminKegiatanController::class);
 });

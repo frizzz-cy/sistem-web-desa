@@ -60,7 +60,11 @@
                 <label for="foto">Foto Banner Berita (Biarkan kosong jika tidak ingin mengubah)</label>
                 <input type="file" name="foto" id="foto" accept="image/*">
                 @if($berita->foto)
-                    <img src="{{ asset('storage/' . $berita->foto) }}" alt="Foto Saat Ini" class="current-img">
+                    <div style="position: relative; display: inline-block; margin-top: 10px;" id="banner-preview-container">
+                        <img src="{{ asset('storage/' . $berita->foto) }}" alt="Foto Saat Ini" class="current-img" style="margin-top:0;">
+                        <button type="button" onclick="removeBannerImage()" style="position: absolute; top: 8px; right: 8px; background: #DC2626; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.2); transition: background 0.2s;" title="Hapus foto banner">✕</button>
+                        <input type="hidden" name="remove_foto" id="remove_foto" value="0">
+                    </div>
                 @endif
                 <small style="color: #64748B; display: block; margin-top: 6px;">Format yang diizinkan: JPG, JPEG, PNG (Maksimal 2MB)</small>
                 @error('foto') <span class="error-msg">{{ $message }}</span> @enderror
@@ -89,13 +93,61 @@
             theme: 'snow',
             placeholder: 'Tulis isi berita selengkapnya disini...',
             modules: {
-                toolbar: [
-                    ['bold', 'italic', 'underline', 'strike'],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    ['clean']
-                ]
+                toolbar: {
+                    container: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        ['image'],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        ['clean']
+                    ],
+                    handlers: {
+                        image: imageHandler
+                    }
+                }
             }
         });
+
+        function imageHandler() {
+            const input = document.createElement('input');
+            input.setAttribute('type', 'file');
+            input.setAttribute('accept', 'image/*');
+            input.click();
+
+            input.onchange = async () => {
+                const file = input.files[0];
+                if (!file) return;
+
+                const formData = new FormData();
+                formData.append('image', file);
+                formData.append('_token', '{{ csrf_token() }}');
+
+                try {
+                    const response = await fetch('/admin/berita/upload-image', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        const range = quill.getSelection();
+                        quill.insertEmbed(range.index, 'image', result.url);
+                    } else {
+                        alert('Gagal mengunggah gambar. Pastikan ukuran file di bawah 2MB.');
+                    }
+                } catch (error) {
+                    console.error('Error uploading image:', error);
+                    alert('Terjadi kesalahan saat mengunggah gambar.');
+                }
+            };
+        }
+
+        function removeBannerImage() {
+            if (confirm('Yakin ingin menghapus foto banner berita ini?')) {
+                document.getElementById('remove_foto').value = "1";
+                document.getElementById('banner-preview-container').style.display = 'none';
+                document.getElementById('foto').value = '';
+            }
+        }
 
         // Sync Quill content to hidden input on form submit
         document.querySelector('form').onsubmit = function() {

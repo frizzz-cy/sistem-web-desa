@@ -58,7 +58,12 @@ class AdminBeritaController extends Controller
             'foto'     => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        if ($request->hasFile('foto')) {
+        if ($request->remove_foto == '1') {
+            if ($berita->foto) {
+                Storage::disk('public')->delete($berita->foto);
+            }
+            $data['foto'] = null;
+        } elseif ($request->hasFile('foto')) {
             if ($berita->foto) {
                 Storage::disk('public')->delete($berita->foto);
             }
@@ -77,5 +82,20 @@ class AdminBeritaController extends Controller
         }
         $berita->delete();
         return redirect('/admin/berita')->with('success', 'Berita berhasil dihapus!');
+    }
+
+    // Menangani upload gambar dari editor Quill
+    public function uploadImage(Request $request)
+    {
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $path = ImageHelper::uploadAndCompress($file, 'berita_content');
+            if ($path) {
+                return response()->json([
+                    'url' => asset('storage/' . $path)
+                ]);
+            }
+        }
+        return response()->json(['error' => 'Gagal mengunggah gambar'], 400);
     }
 }
