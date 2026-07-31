@@ -161,7 +161,7 @@
          data-avatar="{{ substr($item->nama_pembuat, 0, 2) }}">
       <div class="kegiatan-img-wrap">
         <span class="kegiatan-badge">{{ $item->kategori }}</span>
-        <img src="{{ $item->foto ? asset('storage/'.$item->foto) : 'https://placehold.co/600x400/e2e8f0/94a3b8?text=Foto+Kegiatan' }}" alt="{{ $item->judul }}" class="kegiatan-img">
+        <img src="{{ $item->foto ? asset('storage/'.$item->foto) : 'https://placehold.co/600x400/e2e8f0/94a3b8?text=Foto+Kegiatan' }}" alt="{{ $item->judul }}" class="kegiatan-img" loading="lazy">
       </div>
       <div class="kegiatan-content">
         <h3 class="kegiatan-title">{{ $item->judul }}</h3>

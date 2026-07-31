@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ImageHelper;
 use App\Models\Berita;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -33,7 +34,7 @@ class AdminBeritaController extends Controller
         ]);
 
         if ($request->hasFile('foto')) {
-            $data['foto'] = $request->file('foto')->store('berita_images', 'public');
+            $data['foto'] = ImageHelper::uploadAndCompress($request->file('foto'), 'berita_images');
         }
 
         Berita::create($data);
@@ -61,7 +62,7 @@ class AdminBeritaController extends Controller
             if ($berita->foto) {
                 Storage::disk('public')->delete($berita->foto);
             }
-            $data['foto'] = $request->file('foto')->store('berita_images', 'public');
+            $data['foto'] = ImageHelper::uploadAndCompress($request->file('foto'), 'berita_images');
         }
 
         $berita->update($data);

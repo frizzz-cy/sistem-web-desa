@@ -198,7 +198,7 @@
          data-avatar="{{ substr($item->nama_penjual, 0, 2) }}">
       <div class="prod-img-wrap">
         <span class="prod-badge">{{ $item->kategori }}</span>
-        <img src="{{ $item->foto_produk ? asset('storage/'.$item->foto_produk) : 'https://placehold.co/600x400/e2e8f0/94a3b8?text=Foto+Produk' }}" alt="{{ $item->nama_produk }}" class="prod-img">
+        <img src="{{ $item->foto_produk ? asset('storage/'.$item->foto_produk) : 'https://placehold.co/600x400/e2e8f0/94a3b8?text=Foto+Produk' }}" alt="{{ $item->nama_produk }}" class="prod-img" loading="lazy">
       </div>
       <div class="prod-content">
         <h3 class="prod-title">{{ $item->nama_produk }}</h3>
@@ -206,7 +206,7 @@
         <div class="prod-meta">
           <span class="prod-meta-item harga">
             <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-            {{ $item->harga }}
+            Rp {{ $item->harga }}
           </span>
           <span class="prod-meta-dot">&bull;</span>
           <span class="prod-meta-item">
@@ -311,7 +311,7 @@
     document.getElementById('modal-prod-title').textContent = name;
     document.getElementById('modal-prod-harga').innerHTML = `
       <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" style="width: 15px; height: 15px; stroke: var(--biru-tua); stroke-width: 2.2;"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
-      ${price}
+      Rp ${price}
     `;
     document.getElementById('modal-prod-stok').innerHTML = `
       <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round" style="width: 15px; height: 15px; stroke: var(--biru-tua); stroke-width: 2.2;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>

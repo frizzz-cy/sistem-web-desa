@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ImageHelper;
 use App\Models\Produk;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -36,7 +37,7 @@ class AdminProdukController extends Controller
         ]);
 
         if ($request->hasFile('foto_produk')) {
-            $data['foto_produk'] = $request->file('foto_produk')->store('produk_images', 'public');
+            $data['foto_produk'] = ImageHelper::uploadAndCompress($request->file('foto_produk'), 'produk_images');
         }
 
         Produk::create($data);
@@ -68,7 +69,7 @@ class AdminProdukController extends Controller
             if ($produk->foto_produk) {
                 Storage::disk('public')->delete($produk->foto_produk);
             }
-            $data['foto_produk'] = $request->file('foto_produk')->store('produk_images', 'public');
+            $data['foto_produk'] = ImageHelper::uploadAndCompress($request->file('foto_produk'), 'produk_images');
         }
 
         $produk->update($data);

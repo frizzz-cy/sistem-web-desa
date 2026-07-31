@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ImageHelper;
 use App\Models\Kegiatan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -35,7 +36,7 @@ class AdminKegiatanController extends Controller
         ]);
 
         if ($request->hasFile('foto')) {
-            $data['foto'] = $request->file('foto')->store('kegiatan_images', 'public');
+            $data['foto'] = ImageHelper::uploadAndCompress($request->file('foto'), 'kegiatan_images');
         }
 
         Kegiatan::create($data);
@@ -65,7 +66,7 @@ class AdminKegiatanController extends Controller
             if ($kegiatan->foto) {
                 Storage::disk('public')->delete($kegiatan->foto);
             }
-            $data['foto'] = $request->file('foto')->store('kegiatan_images', 'public');
+            $data['foto'] = ImageHelper::uploadAndCompress($request->file('foto'), 'kegiatan_images');
         }
 
         $kegiatan->update($data);

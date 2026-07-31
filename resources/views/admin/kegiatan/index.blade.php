@@ -41,45 +41,47 @@
             <div class="alert-success">{{ session('success') }}</div>
         @endif
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Foto</th>
-                    <th>Judul Kegiatan</th>
-                    <th>Kategori</th>
-                    <th>Tanggal</th>
-                    <th>Lokasi</th>
-                    <th>Pembuat</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($kegiatans as $item)
-                <tr>
-                    <td>
-                        <img src="{{ $item->foto ? asset('storage/'.$item->foto) : 'https://placehold.co/100?text=Kegiatan' }}" width="60" style="border-radius: 6px; object-fit: cover; aspect-ratio: 1/1;">
-                    </td>
-                    <td><b>{{ $item->judul }}</b></td>
-                    <td><span style="background: #DBEAFE; color: #1D4ED8; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase;">{{ $item->kategori }}</span></td>
-                    <td>{{ date('d M Y', strtotime($item->tanggal)) }}</td>
-                    <td>{{ $item->lokasi }}</td>
-                    <td>{{ $item->nama_pembuat }}</td>
-                    <td>
-                        <a href="/admin/kegiatan/{{ $item->id }}/edit" class="btn btn-warning" style="padding: 6px 12px;">Edit</a>
-                        <form action="/admin/kegiatan/{{ $item->id }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus kegiatan ini?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger" style="padding: 6px 12px;">Hapus</button>
-                        </form>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="7" style="text-align: center; color: #64748B; padding: 30px;">Belum ada dokumentasi kegiatan yang diunggah.</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+        <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; margin-top: 10px;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Foto</th>
+                        <th>Judul Kegiatan</th>
+                        <th>Kategori</th>
+                        <th>Tanggal</th>
+                        <th>Lokasi</th>
+                        <th>Pembuat</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($kegiatans as $item)
+                    <tr>
+                        <td>
+                            <img src="{{ $item->foto ? asset('storage/'.$item->foto) : 'https://placehold.co/100?text=Kegiatan' }}" width="60" style="border-radius: 6px; object-fit: cover; aspect-ratio: 1/1;">
+                        </td>
+                        <td><b>{{ $item->judul }}</b></td>
+                        <td><span style="background: #DBEAFE; color: #1D4ED8; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase;">{{ $item->kategori }}</span></td>
+                        <td>{{ date('d M Y', strtotime($item->tanggal)) }}</td>
+                        <td>{{ $item->lokasi }}</td>
+                        <td>{{ $item->nama_pembuat }}</td>
+                        <td>
+                            <a href="/admin/kegiatan/{{ $item->id }}/edit" class="btn btn-warning" style="padding: 6px 12px;">Edit</a>
+                            <form action="/admin/kegiatan/{{ $item->id }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus kegiatan ini?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger" style="padding: 6px 12px;">Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="7" style="text-align: center; color: #64748B; padding: 30px;">Belum ada dokumentasi kegiatan yang diunggah.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 </body>
 </html>
