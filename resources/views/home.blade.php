@@ -27,67 +27,28 @@
   h1,h2,h3{font-family:'Plus Jakarta Sans',sans-serif; font-weight:800;}
   .mono{font-family:'Plus Jakarta Sans',sans-serif;}
 
-  header{
-    position:relative; overflow:hidden;
-    background:var(--ground); color:var(--paper);
-    padding:34px 20px 28px;
-  }
-  header::before{
-    content:"";
-    position:absolute; inset:0;
-    opacity:0.16;
-    background-image:
-      repeating-radial-gradient(ellipse 140% 90% at 15% 120%,
-        transparent 0, transparent 22px,
-        var(--gold) 22px, var(--gold) 23px,
-        transparent 23px, transparent 46px);
-    pointer-events:none;
-  }
-  .header-inner{position:relative; z-index:1; max-width:920px; margin:0 auto; text-align:center;}
-  .eyebrow{
-    display:inline-flex; align-items:center; gap:8px;
-    font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:600;
-    letter-spacing:.14em; text-transform:uppercase; color:var(--gold);
-    margin-bottom:14px;
-  }
-  .eyebrow::before, .eyebrow::after{content:"—"; opacity:.6;}
-  header h1{
-    font-size:clamp(24px, 5vw, 38px); font-weight:600; line-height:1.15;
-    letter-spacing:-.01em;
-  }
-  header .lokasi{
-    font-size:13.5px; color:#C9C2AC; margin-top:10px;
-    font-style:italic; font-family:'Plus Jakarta Sans',sans-serif; font-weight:800;
-  }
-  header .intro{
-    font-size:13.5px; color:#D9D3BF; max-width:520px; margin:16px auto 0;
-    line-height:1.6;
-  }
+  .main-layout{display:grid; grid-template-columns:1fr; background:var(--paper-2); border-radius:12px; overflow:hidden; box-shadow:0 16px 40px rgba(11,59,96,0.15);}
+  @media (min-width:640px){ .main-layout{grid-template-columns:3fr 1.1fr;} }
 
   .stats-strip{
-    display:flex; flex-wrap:wrap; justify-content:center; gap:0;
-    max-width:920px; margin:26px auto 0;
-    border-top:1px solid rgba(246,242,231,0.15);
+    display:grid; grid-template-columns:repeat(5,1fr); gap:1px;
+    margin:24px 0 0;
+    background:var(--line); border:1px solid var(--line); border-radius:12px; overflow:hidden;
+    box-shadow:0 10px 24px rgba(11,59,96,0.10);
   }
   .stat-item{
-    flex:1; min-width:110px; text-align:center;
-    padding:16px 12px 4px;
-    border-right:1px solid rgba(246,242,231,0.15);
+    background:var(--paper-2); padding:12px 4px; text-align:center;
   }
-  .stat-item:last-child{border-right:none;}
   .stat-num{
-    font-family:'Plus Jakarta Sans',sans-serif; font-size:22px; font-weight:600; color:var(--gold);
+    font-family:'Plus Jakarta Sans',sans-serif; font-size:30px; font-weight:800; color:var(--ground); line-height:1.1;
   }
   .stat-label{
-    font-size:10.5px; color:#B8B098; text-transform:uppercase; letter-spacing:.07em;
-    margin-top:3px;
+    font-size:9px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.02em;
+    margin-top:3px; font-weight:600; line-height:1.2;
   }
 
-  .main-layout{display:grid; grid-template-columns:1fr; background:var(--paper-2);}
-  @media (min-width:900px){ .main-layout{grid-template-columns:3fr 1fr;} }
-
   .map-wrap{position:relative; border-top:4px solid var(--gold);}
-  #map{height:58vh; min-height:360px; width:100%; background:var(--line);}
+  #map{height:52vh; min-height:320px; width:100%; background:var(--line);}
   @media (min-width:900px){ #map{height:76vh; min-height:520px;} }
 
   .map-loading{
@@ -120,85 +81,110 @@
   .basemap-btn:focus-visible{outline:2px solid var(--clay); outline-offset:-2px;}
 
   .legenda-panel{
-    background:var(--paper-2); border-left:1px solid var(--line); padding:18px;
+    background:var(--paper-2); border-top:1px solid var(--line); padding:20px;
+  }
+  @media (min-width:640px){
+    .legenda-panel{border-left:1px solid var(--line); border-top:none; overflow-y:auto;}
   }
   .legenda-panel h2{
-    font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:600;
-    text-transform:uppercase; letter-spacing:.1em; margin-bottom:14px; color:var(--ink-soft);
+    display:block; font-family:'Plus Jakarta Sans',sans-serif; font-size:12px; font-weight:800;
+    text-transform:uppercase; letter-spacing:.08em; margin-bottom:16px; color:var(--ground);
   }
 
   .filter-chip{
-    display:flex; align-items:center; gap:10px; width:100%;
-    background:none; border:none; cursor:pointer;
-    font-family:'Plus Jakarta Sans',sans-serif; font-weight:600; font-size:13.5px;
-    color:var(--ground); padding:10px 8px; text-align:left;
-    margin-bottom:1px; -webkit-appearance:none; appearance:none;
-    border-bottom:1px solid var(--line);
+    display:flex; align-items:center; gap:10px; width:100%; white-space:normal; flex-shrink:0;
+    background:var(--paper); border:1px solid transparent; border-radius:8px; cursor:pointer;
+    font-family:'Plus Jakarta Sans',sans-serif; font-weight:600; font-size:13px;
+    color:var(--ground); padding:10px 12px; text-align:left;
+    margin-bottom:6px; -webkit-appearance:none; appearance:none;
+    transition:background .15s ease, border-color .15s ease;
   }
-  .filter-chip:last-child{border-bottom:none;}
-  .filter-chip.off{opacity:0.3;}
-  .filter-chip:hover{background:var(--paper);}
+  .filter-chip.off{opacity:0.35;}
+  .filter-chip:hover{background:var(--line); border-color:var(--ground);}
   .filter-chip:focus-visible{outline:2px solid var(--clay); outline-offset:-2px;}
   .dot{width:10px; height:10px; border-radius:50%; flex-shrink:0;}
   .dot.area{border-radius:2px; background:rgba(234,67,53,0.12); border:2px dashed #EA4335;}
 
-  @media (max-width:899px){
-    .legenda-panel{
-      border-left:none; border-top:1px solid var(--line);
-      display:flex; overflow-x:auto; gap:2px; padding:12px;
-    }
-    .legenda-panel h2{display:none;}
-    .filter-chip{width:auto; white-space:nowrap; flex-shrink:0; border-bottom:none; border-right:1px solid var(--line);}
-  }
-
   .leaflet-popup-content-wrapper{border-radius:6px; font-family:'Plus Jakarta Sans',sans-serif;}
+
+  /* ============ DEMOGRAFI + PETA SATELIT MINI ============ */
+  .demografi-section{
+    max-width:1200px; margin:0 auto; padding:44px 20px 56px;
+    display:grid; grid-template-columns:1fr; gap:32px;
+  }
+  @media (min-width:900px){ .demografi-section{grid-template-columns:1fr 1.5fr; align-items:start;} }
+  .demografi-text{
+    max-width:520px; padding:0; text-align:left;
+  }
+  .demografi-text .eyebrow-2{
+    font-family:'Plus Jakarta Sans',sans-serif; font-size:12px; font-weight:700;
+    letter-spacing:.1em; text-transform:uppercase; color:var(--clay); margin-bottom:10px;
+  }
+  .demografi-text h2{
+    font-size:clamp(30px,5.5vw,42px); font-weight:800; color:var(--ground); line-height:1.15;
+    margin-bottom:18px;
+  }
+  .demografi-text p{font-size:16px; color:var(--ink-soft); line-height:1.8; margin-bottom:14px;}
+  .demografi-mini-stat{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px; margin-top:20px;
+    background:var(--line); border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  }
+  .demografi-mini-stat div{
+    text-align:left; padding:10px 10px; background:var(--paper);
+  }
+  .demografi-mini-stat .d-val{font-size:30px; font-weight:800; color:var(--ground); line-height:1.1;}
+  .demografi-mini-stat .d-lbl{font-size:11px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.05em; font-weight:600; margin-top:2px;}
+
   .leaflet-popup-content b{font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:15px; color:var(--ground);}
   .leaflet-popup-content .kategori-label{
     display:inline-block; font-family:'Plus Jakarta Sans',sans-serif; font-size:10px; font-weight:600;
     text-transform:uppercase; letter-spacing:.05em; color:#fff; padding:2px 8px; border-radius:3px; margin:5px 0;
   }
 
-  .potensi-section{max-width:640px; margin:0 auto; padding:52px 20px 60px;}
-  .potensi-header{text-align:center; margin-bottom:30px;}
+  .potensi-section{max-width:700px; margin:0 auto; padding:56px 20px;}
+  .potensi-header{text-align:center; margin-bottom:34px;}
   .potensi-header .eyebrow-2{
-    font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:600;
-    letter-spacing:.12em; text-transform:uppercase; color:var(--clay); margin-bottom:8px;
+    font-family:'Plus Jakarta Sans',sans-serif; font-size:12px; font-weight:700;
+    letter-spacing:.1em; text-transform:uppercase; color:var(--clay); margin-bottom:10px;
   }
-  .potensi-header h2{font-size:clamp(20px,4vw,26px); font-weight:600;}
+  .potensi-header h2{font-size:clamp(24px,4.5vw,32px); font-weight:800; color:var(--ground);}
   .potensi-header p{color:var(--ink-soft); font-size:13.5px; margin-top:8px;}
 
-  .potensi-grid{display:grid; grid-template-columns:1fr; gap:18px;}
-  @media (min-width:520px){ .potensi-grid{grid-template-columns:1fr 1fr;} }
+  .potensi-carousel-wrap{ position:relative; }
+  .potensi-grid{
+    display:flex; gap:20px; overflow-x:auto;
+    -webkit-overflow-scrolling:touch; scrollbar-width:none; padding-bottom:4px;
+    touch-action:pan-y; /* blokir swipe geser horizontal manual, scroll vertikal halaman tetap normal */
+  }
+  .potensi-grid::-webkit-scrollbar{display:none;}
+  .potensi-card-wrap{
+    flex:0 0 calc(100% - 40px); scroll-snap-align:center;
+  }
+  @media (min-width:600px){ .potensi-card-wrap{flex:0 0 calc(50% - 10px);} }
 
-  .potensi-card-wrap{ position:relative; }
 
   .potensi-card{
-    background:var(--paper-2); border:1px solid var(--line); overflow:hidden;
-    border:none; text-align:left; cursor:pointer; width:100%; padding:0;
-    font-family:'Plus Jakarta Sans',sans-serif; transition:transform .18s ease, box-shadow .18s ease;
+    background:var(--paper-2); border:1px solid var(--line); border-radius:12px; overflow:hidden;
+    text-align:left; cursor:pointer; width:100%; padding:0;
+    font-family:'Plus Jakarta Sans',sans-serif; transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
     -webkit-appearance:none; appearance:none; position:relative;
+    box-shadow:0 6px 16px rgba(11,59,96,0.06);
   }
-  .potensi-card::before{
-    content:""; position:absolute; top:0; left:0; width:4px; height:100%;
-    background:var(--moss); transform:scaleY(0); transform-origin:top;
-    transition:transform .2s ease;
-  }
-  .potensi-card:hover{box-shadow:0 4px 12px rgba(46,42,31,0.08);}
-  .potensi-card:hover::before{transform:scaleY(1);}
+  .potensi-card:hover{transform:translateY(-3px); box-shadow:0 14px 28px rgba(11,59,96,0.12); border-color:var(--moss);}
   .potensi-card:focus-visible{outline:2px solid var(--clay); outline-offset:2px;}
   .potensi-card .foto{
-    width:100%; aspect-ratio:16/10; background:var(--line); position:relative;
+    width:100%; aspect-ratio:16/10; background:var(--paper); position:relative;
     display:flex; align-items:center; justify-content:center;
     color:var(--ink-soft); font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:500;
   }
   .potensi-card .foto img{width:100%; height:100%; object-fit:cover;}
-  .potensi-card .info{padding:16px 18px 18px;}
+  .potensi-card .info{padding:18px 20px 20px;}
   .potensi-card .info .tag{
-    font-family:'Plus Jakarta Sans',sans-serif; font-size:10px; font-weight:600;
-    letter-spacing:.08em; text-transform:uppercase; color:var(--moss); display:block; margin-bottom:6px;
+    font-family:'Plus Jakarta Sans',sans-serif; font-size:10.5px; font-weight:700;
+    letter-spacing:.08em; text-transform:uppercase; color:var(--moss); display:block; margin-bottom:8px;
   }
-  .potensi-card .info h3{font-size:17px; font-weight:600; margin-bottom:6px;}
-  .klik-hint{color:var(--clay); font-weight:600; font-size:12px; display:flex; align-items:center; gap:5px;}
+  .potensi-card .info h3{font-size:19px; font-weight:800; color:var(--ground); margin-bottom:8px;}
+  .klik-hint{color:var(--clay); font-weight:700; font-size:12.5px; display:flex; align-items:center; gap:5px;}
   .klik-hint svg{width:12px; height:12px; transition:transform .15s ease;}
   .potensi-card:hover .klik-hint svg{transform:translateX(3px);}
 
@@ -226,6 +212,21 @@
   }
   @media (hover:hover){
     .potensi-card-wrap:hover .hover-preview{ opacity:1; transform:translateX(-50%) translateY(0); }
+  }
+
+  /* ================= PRODUK TURUNAN (di dalam modal) ================= */
+  .modal-produk{
+    margin:14px 22px 0; padding:14px; background:var(--paper);
+    border:1px solid var(--line); border-radius:8px;
+  }
+  .modal-produk .judul-kecil{
+    font-family:'Plus Jakarta Sans',sans-serif; font-size:9px; font-weight:700;
+    letter-spacing:.06em; text-transform:uppercase; color:var(--moss); display:block; margin-bottom:8px;
+  }
+  .modal-produk .daftar-chip{display:flex; flex-wrap:wrap; gap:6px;}
+  .modal-produk .chip-produk{
+    background:var(--paper-2); border:1px solid var(--line); border-radius:20px;
+    padding:5px 12px; font-size:11px; font-weight:600; color:var(--ground);
   }
 
   .modal-overlay{
@@ -283,111 +284,93 @@
   .modal-box p{padding:10px 22px 0; font-size:13.5px; color:#4A4638; line-height:1.65;}
   .modal-box p.isi-nanti{color:var(--clay); font-style:italic; font-size:11.5px; font-family:'Plus Jakarta Sans',sans-serif;}
 
-  /* ================= SEJARAH SINGKAT ================= */
-  .sejarah-section{
-    max-width:680px; margin:0 auto; padding:8px 20px 56px;
-    border-top:1px solid var(--line);
-  }
-  .sejarah-header{text-align:center; margin:44px 0 26px;}
-  .sejarah-header .eyebrow-2{
-    font-family:'Plus Jakarta Sans',sans-serif; font-size:11px; font-weight:600;
-    letter-spacing:.12em; text-transform:uppercase; color:var(--clay); margin-bottom:8px;
-  }
-  .sejarah-header h2{font-size:clamp(20px,4vw,26px); font-weight:600;}
-  .sejarah-body p{
-    font-size:14px; line-height:1.75; color:#4A4638; margin-bottom:16px;
-  }
-  .sejarah-body p:first-of-type{
-    font-family:'Plus Jakarta Sans',sans-serif; font-weight:800; font-size:15.5px; font-style:italic; color:var(--ground);
-  }
-  .sejarah-sumber{
-    margin-top:22px; padding-top:16px; border-top:1px dashed var(--line);
-    font-size:12px; color:var(--ink-soft); font-style:italic;
-  }
 
-  footer{
-    text-align:center; padding:22px; font-size:11.5px; color:var(--ink-soft);
-    border-top:1px solid var(--line); background:var(--paper);
-  }
-  footer .sumber{display:block; margin-top:4px; color:#9C9480; font-family:'Plus Jakarta Sans',sans-serif; font-size:10.5px;}
-
-  .topbar{
-    background:#08283F; color:#C9DCEA; font-size:11px;
-    padding:6px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;
-  }
-  .topbar .breadcrumb span{opacity:.75;}
-
-  .navbar{
-    background:var(--paper-2); border-bottom:1px solid var(--line);
-    position:sticky; top:0; z-index:960; box-shadow:0 1px 3px rgba(11,59,96,0.06);
-  }
-  .navbar-inner{
-    max-width:1200px; margin:0 auto; padding:10px 20px;
-    display:flex; align-items:center; justify-content:space-between; gap:16px;
-  }
-  .brand{display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit;}
-  .brand-logo{
-    width:38px; height:38px; border-radius:50%; background:var(--ground);
-    display:flex; align-items:center; justify-content:center; flex-shrink:0;
-    color:var(--gold); font-size:16px; font-weight:800; border:2px solid var(--gold);
-  }
-  .brand-text .b-title{font-size:13.5px; font-weight:800; color:var(--ground); line-height:1.2;}
-  .brand-text .b-sub{font-size:9.5px; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.04em; margin-top:2px;}
-
-  .menu{display:flex; gap:4px; align-items:center;}
-  .menu a{
-    font-size:13px; font-weight:600; color:var(--ground); padding:9px 14px;
-    border-radius:6px; text-decoration:none; transition:background .15s ease, color .15s ease;
-  }
-  .menu a:hover{background:#E8F1F8; color:var(--ground);}
-  .menu a.active{background:var(--ground); color:#fff;}
-  .menu-toggle{display:none; background:none; border:none; cursor:pointer; padding:6px; flex-direction:column; gap:4px;}
-  .menu-toggle span{width:20px; height:2.5px; background:var(--ground); border-radius:2px;}
-  @media (max-width:860px){
-    .menu{
-      display:none; position:absolute; top:100%; left:0; right:0; background:var(--paper-2);
-      flex-direction:column; padding:8px 20px 14px; border-bottom:1px solid var(--line);
-      box-shadow:0 8px 16px rgba(11,59,96,0.08);
-    }
-    .menu.buka{display:flex;}
-    .menu a{width:100%; padding:11px 12px;}
-    .menu-toggle{display:flex;}
-  }
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="breadcrumb"><span>Kabupaten Jombang</span> › <span>Kecamatan Kabuh</span> › <strong>Desa Munungkerep</strong></div>
-</div>
+@include('partials.navbar', ['active' => 'peta'])
 
-<nav class="navbar">
-  <div class="navbar-inner">
-    <a href="/" class="brand" onclick="return pindahHalus(event, '/')">
-      <div class="brand-logo">M</div>
-      <div class="brand-text">
-        <div class="b-title">Desa Munungkerep</div>
-        <div class="b-sub">Sistem Informasi Desa</div>
+<section class="demografi-section">
+  <div class="demografi-text">
+    <div class="eyebrow-2">Demografi</div>
+    <h2>Demografi Penduduk</h2>
+    <p>Desa Munungkerep dihuni oleh 2.120 jiwa yang tersebar di 7 dusun, dengan mayoritas warga berprofesi sebagai petani. Data ini bersumber dari papan monografi desa dan menjadi gambaran umum kondisi kependudukan.</p>
+    <p>Peta di bawah memuat sarana desa, titik ibadah, dan potensi ekonomi warga, dihimpun langsung dari survei lapangan Tim KKN 2026. Ketuk titik pada peta untuk detail lengkap.</p>
+  </div>
+  <div class="main-layout">
+    <div class="map-wrap">
+      <div id="map"></div>
+      <div class="map-loading" id="map-loading">Memuat data lapangan…</div>
+      <div class="basemap-switcher">
+        <button class="basemap-btn active" data-layer="jalan">Peta</button>
+        <button class="basemap-btn" data-layer="satelit">Satelit</button>
+        <button class="basemap-btn" data-layer="kontur">Kontur</button>
       </div>
-    </a>
-    <button class="menu-toggle" onclick="document.getElementById('menu').classList.toggle('buka')">
-      <span></span><span></span><span></span>
-    </button>
-    <div class="menu" id="menu">
-      <a href="/" onclick="return pindahHalus(event, '/')">Beranda</a>
-      <a href="/peta" class="active">Peta &amp; Potensi</a>
-      <a href="/profil-desa" onclick="return pindahHalus(event, '/profil-desa')">Profil Desa</a>
+    </div>
+    <div class="legenda-panel">
+      <h2>Legenda</h2>
+      <button class="filter-chip" data-kategori="Sarana Ibadah"><span class="dot" style="background:#C79A3D"></span> Sarana Ibadah</button>
+      <button class="filter-chip" data-kategori="Pendidikan"><span class="dot" style="background:#52633B"></span> Pendidikan</button>
+      <button class="filter-chip" data-kategori="Potensi Ekonomi"><span class="dot" style="background:#A63D2C"></span> Potensi Ekonomi</button>
+      <button class="filter-chip" data-kategori="Pemerintahan"><span class="dot" style="background:#6B6355"></span> Pemerintahan</button>
+      <button class="filter-chip" data-kategori="Dusun"><span class="dot" style="background:#3D6B8C"></span> Dusun</button>
+      <button class="filter-chip" data-kategori="UMKM Lokal"><span class="dot" style="background:#7A5C8E"></span> UMKM Lokal</button>
+      <button class="filter-chip" data-kategori="Lainnya"><span class="dot" style="background:#9C9480"></span> Lainnya</button>
+      <button class="filter-chip" data-kategori="__wilayah_dusun__"><span class="dot area"></span> Wilayah Dusun</button>
+      <button class="filter-chip" data-kategori="__batas_desa__"><span class="dot" style="border-radius:2px; background:rgba(234,67,53,0.15); border:2px dashed #EA4335;"></span> Batas Desa</button>
+      <button class="filter-chip" data-kategori="__lahan_potensi__"><span class="dot" style="border-radius:2px; background:rgba(166,124,61,0.35); border:2px dashed #A67C3D;"></span> Lahan Tembakau/Pandan</button>
     </div>
   </div>
-</nav>
+</section>
 
-<header>
-  <div class="header-inner">
-    <div class="eyebrow">Peta Administrasi &amp; Potensi Desa</div>
-    <h1>Desa Munungkerep</h1>
-    <p class="lokasi">Kecamatan Kabuh, Kabupaten Jombang — dataran tinggi Jawa Timur</p>
-    <p class="intro">Peta ini memuat sarana desa, titik ibadah, dan potensi ekonomi warga, dihimpun langsung dari survei lapangan Tim KKN 2026. Ketuk titik pada peta atau kartu di bawah untuk detail lengkap.</p>
+<section class="potensi-section">
+  <div class="potensi-header">
+    <div class="eyebrow-2">Hasil Bumi</div>
+    <h2>Potensi Ekonomi Desa</h2>
+    <p>Tiga komoditas utama yang menopang warga Munungkerep</p>
   </div>
+
+  <div class="potensi-carousel-wrap">
+    <div class="potensi-grid" id="potensi-grid">
+      <div class="potensi-card-wrap" data-terkait="tembakau">
+        <div class="hover-preview">Komoditas unggulan warga, ditanam di lahan kering saat kemarau. Ketuk untuk detail lengkap.</div>
+        <button class="potensi-card" onclick="bukaPopupPotensi('tembakau')">
+          <div class="foto"><img src="/images/tembakau.jpg" alt="Tembakau"></div>
+          <div class="info">
+            <span class="tag">Komoditas Utama</span>
+            <h3>Tembakau</h3>
+            <p class="klik-hint">Lihat detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></p>
+          </div>
+        </button>
+      </div>
+      <div class="potensi-card-wrap" data-terkait="pandan">
+        <div class="hover-preview">Komoditas yang ditanam merata di seluruh desa, produksi skala rumahan. Ketuk untuk detail lengkap.</div>
+        <button class="potensi-card" onclick="bukaPopupPotensi('pandan')">
+          <div class="foto"><img src="/images/pandan.jpeg" alt="Pandan"></div>
+          <div class="info">
+            <span class="tag">Komoditas Pendukung</span>
+            <h3>Pandan</h3>
+            <p class="klik-hint">Lihat detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></p>
+          </div>
+        </button>
+      </div>
+      <div class="potensi-card-wrap" data-terkait="anyaman">
+        <div class="hover-preview">PADII</div>
+        <button class="potensi-card" onclick="bukaPopupPotensi('padi')">
+          <div class="foto"><img src="/images/padi.jpg" alt="Padi"></div>
+          <div class="info">
+            <span class="tag">Produk Olahan</span>
+            <h3>Padi</h3>
+            <p class="klik-hint">Lihat detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></p>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div style="max-width:700px; margin:0 auto 56px; padding:0 20px;">
   <div class="stats-strip" id="stats-strip">
     <div class="stat-item"><div class="stat-num" id="stat-total">–</div><div class="stat-label">Titik Terdata</div></div>
     <div class="stat-item"><div class="stat-num" id="stat-dusun">–</div><div class="stat-label">Dusun</div></div>
@@ -395,65 +378,8 @@
     <div class="stat-item"><div class="stat-num" id="stat-pendidikan">–</div><div class="stat-label">Pendidikan</div></div>
     <div class="stat-item"><div class="stat-num" id="stat-ekonomi">–</div><div class="stat-label">Potensi Ekonomi</div></div>
   </div>
-</header>
-
-<div class="main-layout">
-  <div class="map-wrap">
-    <div id="map"></div>
-    <div class="map-loading" id="map-loading">Memuat data lapangan…</div>
-    <div class="basemap-switcher">
-      <button class="basemap-btn active" data-layer="jalan">Peta</button>
-      <button class="basemap-btn" data-layer="satelit">Satelit</button>
-      <button class="basemap-btn" data-layer="kontur">Kontur</button>
-    </div>
-  </div>
-  <div class="legenda-panel">
-    <h2>Legenda</h2>
-    <button class="filter-chip" data-kategori="Sarana Ibadah"><span class="dot" style="background:#C79A3D"></span> Sarana Ibadah</button>
-    <button class="filter-chip" data-kategori="Pendidikan"><span class="dot" style="background:#52633B"></span> Pendidikan</button>
-    <button class="filter-chip" data-kategori="Potensi Ekonomi"><span class="dot" style="background:#A63D2C"></span> Potensi Ekonomi</button>
-    <button class="filter-chip" data-kategori="Pemerintahan"><span class="dot" style="background:#6B6355"></span> Pemerintahan</button>
-    <button class="filter-chip" data-kategori="Dusun"><span class="dot" style="background:#3D6B8C"></span> Dusun</button>
-    <button class="filter-chip" data-kategori="UMKM Lokal"><span class="dot" style="background:#7A5C8E"></span> UMKM Lokal</button>
-    <button class="filter-chip" data-kategori="Lainnya"><span class="dot" style="background:#9C9480"></span> Lainnya</button>
-    <button class="filter-chip" data-kategori="__wilayah_dusun__"><span class="dot area"></span> Wilayah Dusun</button>
-    <button class="filter-chip" data-kategori="__batas_desa__"><span class="dot" style="border-radius:2px; background:rgba(234,67,53,0.15); border:2px dashed #EA4335;"></span> Batas Desa</button>
-    <button class="filter-chip" data-kategori="__lahan_potensi__"><span class="dot" style="border-radius:2px; background:rgba(166,124,61,0.35); border:2px dashed #A67C3D;"></span> Lahan Tembakau/Pandan</button>
-  </div>
 </div>
 
-<section class="potensi-section">
-  <div class="potensi-header">
-    <div class="eyebrow-2">Hasil Bumi</div>
-    <h2>Potensi Ekonomi Desa</h2>
-    <p>Dua komoditas utama yang menopang warga Munungkerep</p>
-  </div>
-
-  <div class="potensi-grid">
-    <div class="potensi-card-wrap">
-      <div class="hover-preview">Komoditas unggulan warga, ditanam di lahan kering saat kemarau. Ketuk untuk detail lengkap.</div>
-      <button class="potensi-card" onclick="bukaPopupPotensi('tembakau')">
-        <div class="foto"><img src="/images/tembakau.jpg" alt="Tembakau"></div>
-        <div class="info">
-          <span class="tag">Komoditas Utama</span>
-          <h3>Tembakau</h3>
-          <p class="klik-hint">Lihat detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></p>
-        </div>
-      </button>
-    </div>
-    <div class="potensi-card-wrap">
-      <div class="hover-preview">Komoditas yang ditanam merata di seluruh desa, produksi skala rumahan. Ketuk untuk detail lengkap.</div>
-      <button class="potensi-card" onclick="bukaPopupPotensi('pandan')">
-        <div class="foto"><img src="/images/pandan.jpg" alt="Pandan"></div>
-        <div class="info">
-          <span class="tag">Komoditas Pendukung</span>
-          <h3>Pandan</h3>
-          <p class="klik-hint">Lihat detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></p>
-        </div>
-      </button>
-    </div>
-  </div>
-</section>
 
 <div class="modal-overlay" id="modal-overlay" onclick="tutupPopupPotensi(event)">
   <div class="modal-box">
@@ -477,35 +403,16 @@
         <ol id="modal-cara" style="padding-left:18px; display:flex; flex-direction:column; gap:6px; margin-top:6px;"></ol>
       </details>
     </div>
+    <div class="modal-produk" id="modal-produk">
+      <span class="judul-kecil">Bisa Diolah Jadi</span>
+      <div class="daftar-chip" id="modal-produk-chip"></div>
+    </div>
     <p class="isi-nanti" id="modal-catatan"></p>
   </div>
 </div>
 
-<section class="sejarah-section">
-  <div class="sejarah-header">
-    <div class="eyebrow-2">Sejarah</div>
-    <h2>Asal Usul Penduduk Desa Munungkerep</h2>
-  </div>
-  <div class="sejarah-body">
-    <p>Asal usul nama Desa Munungkerep diambil dari kata "Munung" dan "Kerep". Munung pada zaman dahulu adalah nama sebuah pohon, yaitu pohon Sriwikutil, sedangkan "Kerep" adalah bahasa Jawa yang dalam bahasa Indonesia berarti rapat atau banyak. Sehingga Munungkerep adalah suatu desa yang dahulu banyak berjajar-jajar pohon Sriwikutil.</p>
 
-    <p>Pada tahun 1721, ada seorang bernama Ki Suroyudo yang bersama istrinya hijrah ke hutan utara yang biasa disebut Hutan Guwo. Ki Suroyudo membuat sebuah pondok di Sendang Guwo tersebut, hingga akhirnya dikaruniai dua orang anak — satu laki-laki dan satu perempuan. Yang laki-laki diberi nama Singokerto, dan yang perempuan diberi nama Tumirah.</p>
-
-    <p>Ki Suroyudo memiliki seorang sahabat di Sendang Jambian bernama Kartojoyo. Pada masa itu, perjodohan dalam keluarga masih erat kaitannya dengan tradisi, sehingga anak Kartojoyo yang bernama Sumojoyo dijodohkan dengan Tumirah, sementara Singokerto dijodohkan dengan Dewi Asih. Dari pernikahan Singokerto dan Dewi Asih, lahirlah seorang anak bernama Wongsojoyo.</p>
-
-    <p>Warga akhirnya berkumpul di Alas Munung atas permintaan pemerintah Belanda, yang memerintahkan pegawai alas (mantri) untuk membuka sebuah desa di kawasan itu. Sebanyak 14 warga yang dipimpin oleh Ki Godek dan Bapak Mundu pun setuju untuk mulai membersihkan Alas Munung.</p>
-
-    <p>Selama masa pembersihan hutan, terjadi serangan ular. Karena Ki Godek juga dikenal sebagai orang sakti, ia mampu mengatasi gangguan tersebut. Namun, akibat serangan itu, Ki Suroyudo sempat menghentikan proses pembersihan Alas Munung. Ia kemudian bertapa bersama ketiga anaknya selama tujuh hari di Sendang Sumberan, di sebelah timur Dusun Munungkerep. Di sanalah mereka bertemu dengan Mbah Jenggot Surowijoyo, penguasa Sendang Sumberan.</p>
-
-    <p>Dari pertemuan tersebut, Mbah Jenggot Surowijoyo mengizinkan Ki Suroyudo bersama warga untuk melanjutkan pembersihan Alas Munung, dengan satu permintaan: setiap hari Jumat Pahing bulan Selo, warga harus membawa tumpengan ke Sendang Sumberan — berupa tumpeng, panggang ayam, jenang abang, jenang menir, dan jenang sengkolo — sebagai penanda telah berdirinya Desa Munungkerep.</p>
-  </div>
-  <div class="sejarah-sumber">📖 Dituturkan oleh Bapak Supriyadi, Budayawan Desa Munungkerep (Dusun Munungkerep).</div>
-</section>
-
-<footer>
-  Disusun oleh Tim KKN
-  <span class="sumber">DATA DIHIMPUN DARI SURVEI LAPANGAN · JULI 2026</span>
-</footer>
+@include('partials.footer')
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
@@ -668,17 +575,21 @@
 
       document.getElementById('map-loading').classList.add('hidden');
 
-      if (batasDariData){
-        map.fitBounds(batasDariData.pad(0.08));
-        map.setMaxBounds(batasDariData.pad(0.15));
-      }
-
       const totalTitik = Object.values(hitungKategori).reduce((a,b) => a+b, 0);
       document.getElementById('stat-total').textContent = totalTitik;
       document.getElementById('stat-dusun').textContent = hitungKategori['Dusun'] || 0;
       document.getElementById('stat-ibadah').textContent = hitungKategori['Sarana Ibadah'] || 0;
       document.getElementById('stat-pendidikan').textContent = hitungKategori['Pendidikan'] || 0;
       document.getElementById('stat-ekonomi').textContent = hitungKategori['Potensi Ekonomi'] || 0;
+
+      if (batasDariData){
+        map.fitBounds(batasDariData.pad(0.08));
+        map.setMaxBounds(batasDariData.pad(0.15));
+        // Jaga biar gak ke-zoom out kejauhan cuma buat ngejar 1-2 titik terpencil di pinggir
+        if (map.getZoom() < 15) map.setZoom(15);
+      }
+
+
     })
     .catch((err) => {
       // Sekarang pesan errornya spesifik, dan tercatat lengkap di Console buat didiagnosis
@@ -711,6 +622,7 @@
         'Jadi sumber penghasilan utama petani saat musim kemarau, ketika tanaman lain sulit tumbuh di lahan kering'
       ],
       catatan: '📝 Masih perlu: luas lahan, jumlah petani/dusun penghasil, titik lokasi lahan',
+      produk: ['Rajangan', 'Cerutu', 'Lintingan', 'Pestisida Alami', 'Pupuk Kompos'],
       cara: [
         'Daun dipetik saat sudah matang, biasanya pagi hari setelah embun mengering',
         'Daun diperam (curing) dulu sampai warnanya berubah dan agak lentur, tidak mudah hancur',
@@ -733,6 +645,7 @@
         'Ditanam di lahan miring juga membantu menahan erosi tanah, selain nilai ekonominya'
       ],
       catatan: '📝 Masih perlu: dijual ke mana/pembeli utama, titik lokasi lahan (kalau ada yang representatif)',
+      produk: ['Dupa', 'Pewarna Masakan', 'Pembungkus Makanan', 'Ramuan Tradisional'],
       cara: [
         'Daun pandan dipetik, lalu duri di tepinya dibersihkan pakai pisau atau senar',
         'Daun dipotong/dibelah jadi ukuran seragam, biasanya sekitar 0,5–0,7 cm lebar',
@@ -740,8 +653,55 @@
         'Dijemur sampai benar-benar kering, lalu diluruskan dan dihaluskan',
         'Setelah siap, baru dianyam sesuai motif dan bentuk yang diinginkan — tikar, tas, dompet, dan lainnya'
       ]
+    },
+    anyaman: {
+      tag: 'Produk Olahan',
+      judul: 'Anyaman',
+      foto: ['/images/anyaman-1.jpg', '/images/anyaman-2.jpg', '/images/anyaman-3.jpg'],
+      isi: 'Kerajinan anyaman merupakan produk olahan turunan dari komoditas pandan yang tumbuh di Desa Munungkerep. Salah satu pelaku usaha yang menekuni kerajinan ini adalah UMKM Anyacraft, dengan tugu penanda lokasi sentra kerajinan yang bisa dilihat di peta desa.',
+      manfaat: [
+        'Menambah nilai jual daun pandan mentah menjadi produk kerajinan siap pakai',
+        'Membuka lapangan usaha rumahan bagi warga, terutama ibu-ibu dan pengrajin lokal',
+        'Produk seperti tikar, tas, dan dompet anyaman punya potensi dijual ke luar desa',
+        'Melestarikan keterampilan menganyam sebagai bagian dari budaya warga setempat'
+      ],
+      catatan: '📝 Masih perlu: profil UMKM Anyacraft lebih lengkap, harga jual, dan jangkauan pemasaran',
+      produk: ['Tikar', 'Tas', 'Dompet', 'Topi', 'Hiasan Dinding'],
+      cara: [
+        'Bahan baku pandan yang sudah kering dan halus (hasil dari proses pengolahan pandan) disiapkan terlebih dahulu',
+        'Helai pandan disusun dan dianyam mengikuti motif dasar sesuai bentuk produk yang dituju',
+        'Anyaman dirapikan dan tepinya dikunci/dijahit agar tidak mudah lepas',
+        'Produk jadi bisa diberi finishing tambahan seperti pewarnaan atau aksesoris sebelum dipasarkan'
+      ]
     }
   };
+
+
+  // Carousel Potensi Ekonomi — geser halus terus-menerus ke kanan, berhenti sementara saat di-hover
+  (function(){
+    const wadahGrid = document.getElementById('potensi-grid');
+    if (!wadahGrid) return;
+
+    let jalan = true;
+    const kecepatan = 0.4; // px per frame — kecilin/besarin ini buat atur pelan-cepatnya
+
+    function langkahGeser(){
+      if (jalan){
+        const maksimum = wadahGrid.scrollWidth - wadahGrid.clientWidth;
+        if (wadahGrid.scrollLeft >= maksimum - 1){
+          wadahGrid.scrollLeft = 0; // sampai ujung, balik lagi ke awal
+        } else {
+          wadahGrid.scrollLeft += kecepatan;
+        }
+      }
+      requestAnimationFrame(langkahGeser);
+    }
+    requestAnimationFrame(langkahGeser);
+
+    // Berhenti sementara kalau mouse diarahkan ke area carousel, lanjut lagi kalau mouse pergi
+    wadahGrid.addEventListener('mouseenter', () => { jalan = false; });
+    wadahGrid.addEventListener('mouseleave', () => { jalan = true; });
+  })();
 
   function bukaPopupPotensi(kunci){
     const data = DATA_POTENSI[kunci];
@@ -749,6 +709,22 @@
     document.getElementById('modal-judul').textContent = data.judul;
     document.getElementById('modal-isi').textContent = data.isi;
     document.getElementById('modal-catatan').textContent = data.catatan;
+
+    // Isi daftar chip "bisa diolah jadi" (kalau ada datanya)
+    const wadahProduk = document.getElementById('modal-produk');
+    const daftarChip = document.getElementById('modal-produk-chip');
+    if (data.produk && data.produk.length){
+      daftarChip.innerHTML = '';
+      data.produk.forEach(nama => {
+        const chip = document.createElement('span');
+        chip.className = 'chip-produk';
+        chip.textContent = nama;
+        daftarChip.appendChild(chip);
+      });
+      wadahProduk.style.display = 'block';
+    } else {
+      wadahProduk.style.display = 'none';
+    }
 
     // Bangun galeri dari daftar foto — kalau ada yang belum ada filenya, dilewati diam-diam
     const galeri = document.getElementById('modal-galeri');
