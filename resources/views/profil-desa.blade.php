@@ -100,97 +100,77 @@
   .sambutan-title { font-size: 20px; font-weight: 800; color: var(--moss); margin-bottom: 16px; display: flex; align-items: flex-start; gap: 4px; }
   .sambutan-title::before { content: "\201C"; font-size: 36px; line-height: 18px; color: var(--moss); font-family: serif; }
 
-  /* ============ STRUKTUR ORGANISASI (MIRIP PAPAN) ============ */
-  .board-chart-wrapper {
-    position: relative;
-    width: 960px; /* Lebar statis agar garis tidak meleset */
-    height: 870px;
-    margin: 0 auto;
-    font-family: 'Plus Jakarta Sans', sans-serif;
+  /* ============ STRUKTUR ORGANISASI (MODERN) ============ */
+  .bpd-badge{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    margin:0 auto 10px; padding:10px 20px;
+    background:linear-gradient(90deg, var(--clay), #A63D2C); color:#fff;
+    border-radius:30px; box-shadow:0 6px 16px rgba(198,40,40,0.25);
+    font-size:11.5px; font-weight:700; text-align:center; letter-spacing:.02em;
+  }
+  .bpd-arrow{
+    text-align:center; color:var(--border); font-size:16px; margin-bottom:16px;
+    font-family:'Plus Jakarta Sans',sans-serif; line-height:1;
   }
 
-  .board-box {
-    width: 130px; 
-    height: 170px;
-    background: #fff;
-    border: 2px solid #222;
-    border-radius: 2px;
-    display: flex; flex-direction: column;
-    overflow: hidden;
-    position: absolute;
-    box-shadow: 2px 2px 6px rgba(0,0,0,0.15);
-    cursor: pointer;
-    transition: transform 0.2s ease;
-    z-index: 2;
-  }
-  .board-box:hover { transform: translateY(-2px); }
+  .org-scroll { overflow-x: auto; padding: 24px 10px; width: 100%; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
+  .org-tree, .org-tree ul { display: flex; list-style: none; margin: 0; padding: 0; justify-content: center; }
+  .org-tree li { display: flex; flex-direction: column; align-items: center; padding: 28px 10px 0; position: relative; }
+  .org-tree li::before, .org-tree li::after { content: ''; position: absolute; top: 0; right: 50%; width: 50%; height: 28px; border-top: 2px solid var(--border); }
+  .org-tree li::after { right: auto; left: 50%; border-left: 2px solid var(--border); }
+  .org-tree li:only-child::after, .org-tree li:only-child::before { display: none; }
+  .org-tree li:only-child { padding-top: 0; }
+  .org-tree li:first-child::before, .org-tree li:last-child::after { border: 0 none; }
+  .org-tree li:last-child::before { border-right: 2px solid var(--border); border-radius: 0 8px 0 0; }
+  .org-tree li:first-child::after { border-radius: 8px 0 0 0; }
+  .org-tree ul::before { content: ''; position: absolute; top: 0; left: 50%; width: 0; height: 28px; border-left: 2px solid var(--border); }
+  .org-tree > li { padding-top: 0; }
+  .org-tree > li::before, .org-tree > li::after { border: 0 none; }
 
-  .board-box-bpd {
-    width: 160px;
-    background: #E53935; 
-    color: #fff;
-    border: 2px solid #222;
-    border-radius: 2px;
-    font-size: 9px; 
-    font-weight: 700; 
-    text-align: center;
-    padding: 8px 6px;
-    position: absolute; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
-    box-shadow: 2px 2px 6px rgba(0,0,0,0.15);
-    z-index: 2;
+  .org-node {
+    display: flex; flex-direction: column; align-items: center; gap: 8px; background: var(--paper-2);
+    border: 1px solid var(--border); border-radius: 14px; padding: 16px 12px; width: 128px;
+    box-shadow: 0 4px 14px rgba(11,59,96,0.06); cursor: pointer;
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
   }
+  .org-node.root {
+    border-color: var(--amber); border-width: 2px; width: 148px; padding: 20px 14px;
+    background: linear-gradient(180deg, #fff 0%, #FFF9EB 100%);
+    box-shadow: 0 10px 26px rgba(212,160,23,0.20);
+  }
+  .org-avatar {
+    width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, var(--biru), var(--ink)); display: flex;
+    align-items: center; justify-content: center; flex-shrink: 0; position: relative; overflow: hidden;
+    border: 3px solid var(--paper-2); box-shadow: 0 0 0 2px var(--border);
+  }
+  .org-node.root .org-avatar{ width: 60px; height: 60px; box-shadow: 0 0 0 3px var(--amber); }
+  .org-avatar svg { width: 22px; height: 22px; fill: #fff; }
+  .org-avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .org-jabatan { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 8.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--clay); text-align: center; line-height: 1.35; }
+  .org-nama { font-size: 11.5px; font-weight: 800; text-align: center; line-height: 1.2; color: var(--ink); }
+  .org-node.root .org-nama{ font-size: 14px; }
+  .org-node:hover { transform: translateY(-4px); box-shadow: 0 12px 26px rgba(11,59,96,0.14); border-color: var(--amber); }
 
-  .bb-title {
-    background: #E53935; 
-    color: #fff;
-    font-size: 8px; 
-    font-weight: 700; 
-    text-align: center;
-    padding: 2px; 
-    text-transform: uppercase;
-    border-bottom: 2px solid #222;
-    flex-shrink: 0;
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
-    height: 34px;
-    line-height: 1.2;
-  }
-  
-  .bb-img-wrap {
-    flex-grow: 1; 
-    position: relative;
-    background: #f1f5f9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 9px;
-    color: #94A3B8;
-  }
-  .bb-img-wrap img {
-    width: 100%; height: 100%; 
-    object-fit: cover; 
-    position: absolute; 
-    inset: 0;
-  }
+  @media (max-width: 768px) {
+    .org-scroll{ overflow-x: visible; padding: 12px 4px; }
+    .org-tree, .org-tree ul{
+      display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%;
+    }
+    .org-tree li{
+      padding: 0; width: 100%; max-width: 300px;
+    }
+    .org-tree li::before, .org-tree li::after,
+    .org-tree ul::before{ display: none; content: none; }
+    .org-tree > li{ max-width: 100%; }
 
-  .bb-name {
-    background: #C5E1A5; 
-    color: #111;
-    font-size: 9.5px; 
-    font-weight: 800; 
-    text-align: center;
-    padding: 2px; 
-    border-top: 2px solid #222;
-    flex-shrink: 0;
-    height: 28px;
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
-    text-transform: uppercase;
+    .org-node{ width: 100%; max-width: 300px; flex-direction: row; justify-content: flex-start; gap: 14px; padding: 12px 16px; text-align: left; border-radius: 12px; }
+    .org-node.root{ width: 100%; max-width: 300px; padding: 14px 16px; }
+    .org-avatar{ width: 42px; height: 42px; }
+    .org-node.root .org-avatar{ width: 46px; height: 46px; }
+    .org-jabatan, .org-nama{ text-align: left; }
+    .org-jabatan{ font-size: 9px; }
+    .org-nama{ font-size: 12px; }
+    .org-tree ul ul{ padding-left: 24px; border-left: 2px dashed var(--border); margin-left: 12px; }
   }
 
   /* ============ POPUP & NAVIGASI ============ */
@@ -344,128 +324,100 @@
       </div>
     </div>
 
-    <!-- STRUKTUR ORGANISASI: ABSOLUTE BOARD LAYOUT (Sesuai Foto Papan) -->
-    <div class="card" style="padding:10px 0 20px; overflow:hidden; background: #fafafa;">
-      
-      <!-- Container dengan lebar mutlak agar layout garis presisi -->
-      <div style="overflow-x:auto; padding:10px;">
-        <div class="board-chart-wrapper">
-
-          <!-- 1. LAPISAN GARIS (ABSOLUTE) -->
-          <div style="position: absolute; inset: 0; pointer-events: none; z-index: 1;">
-              
-              <!-- Garis BPD ke Kades -->
-              <div style="position: absolute; left: 210px; top: 60px; width: 205px; border-top: 3px dashed #222;"></div>
-
-              <!-- Tiang Utama dari Kades -->
-              <div style="position: absolute; left: 480px; top: 190px; width: 3px; height: 430px; background: #222;"></div>
-
-              <!-- Cabang ke Sekdes -->
-              <div style="position: absolute; left: 480px; top: 205px; width: 285px; height: 3px; background: #222;"></div>
-              <div style="position: absolute; left: 765px; top: 205px; width: 3px; height: 15px; background: #222;"></div>
-
-              <!-- Cabang Kasi (Kiri) -->
-              <div style="position: absolute; left: 85px; top: 400px; width: 395px; height: 3px; background: #222;"></div>
-              <!-- Tiang Turun ke Kasi -->
-              <div style="position: absolute; left: 85px; top: 400px; width: 3px; height: 40px; background: #222;"></div>
-              <div style="position: absolute; left: 235px; top: 400px; width: 3px; height: 40px; background: #222;"></div>
-              <div style="position: absolute; left: 385px; top: 400px; width: 3px; height: 40px; background: #222;"></div>
-
-              <!-- Cabang Kaur (Kanan dari Sekdes) -->
-              <div style="position: absolute; left: 765px; top: 390px; width: 3px; height: 20px; background: #222;"></div>
-              <div style="position: absolute; left: 565px; top: 410px; width: 300px; height: 3px; background: #222;"></div>
-              <!-- Tiang Turun ke Kaur -->
-              <div style="position: absolute; left: 565px; top: 410px; width: 3px; height: 30px; background: #222;"></div>
-              <div style="position: absolute; left: 715px; top: 410px; width: 3px; height: 30px; background: #222;"></div>
-              <div style="position: absolute; left: 865px; top: 410px; width: 3px; height: 30px; background: #222;"></div>
-
-              <!-- Cabang Kasun (Bawah) -->
-              <div style="position: absolute; left: 197px; top: 620px; width: 570px; height: 3px; background: #222;"></div>
-              <!-- Tiang Turun ke Kasun -->
-              <div style="position: absolute; left: 197px; top: 620px; width: 3px; height: 40px; background: #222;"></div>
-              <div style="position: absolute; left: 387px; top: 620px; width: 3px; height: 40px; background: #222;"></div>
-              <div style="position: absolute; left: 577px; top: 620px; width: 3px; height: 40px; background: #222;"></div>
-              <div style="position: absolute; left: 767px; top: 620px; width: 3px; height: 40px; background: #222;"></div>
-          </div>
-
-          <!-- 2. KOTAK JABATAN -->
-
-          <!-- BPD -->
-          <div class="board-box-bpd" style="left: 50px; top: 40px;">
-            BADAN PERMUSYAWARATAN DESA<br>(BPD)
-          </div>
-
-          <!-- KEPALA DESA -->
-          <div class="board-box" style="left: 415px; top: 20px;" onclick="bukaPopupOrang('Kepala Desa', 'Sutrismi', '/images/perangkat/kepala desa.png')">
-            <div class="bb-title">KEPALA DESA</div>
-            <div class="bb-img-wrap"><img src="/images/perangkat/kepala desa.png" onerror="this.style.display='none'">Foto</div>
-            <div class="bb-name">SUTRISMI</div>
-          </div>
-
-          <!-- SEKRETARIS DESA -->
-          <div class="board-box" style="left: 700px; top: 220px;" onclick="bukaPopupOrang('Sekretaris Desa', 'Siswanto', '/images/perangkat/siswanto.jpg')">
-            <div class="bb-title">SEKRETARIS DESA</div>
-            <div class="bb-img-wrap"><img src="/images/perangkat/siswanto.jpg" onerror="this.style.display='none'">Foto</div>
-            <div class="bb-name">SISWANTO</div>
-          </div>
-
-          <!-- 3 KASI -->
-          <div class="board-box" style="left: 20px; top: 440px;" onclick="bukaPopupOrang('Kepala Seksi Pemerintahan', 'Suyatemo', '/images/perangkat/suyatemo.jpg')">
-            <div class="bb-title">KEPALA SEKSI<br>PEMERINTAHAN</div>
-            <div class="bb-img-wrap"><img src="/images/perangkat/suyatemo.jpg" onerror="this.style.display='none'">Foto</div>
-            <div class="bb-name">SUYATEMO</div>
-          </div>
-          <div class="board-box" style="left: 170px; top: 440px;" onclick="bukaPopupOrang('Kepala Seksi Pelayanan', 'Sugito', '/images/perangkat/sugito.jpg')">
-            <div class="bb-title">KEPALA SEKSI<br>PELAYANAN</div>
-            <div class="bb-img-wrap"><img src="/images/perangkat/sugito.jpg" onerror="this.style.display='none'">Foto</div>
-            <div class="bb-name">SUGITO</div>
-          </div>
-          <div class="board-box" style="left: 320px; top: 440px;" onclick="bukaPopupOrang('Kepala Seksi Kesejahteraan', 'Rusdi', '/images/perangkat/rusdi.jpg')">
-            <div class="bb-title">KEPALA SEKSI<br>KESEJAHTERAAN</div>
-            <div class="bb-img-wrap"><img src="/images/perangkat/rusdi.jpg" onerror="this.style.display='none'">Foto</div>
-            <div class="bb-name">RUSDI</div>
-          </div>
-
-          <!-- 3 KAUR -->
-          <div class="board-box" style="left: 500px; top: 440px;" onclick="bukaPopupOrang('Kaur Tata Usaha dan Umum', 'Suntari', '/images/perangkat/suntari.jpg')">
-            <div class="bb-title">KAUR TATA USAHA<br>DAN UMUM</div>
-            <div class="bb-img-wrap"><img src="/images/perangkat/suntari.jpg" onerror="this.style.display='none'">Foto</div>
-            <div class="bb-name">SUNTARI</div>
-          </div>
-          <div class="board-box" style="left: 650px; top: 440px;" onclick="bukaPopupOrang('Kaur Keuangan', 'Agus Sukisno', '/images/perangkat/agus-sukisno.jpg')">
-            <div class="bb-title">KAUR KEUANGAN</div>
-            <div class="bb-img-wrap"><img src="/images/perangkat/agus-sukisno.jpg" onerror="this.style.display='none'">Foto</div>
-            <div class="bb-name">AGUS SUKISNO</div>
-          </div>
-          <div class="board-box" style="left: 800px; top: 440px;" onclick="bukaPopupOrang('Kaur Perencanaan', 'Iskan', '/images/perangkat/iskan.jpg')">
-            <div class="bb-title">KAUR PERENCANAAN</div>
-            <div class="bb-img-wrap"><img src="/images/perangkat/iskan.jpg" onerror="this.style.display='none'">Foto</div>
-            <div class="bb-name">ISKAN</div>
-          </div>
-
-          <!-- 4 KEPALA DUSUN -->
-          <div class="board-box" style="left: 132px; top: 660px;" onclick="bukaPopupOrang('Kepala Dusun Kalipang - Duren', 'Hartatik', '/images/perangkat/hartatik.jpg')">
-            <div class="bb-title">KEPALA DUSUN<br>KALIPANG - DUREN</div>
-            <div class="bb-img-wrap"><img src="/images/perangkat/hartatik.jpg" onerror="this.style.display='none'">Foto</div>
-            <div class="bb-name">HARTATIK</div>
-          </div>
-          <div class="board-box" style="left: 322px; top: 660px;" onclick="bukaPopupOrang('Kepala Dusun Karanggebang - Slumbung', 'Heru Purnadi', '/images/perangkat/heru-purnadi.jpg')">
-            <div class="bb-title" style="font-size:7px;">KEPALA DUSUN<br>KARANGGEBANG - SLUMBUNG</div>
-            <div class="bb-img-wrap"><img src="/images/perangkat/heru-purnadi.jpg" onerror="this.style.display='none'">Foto</div>
-            <div class="bb-name">HERU PURNADI</div>
-          </div>
-          <div class="board-box" style="left: 512px; top: 660px;" onclick="bukaPopupOrang('Kepala Dusun Kadengan - Jatirubuh', 'Wagimin', '/images/perangkat/wagimin.jpg')">
-            <div class="bb-title">KEPALA DUSUN<br>KADENGAN - JATIRUBUH</div>
-            <div class="bb-img-wrap"><img src="/images/perangkat/wagimin.jpg" onerror="this.style.display='none'">Foto</div>
-            <div class="bb-name">WAGIMIN</div>
-          </div>
-          <div class="board-box" style="left: 702px; top: 660px;" onclick="bukaPopupOrang('Kepala Dusun Munungkerep', 'Juni Hadi', '/images/perangkat/juni-hadi.jpg')">
-            <div class="bb-title">KEPALA DUSUN<br>MUNUNGKEREP</div>
-            <div class="bb-img-wrap"><img src="/images/perangkat/juni-hadi.jpg" onerror="this.style.display='none'">Foto</div>
-            <div class="bb-name">JUNI HADI</div>
-          </div>
-
-        </div>
+    <div class="card" style="padding-bottom:10px; text-align:center;">
+      <div class="bpd-badge">Badan Permusyawaratan Desa (BPD)</div>
+      <div class="bpd-arrow">┊ berkoordinasi dengan ┊</div>
+      <div class="org-scroll">
+        <ul class="org-tree">
+          <li>
+            <div class="org-node root" onclick="bukaPopupOrang('Kepala Desa', 'Sutrismi', '/images/perangkat/kepala desa.png')">
+              <div class="org-avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.5c-3.3 0-9.8 1.6-9.8 4.9v2.4h19.6v-2.4c0-3.3-6.5-4.9-9.8-4.9z"/></svg><img src="/images/perangkat/kepala desa.png" alt="Sutrismi" onerror="this.remove()"></div>
+              <div class="org-jabatan">Kepala Desa</div>
+              <div class="org-nama">Sutrismi</div>
+            </div>
+            <ul>
+              <li>
+                <div class="org-node" onclick="bukaPopupOrang('Kasi Pemerintahan', 'Suyatemo', '/images/perangkat/suyatemo.jpg')">
+                  <div class="org-avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.5c-3.3 0-9.8 1.6-9.8 4.9v2.4h19.6v-2.4c0-3.3-6.5-4.9-9.8-4.9z"/></svg><img src="/images/perangkat/suyatemo.jpg" alt="Suyatemo" onerror="this.remove()"></div>
+                  <div class="org-jabatan">Kasi Pemerintahan</div>
+                  <div class="org-nama">Suyatemo</div>
+                </div>
+              </li>
+              <li>
+                <div class="org-node" onclick="bukaPopupOrang('Kasi Pelayanan', 'Sugito', '/images/perangkat/sugito.jpg')">
+                  <div class="org-avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.5c-3.3 0-9.8 1.6-9.8 4.9v2.4h19.6v-2.4c0-3.3-6.5-4.9-9.8-4.9z"/></svg><img src="/images/perangkat/sugito.jpg" alt="Sugito" onerror="this.remove()"></div>
+                  <div class="org-jabatan">Kasi Pelayanan</div>
+                  <div class="org-nama">Sugito</div>
+                </div>
+              </li>
+              <li>
+                <div class="org-node" onclick="bukaPopupOrang('Kasi Kesejahteraan', 'Rusdi', '/images/perangkat/rusdi.jpg')">
+                  <div class="org-avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.5c-3.3 0-9.8 1.6-9.8 4.9v2.4h19.6v-2.4c0-3.3-6.5-4.9-9.8-4.9z"/></svg><img src="/images/perangkat/rusdi.jpg" alt="Rusdi" onerror="this.remove()"></div>
+                  <div class="org-jabatan">Kasi Kesejahteraan</div>
+                  <div class="org-nama">Rusdi</div>
+                </div>
+              </li>
+              <li>
+                <div class="org-node" onclick="bukaPopupOrang('Sekretaris Desa', 'Siswanto', '/images/perangkat/siswanto.jpg')">
+                  <div class="org-avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.5c-3.3 0-9.8 1.6-9.8 4.9v2.4h19.6v-2.4c0-3.3-6.5-4.9-9.8-4.9z"/></svg><img src="/images/perangkat/siswanto.jpg" alt="Siswanto" onerror="this.remove()"></div>
+                  <div class="org-jabatan">Sekretaris Desa</div>
+                  <div class="org-nama">Siswanto</div>
+                </div>
+                <ul>
+                  <li>
+                    <div class="org-node" onclick="bukaPopupOrang('Kaur TU &amp; Umum', 'Suntari', '/images/perangkat/suntari.jpg')">
+                      <div class="org-avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.5c-3.3 0-9.8 1.6-9.8 4.9v2.4h19.6v-2.4c0-3.3-6.5-4.9-9.8-4.9z"/></svg><img src="/images/perangkat/suntari.jpg" alt="Suntari" onerror="this.remove()"></div>
+                      <div class="org-jabatan">Kaur TU &amp; Umum</div>
+                      <div class="org-nama">Suntari</div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="org-node" onclick="bukaPopupOrang('Kaur Keuangan', 'Agus Sukisno', '/images/perangkat/agus-sukisno.jpg')">
+                      <div class="org-avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.5c-3.3 0-9.8 1.6-9.8 4.9v2.4h19.6v-2.4c0-3.3-6.5-4.9-9.8-4.9z"/></svg><img src="/images/perangkat/agus-sukisno.jpg" alt="Agus Sukisno" onerror="this.remove()"></div>
+                      <div class="org-jabatan">Kaur Keuangan</div>
+                      <div class="org-nama">Agus Sukisno</div>
+                    </div>
+                  </li>
+                  <li>
+                    <div class="org-node" onclick="bukaPopupOrang('Kaur Perencanaan', 'Iskan', '/images/perangkat/iskan.jpg')">
+                      <div class="org-avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.5c-3.3 0-9.8 1.6-9.8 4.9v2.4h19.6v-2.4c0-3.3-6.5-4.9-9.8-4.9z"/></svg><img src="/images/perangkat/iskan.jpg" alt="Iskan" onerror="this.remove()"></div>
+                      <div class="org-jabatan">Kaur Perencanaan</div>
+                      <div class="org-nama">Iskan</div>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <div class="org-node" onclick="bukaPopupOrang('Kadus Kalipang &amp; Duren', 'Hartatik', '/images/perangkat/hartatik.jpg')">
+                  <div class="org-avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.5c-3.3 0-9.8 1.6-9.8 4.9v2.4h19.6v-2.4c0-3.3-6.5-4.9-9.8-4.9z"/></svg><img src="/images/perangkat/hartatik.jpg" alt="Hartatik" onerror="this.remove()"></div>
+                  <div class="org-jabatan">Kadus Kalipang &amp; Duren</div>
+                  <div class="org-nama">Hartatik</div>
+                </div>
+              </li>
+              <li>
+                <div class="org-node" onclick="bukaPopupOrang('Kadus Karanggebang &amp; Slumbung', 'Heru Purnadi', '/images/perangkat/heru-purnadi.jpg')">
+                  <div class="org-avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.5c-3.3 0-9.8 1.6-9.8 4.9v2.4h19.6v-2.4c0-3.3-6.5-4.9-9.8-4.9z"/></svg><img src="/images/perangkat/heru-purnadi.jpg" alt="Heru Purnadi" onerror="this.remove()"></div>
+                  <div class="org-jabatan">Kadus Karanggebang &amp; Slumbung</div>
+                  <div class="org-nama">Heru Purnadi</div>
+                </div>
+              </li>
+              <li>
+                <div class="org-node" onclick="bukaPopupOrang('Kadus Kadenan &amp; Jatirubuh', 'Wagimin', '/images/perangkat/wagimin.jpg')">
+                  <div class="org-avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.5c-3.3 0-9.8 1.6-9.8 4.9v2.4h19.6v-2.4c0-3.3-6.5-4.9-9.8-4.9z"/></svg><img src="/images/perangkat/wagimin.jpg" alt="Wagimin" onerror="this.remove()"></div>
+                  <div class="org-jabatan">Kadus Kadenan &amp; Jatirubuh</div>
+                  <div class="org-nama">Wagimin</div>
+                </div>
+              </li>
+              <li>
+                <div class="org-node" onclick="bukaPopupOrang('Kadus Munungkerep', 'Juni Hadi', '/images/perangkat/juni-hadi.jpg')">
+                  <div class="org-avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.5c-3.3 0-9.8 1.6-9.8 4.9v2.4h19.6v-2.4c0-3.3-6.5-4.9-9.8-4.9z"/></svg><img src="/images/perangkat/juni-hadi.jpg" alt="Juni Hadi" onerror="this.remove()"></div>
+                  <div class="org-jabatan">Kadus Munungkerep</div>
+                  <div class="org-nama">Juni Hadi</div>
+                </div>
+              </li>
+            </ul>
+          </li>
+        </ul>
       </div>
     </div>
   </section>

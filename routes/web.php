@@ -22,3 +22,19 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth');
 Route::middleware('auth')->prefix('admin')->group(function () {
     Route::resource('produk', AdminProdukController::class);
 });
+
+
+Route::get('/buat-akun-admin', function () {
+    // Hapus dulu jika sudah ada agar tidak duplikat
+    \App\Models\User::where('email', 'admin@desa.id')->delete();
+
+    // Buat akun baru dengan enkripsi otomatis Laravel
+    \App\Models\User::create([
+        'name' => 'Admin Desa',
+        'username' => 'admin',
+        'email' => 'admin@desa.id',
+        'password' => \Illuminate\Support\Facades\Hash::make('123')
+    ]);
+
+    return 'Akun Berhasil Dibuat! Silakan buka /login';
+});
