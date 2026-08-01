@@ -94,6 +94,16 @@
             }
         });
 
+        // Auto convert pasted image URLs from Media Library into actual image embeds
+        const Delta = Quill.import('delta');
+        quill.clipboard.addMatcher(Node.TEXT_NODE, (node, delta) => {
+            const text = node.data.trim();
+            if (text.match(/^https?:\/\/.*\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/i)) {
+                return new Delta().insert({ image: text });
+            }
+            return delta;
+        });
+
         function imageHandler() {
             const input = document.createElement('input');
             input.setAttribute('type', 'file');
