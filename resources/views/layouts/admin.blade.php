@@ -301,12 +301,21 @@
 
         <!-- Content Content Wrap -->
         <main class="admin-content-wrap">
+            @if(session('success'))
+                <div class="alert-success" style="margin-bottom: 20px;">{{ session('success') }}</div>
+            @endif
+            @if(session('error'))
+                <div class="alert-danger" style="margin-bottom: 20px;">{{ session('error') }}</div>
+            @endif
             @yield('content')
         </main>
 
     </div>
 
-    <!-- Toggle Script -->
+    <!-- HEIC/HEIF Decoder Library -->
+    <script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+
+    <!-- Toggle Script & Client-side Image Compressor -->
     <script>
         function toggleSidebar() {
             const sidebar = document.getElementById('admin-sidebar');
@@ -314,6 +323,160 @@
             sidebar.classList.toggle('open');
             overlay.classList.toggle('open');
         }
+
+        // Global Client-side Image Compressor & HEIC Converter
+        document.addEventListener('submit', function(e) {
+            const form = e.target;
+            const fileInputs = Array.from(form.querySelectorAll('input[type="file"]'));
+            
+            // Cari input file yang berisi berkas gambar
+            const imageInputs = fileInputs.filter(input => {
+                return input.files && input.files.length > 0;
+            });
+
+            if (imageInputs.length === 0) return;
+
+            // Hindari looping tak terbatas setelah kompresi selesai
+            if (form.dataset.compressed === "true") return;
+
+            // Cek apakah ada file gambar yang perlu dikompres (ukuran > 1.5MB atau format HEIC)
+            let needsCompression = false;
+            for (const input of imageInputs) {
+                for (const file of input.files) {
+                    const ext = file.name.split('.').pop().toLowerCase();
+                    if (file.size > 1.5 * 1024 * 1024 || ['heic', 'heif'].includes(ext)) {
+                        needsCompression = true;
+                        break;
+                    }
+                }
+                if (needsCompression) break;
+            }
+
+            if (!needsCompression) return;
+
+            // Hentikan submit form untuk memproses gambar terlebih dahulu
+            e.preventDefault();
+
+            // Tampilkan Overlay Loading Kompresi Premium
+            const overlayDiv = document.createElement('div');
+            overlayDiv.id = 'compressing-overlay';
+            overlayDiv.style.cssText = 'position:fixed; inset:0; background:rgba(11,59,96,0.75); backdrop-filter:blur(4px); z-index:99999; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; font-family:"Plus Jakarta Sans",sans-serif; transition:opacity 0.25s ease;';
+            overlayDiv.innerHTML = `
+                <div style="background:#fff; padding:30px; border-radius:12px; text-align:center; color:#1A2833; box-shadow:0 10px 30px rgba(0,0,0,0.15); max-width:340px; width:90%;">
+                    <div style="width:40px; height:40px; border:3px solid #E2E8F0; border-top-color:#1668A3; border-radius:50%; animation:spin-compress 0.8s linear infinite; margin:0 auto 16px;"></div>
+                    <h4 style="margin:0 0 8px; font-weight:800; font-size:16px; color:#0B3B60;">Mengoptimalkan Gambar</h4>
+                    <p style="margin:0; font-size:12.5px; color:#64748B; line-height:1.5;">Sedang mengompresi gambar berukuran besar secara otomatis ke format optimal agar muat di server...</p>
+                </div>
+                <style>
+                    @keyframes spin-compress { to { transform: rotate(360deg); } }
+                </style>
+            `;
+            document.body.appendChild(overlayDiv);
+
+            // Fungsi pembantu kompresi canvas
+            function resizeAndCompress(file) {
+                return new Promise((resolve) => {
+                    const ext = file.name.split('.').pop().toLowerCase();
+                    
+                    // Lewati kompresi jika ukuran sudah kecil (< 1.5MB) dan bukan HEIC
+                    if (file.size <= 1.5 * 1024 * 1024 && !['heic', 'heif'].includes(ext)) {
+                        return resolve(file);
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const img = new Image();
+                        img.onload = function() {
+                            const canvas = document.createElement('canvas');
+                            let width = img.width;
+                            let height = img.height;
+
+                            // Batasi dimensi maksimal gambar ke 1600px
+                            const maxDim = 1600;
+                            if (width > maxDim || height > maxDim) {
+                                if (width > height) {
+                                    height = Math.round((height * maxDim) / width);
+                                    width = maxDim;
+                                } else {
+                                    width = Math.round((width * maxDim) / height);
+                                    height = maxDim;
+                                }
+                            }
+
+                            canvas.width = width;
+                            canvas.height = height;
+
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, width, height);
+
+                            // Kompresi ke JPEG dengan kualitas 75%
+                            canvas.toBlob((blob) => {
+                                if (!blob) {
+                                    return resolve(file);
+                                }
+                                const newName = file.name.substring(0, file.name.lastIndexOf('.')) + '.jpg';
+                                const compressedFile = new File([blob], newName, {
+                                    type: 'image/jpeg',
+                                    lastModified: Date.now()
+                                });
+                                resolve(compressedFile);
+                            }, 'image/jpeg', 0.75);
+                        };
+                        img.onerror = () => resolve(file);
+                        img.src = event.target.result;
+                    };
+                    reader.onerror = () => resolve(file);
+                    reader.readAsDataURL(file);
+                });
+            }
+
+            // Jalankan proses kompresi untuk seluruh input file
+            const compressionPromises = imageInputs.map(input => {
+                const files = Array.from(input.files);
+                const dataTransfer = new DataTransfer();
+
+                const filePromises = files.map(file => {
+                    const ext = file.name.split('.').pop().toLowerCase();
+                    
+                    // Cek jika butuh decode HEIC via heic2any
+                    if ((file.type === 'image/heic' || ext === 'heic' || ext === 'heif') && typeof heic2any !== 'undefined') {
+                        return heic2any({
+                            blob: file,
+                            toType: 'image/jpeg',
+                            quality: 0.8
+                        }).then(convertedBlob => {
+                            const convertedFile = new File([convertedBlob], file.name.replace(/\.(heic|heif)$/i, '.jpg'), {
+                                type: 'image/jpeg',
+                                lastModified: Date.now()
+                            });
+                            return resizeAndCompress(convertedFile).then(compressedFile => {
+                                dataTransfer.items.add(compressedFile);
+                            });
+                        }).catch(err => {
+                            console.error('HEIC conversion failed, uploading raw:', err);
+                            dataTransfer.items.add(file);
+                        });
+                    } else {
+                        // Proses kompresi PNG/JPG biasa
+                        return resizeAndCompress(file).then(compressedFile => {
+                            dataTransfer.items.add(compressedFile);
+                        });
+                    }
+                });
+
+                return Promise.all(filePromises).then(() => {
+                    input.files = dataTransfer.files;
+                });
+            });
+
+            Promise.all(compressionPromises).then(() => {
+                form.dataset.compressed = "true";
+                form.submit();
+            }).catch(err => {
+                console.error('Compression pipeline failed:', err);
+                form.submit();
+            });
+        });
     </script>
     
     @yield('scripts')
