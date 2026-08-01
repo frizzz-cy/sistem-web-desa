@@ -30,7 +30,7 @@ class AdminBeritaController extends Controller
             'kategori' => 'required|string',
             'tanggal'  => 'required|date',
             'isi'      => 'required|string',
-            'foto'     => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'foto'     => 'nullable|image|mimes:jpeg,png,jpg|max:15360',
         ]);
 
         if ($request->hasFile('foto')) {
@@ -55,7 +55,7 @@ class AdminBeritaController extends Controller
             'kategori' => 'required|string',
             'tanggal'  => 'required|date',
             'isi'      => 'required|string',
-            'foto'     => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'foto'     => 'nullable|image|mimes:jpeg,png,jpg|max:15360',
         ]);
 
         if ($request->remove_foto == '1') {
@@ -87,6 +87,10 @@ class AdminBeritaController extends Controller
     // Menangani upload gambar dari editor Quill
     public function uploadImage(Request $request)
     {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg|max:15360'
+        ]);
+
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $path = ImageHelper::uploadAndCompress($file, 'berita_content');

@@ -82,7 +82,7 @@
         </form>
     </div>
 
-    <!-- Script Formatter Rupiah -->
+    <!-- Script Formatter Rupiah & Prevent Double Submit -->
     <script>
         const hargaInput = document.getElementById('harga');
         if (hargaInput) {
@@ -94,6 +94,17 @@
         function formatRupiah(angka) {
             return angka.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
         }
+
+        // Mencegah double submit saat loading lag
+        document.querySelector('form').addEventListener('submit', function() {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = 'Menyimpan...';
+                submitBtn.style.opacity = '0.7';
+                submitBtn.style.cursor = 'not-allowed';
+            }
+        });
     </script>
 </body>
 </html>

@@ -32,7 +32,7 @@ class AdminKegiatanController extends Controller
             'lokasi'       => 'required|string|max:255',
             'nama_pembuat' => 'required|string|max:255',
             'deskripsi'    => 'required|string',
-            'foto'         => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'foto'         => 'nullable|image|mimes:jpeg,png,jpg|max:15360',
         ]);
 
         if ($request->hasFile('foto')) {
@@ -59,7 +59,7 @@ class AdminKegiatanController extends Controller
             'lokasi'       => 'required|string|max:255',
             'nama_pembuat' => 'required|string|max:255',
             'deskripsi'    => 'required|string',
-            'foto'         => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'foto'         => 'nullable|image|mimes:jpeg,png,jpg|max:15360',
         ]);
 
         if ($request->hasFile('foto')) {

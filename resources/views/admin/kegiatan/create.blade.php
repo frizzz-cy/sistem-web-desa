@@ -69,7 +69,7 @@
             <div class="form-group">
                 <label for="foto">Foto Kegiatan</label>
                 <input type="file" name="foto" id="foto" accept="image/*">
-                <small style="color: #64748B;">Format yang diizinkan: JPG, JPEG, PNG (Maksimal 2MB)</small>
+                <small style="color: #64748B;">Format yang diizinkan: JPG, JPEG, PNG (Maksimal 15MB, akan dikompresi otomatis)</small>
                 @error('foto') <span class="error-msg">{{ $message }}</span> @enderror
             </div>
 
@@ -85,5 +85,18 @@
             </div>
         </form>
     </div>
+
+    <!-- Script Prevent Double Submit -->
+    <script>
+        document.querySelector('form').addEventListener('submit', function() {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = 'Menyimpan...';
+                submitBtn.style.opacity = '0.7';
+                submitBtn.style.cursor = 'not-allowed';
+            }
+        });
+    </script>
 </body>
 </html>

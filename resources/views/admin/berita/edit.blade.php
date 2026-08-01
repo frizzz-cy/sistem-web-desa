@@ -66,7 +66,7 @@
                         <input type="hidden" name="remove_foto" id="remove_foto" value="0">
                     </div>
                 @endif
-                <small style="color: #64748B; display: block; margin-top: 6px;">Format yang diizinkan: JPG, JPEG, PNG (Maksimal 2MB)</small>
+                <small style="color: #64748B; display: block; margin-top: 6px;">Format yang diizinkan: JPG, JPEG, PNG (Maksimal 15MB, akan dikompresi otomatis)</small>
                 @error('foto') <span class="error-msg">{{ $message }}</span> @enderror
             </div>
 
@@ -132,7 +132,7 @@
                         const range = quill.getSelection();
                         quill.insertEmbed(range.index, 'image', result.url);
                     } else {
-                        alert('Gagal mengunggah gambar. Pastikan ukuran file di bawah 2MB.');
+                        alert('Gagal mengunggah gambar. Pastikan format gambar sesuai dan ukuran file di bawah 15MB.');
                     }
                 } catch (error) {
                     console.error('Error uploading image:', error);
@@ -149,10 +149,18 @@
             }
         }
 
-        // Sync Quill content to hidden input on form submit
-        document.querySelector('form').onsubmit = function() {
+        // Sync Quill content and prevent double submit on form submit
+        document.querySelector('form').addEventListener('submit', function() {
             document.getElementById('isi-input').value = quill.root.innerHTML;
-        };
+            
+            const submitBtn = this.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = 'Menyimpan...';
+                submitBtn.style.opacity = '0.7';
+                submitBtn.style.cursor = 'not-allowed';
+            }
+        });
     </script>
 </body>
 </html>

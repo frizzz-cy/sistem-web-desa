@@ -74,7 +74,7 @@
                 @if($kegiatan->foto)
                     <img src="{{ asset('storage/' . $kegiatan->foto) }}" alt="Foto Saat Ini" class="current-img">
                 @endif
-                <small style="color: #64748B; display: block; margin-top: 6px;">Format yang diizinkan: JPG, JPEG, PNG (Maksimal 2MB)</small>
+                <small style="color: #64748B; display: block; margin-top: 6px;">Format yang diizinkan: JPG, JPEG, PNG (Maksimal 15MB, akan dikompresi otomatis)</small>
                 @error('foto') <span class="error-msg">{{ $message }}</span> @enderror
             </div>
 
@@ -90,5 +90,18 @@
             </div>
         </form>
     </div>
+
+    <!-- Script Prevent Double Submit -->
+    <script>
+        document.querySelector('form').addEventListener('submit', function() {
+            const submitBtn = this.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = 'Menyimpan...';
+                submitBtn.style.opacity = '0.7';
+                submitBtn.style.cursor = 'not-allowed';
+            }
+        });
+    </script>
 </body>
 </html>

@@ -33,7 +33,7 @@ class AdminProdukController extends Controller
             'nama_penjual' => 'required|string',
             'no_whatsapp'  => 'required|string',
             'deskripsi'    => 'required|string',
-            'foto_produk'  => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'foto_produk'  => 'nullable|image|mimes:jpeg,png,jpg|max:15360',
         ]);
 
         if ($request->hasFile('foto_produk')) {
@@ -61,7 +61,7 @@ class AdminProdukController extends Controller
             'nama_penjual' => 'required|string',
             'no_whatsapp'  => 'required|string',
             'deskripsi'    => 'required|string',
-            'foto_produk'  => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'foto_produk'  => 'nullable|image|mimes:jpeg,png,jpg|max:15360',
         ]);
 
         if ($request->hasFile('foto_produk')) {
