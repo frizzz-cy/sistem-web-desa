@@ -38,7 +38,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
             
             // SETELAH LOGIN BERHASIL, ARAHKAN KE DASHBOARD ADMIN
-            return redirect()->intended('/admin/produk'); 
+            return redirect()->intended('/admin/dashboard'); 
         }
 
         // Jika salah password atau username/email

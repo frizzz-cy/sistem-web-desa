@@ -6,6 +6,9 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminProdukController;
 use App\Http\Controllers\AdminBeritaController;
 use App\Http\Controllers\AdminKegiatanController;
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\AdminMediaController;
 use App\Models\Berita;
 use App\Models\Kegiatan;
 
@@ -34,8 +37,19 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth');
 
 
 Route::middleware('auth')->prefix('admin')->group(function () {
+    Route::get('/', [AdminDashboardController::class, 'index']);
+    Route::get('dashboard', [AdminDashboardController::class, 'index']);
+
     Route::resource('produk', AdminProdukController::class);
+    
     Route::post('berita/upload-image', [AdminBeritaController::class, 'uploadImage']);
     Route::resource('berita', AdminBeritaController::class)->parameters(['berita' => 'berita']);
+    
     Route::resource('kegiatan', AdminKegiatanController::class);
+    
+    Route::resource('user', AdminUserController::class);
+    
+    Route::get('media', [AdminMediaController::class, 'index']);
+    Route::post('media', [AdminMediaController::class, 'store']);
+    Route::delete('media', [AdminMediaController::class, 'destroy']);
 });

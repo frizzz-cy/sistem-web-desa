@@ -1,25 +1,11 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Produk - Admin Desa</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #F4F6F8; padding: 20px; }
-        .container { max-width: 600px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .form-group { margin-bottom: 16px; }
-        label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 14px; color: #1A2833; }
-        input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid #DDE3E8; border-radius: 6px; font-family: inherit; font-size: 14px; box-sizing: border-box; }
-        .btn { padding: 10px 16px; border-radius: 6px; text-decoration: none; font-weight: 600; cursor: pointer; border: none; font-size: 14px; display: inline-block; }
-        .btn-primary { background: #1668A3; color: white; }
-        .btn-secondary { background: #E2E8F0; color: #1A2833; margin-right: 10px; }
-        .error-msg { color: #DC2626; font-size: 12px; font-weight: 600; margin-top: 4px; display: block; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2 style="margin-top:0; margin-bottom: 20px; color: #0B3B60;">Tambah Produk Baru</h2>
+@extends('layouts.admin', ['activePage' => 'produk'])
+
+@section('title', 'Tambah Produk Baru')
+
+@section('content')
+    <div class="admin-box" style="max-width: 600px; margin: 0 auto;">
+        <h2 style="margin-top:0; margin-bottom: 20px; color: var(--biru-tua); font-weight: 800;">Tambah Produk Baru</h2>
+        
         <form action="/admin/produk" method="POST" enctype="multipart/form-data">
             @csrf
             
@@ -70,19 +56,20 @@
             </div>
 
             <div class="form-group">
-                <label>Upload Foto (Opsional)</label>
+                <label>Upload Foto (Opsional, Maksimal 15MB)</label>
                 <input type="file" name="foto_produk" accept="image/*">
                 @error('foto_produk') <span class="error-msg">{{ $message }}</span> @enderror
             </div>
             
-            <div style="margin-top: 24px;">
+            <div style="margin-top: 28px; display: flex; gap: 10px;">
                 <a href="/admin/produk" class="btn btn-secondary">Batal</a>
                 <button type="submit" class="btn btn-primary">Simpan Produk</button>
             </div>
         </form>
     </div>
+@endsection
 
-    <!-- Script Formatter Rupiah & Prevent Double Submit -->
+@section('scripts')
     <script>
         const hargaInput = document.getElementById('harga');
         if (hargaInput) {
@@ -106,5 +93,4 @@
             }
         });
     </script>
-</body>
-</html>
+@endsection
