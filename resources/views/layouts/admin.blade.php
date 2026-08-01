@@ -327,6 +327,13 @@
         // Global Client-side Image Compressor & HEIC Converter
         document.addEventListener('submit', function(e) {
             const form = e.target;
+            
+            // Sinkronisasi konten Quill Editor secara global ke hidden input jika ada di halaman
+            const hiddenIsi = form.querySelector('#isi-input');
+            if (hiddenIsi && typeof quill !== 'undefined') {
+                hiddenIsi.value = quill.root.innerHTML;
+            }
+
             const fileInputs = Array.from(form.querySelectorAll('input[type="file"]'));
             
             // Cari input file yang berisi berkas gambar

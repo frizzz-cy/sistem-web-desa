@@ -271,13 +271,18 @@
           <span class="berita-badge">{{ $item->kategori }}</span>
           <h3 class="berita-title">{{ $item->judul }}</h3>
           <div class="berita-date">{{ date('d M Y', strtotime($item->tanggal)) }}</div>
-          <p class="berita-excerpt">{{ Str::limit(strip_tags($item->isi), 120) }}</p>
+          @php
+            $excerptClean = preg_replace('/!\[.*?\]\((https?:\/\/.*?)\)/i', '', $item->isi);
+            $excerptClean = preg_replace('/https?:\/\/\S+\.(?:jpg|jpeg|png|gif|webp|svg)\b/i', '', $excerptClean);
+            $excerptClean = trim(strip_tags($excerptClean));
+          @endphp
+          <p class="berita-excerpt">{{ Str::limit($excerptClean, 120) }}</p>
           <a class="berita-link" onclick="bukaBerita(this)" 
              data-id="{{ $item->id }}"
              data-judul="{{ $item->judul }}"
              data-kategori="{{ $item->kategori }}"
              data-tanggal="{{ date('d M Y', strtotime($item->tanggal)) }}"
-             data-foto="{{ $item->foto ? asset('storage/'.$item->foto) : 'https://placehold.co/900x480/e2e8f0/94a3b8?text=Gambar+Berita' }}"
+             data-foto="{{ $item->foto ? asset('storage/'.$item->foto) : 'https://placehold.co/600x400/e2e8f0/94a3b8?text=Gambar+Berita' }}"
              data-views="{{ $item->views }}">
             Baca Selengkapnya 
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
@@ -346,7 +351,17 @@
     const tanggal = link.getAttribute('data-tanggal');
     const foto = link.getAttribute('data-foto');
     const views = link.getAttribute('data-views');
-    const isi = link.querySelector('.berita-isi-full').textContent;
+    let isi = link.querySelector('.berita-isi-full').textContent;
+
+    // Parse Markdown image syntax: ![](URL)
+    isi = isi.replace(/!\[.*?\]\((https?:\/\/[^\s)]+)\)/gi, (match, url) => {
+        return `<img src="${url}" style="max-width:100%; border-radius:8px; display:block; margin:16px auto; box-shadow:0 4px 12px rgba(0,0,0,0.08);">`;
+    });
+
+    // Parse raw image URLs on their own line (wrapped in <p>)
+    isi = isi.replace(/<p>\s*(https?:\/\/[^\s<]+\.(?:jpg|jpeg|png|gif|webp|svg)(?:\?[^\s<]+)?)\s*<\/p>/gi, (match, url) => {
+        return `<img src="${url}" style="max-width:100%; border-radius:8px; display:block; margin:16px auto; box-shadow:0 4px 12px rgba(0,0,0,0.08);">`;
+    });
     
     document.getElementById('detail-bd-badge').textContent = kategori;
     document.getElementById('detail-bd-title').textContent = judul;
