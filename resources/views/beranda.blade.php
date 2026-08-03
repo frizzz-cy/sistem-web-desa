@@ -204,10 +204,9 @@
 <!-- HERO HEADER -->
 <header class="hero" id="hero-header">
   <div class="hero-slides" id="hero-slides">
-    <div class="hero-slide aktif" style="background-color:#0B3B60;" data-src="/images/slider/sdn2.jpeg"></div>
-    <div class="hero-slide" style="background-color:#0B3B60;" data-src="/images/slider/tknusa.jpeg"></div>
-    <div class="hero-slide" style="background-color:#0B3B60;" data-src="/images/slider/sentra.jpg"></div>
-    <div class="hero-slide" style="background-color:#0B3B60;" data-src="/images/carousel/slide-4.jpg"></div>
+    @foreach($hero_slides as $index => $slide)
+      <div class="hero-slide {{ $index === 0 ? 'aktif' : '' }}" style="background-color:#0B3B60;" data-src="{{ $slide }}"></div>
+    @endforeach
   </div>
   <div class="hero-partikel" id="hero-partikel"></div>
   <div class="hero-inner">
@@ -223,9 +222,11 @@
     <h2>Mengenal Desa Munungkerep</h2>
   </div>
   <div class="tentang reveal">
-    <p>Desa Munungkerep merupakan salah satu desa di Kecamatan Kabuh, Kabupaten Jombang, Jawa Timur, yang berada di kawasan dataran tinggi dengan kondisi tanah kering pada musim kemarau.</p>
-    <p>Desa ini terdiri dari 7 dusun Munungkerep, Karanggebang, Duren, Slumbung, Kalipang, Kadenan, dan Jatirubuh dengan mayoritas warga berprofesi sebagai petani. Tembakau menjadi komoditas unggulan yang ditanam warga saat musim kemarau, didampingi pandan sebagai komoditas pendukung yang tumbuh merata di seluruh wilayah desa.</p>
-    <p>Melalui portal ini, kami berupaya menghadirkan informasi desa secara terbuka — mulai dari peta wilayah, potensi ekonomi, struktur pemerintahan, hingga data profil desa agar mudah diakses oleh warga dan masyarakat umum.</p>
+    @foreach($tentang as $para)
+      @if(!empty($para))
+        <p>{{ $para }}</p>
+      @endif
+    @endforeach
   </div>
 
   <div class="sect-head">
@@ -233,54 +234,27 @@
   </div>
 
   <div class="portal-grid reveal">
-    <button class="portal-card" onclick="bukaModalLayanan()">
-      <div class="p-badge">
-        <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h8l4 4v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M15 3v4h4"/><path d="M9 12h6M9 16h6M9 8h3"/></svg>
-      </div>
-      <h3>Layanan Administrasi</h3>
-      <p>Persyaratan lengkap surat-menyurat desa — domisili, usaha, KTP, KK, hingga surat tidak mampu.</p>
-      <div class="p-link">Lihat Persyaratan <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </button>
-    <a href="/profil-desa" class="portal-card">
-      <div class="p-badge">
-        <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V7l8-4 8 4v14"/><path d="M9 21v-6h6v6M4 21h16"/></svg>
-      </div>
-      <h3>Informasi Publik</h3>
-      <p>Struktur organisasi pemerintah desa, anggaran APBDes, kondisi geografis, data demografis, hingga visi &amp; misi.</p>
-      <div class="p-link">Lihat Profil <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </a>
-    <a href="/profil-desa#pemerintahan" class="portal-card">
-      <div class="p-badge">
-        <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="18" cy="8" r="2.2"/><path d="M15.5 20c.3-2.5 2-4.5 4.3-5"/></svg>
-      </div>
-      <h3>Struktur Pemerintahan</h3>
-      <p>Kenali Kepala Desa, perangkat desa, dan Kepala Dusun yang melayani warga Munungkerep.</p>
-      <div class="p-link">Lihat Struktur <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </a>
-    <a href="/profil-desa#anggaran" class="portal-card">
-      <div class="p-badge">
-        <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-9.8-9.2C.6 7.8 2.4 4.5 5.6 4c2-.3 3.9.7 4.9 2.4 1-1.7 2.9-2.7 4.9-2.4 3.2.5 5 3.8 3.4 7.3-2.3 4.6-9.8 9.2-9.8 9.2Z"/></svg>
-      </div>
-      <h3>Bantuan Sosial</h3>
-      <p>Lihat rincian APBDes — realisasi tahun berjalan dan rencana anggaran tahun berikutnya, terbuka untuk warga.</p>
-      <div class="p-link">Lihat Anggaran <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </a>
-    <a href="/profil-desa#demografis" class="portal-card">
-      <div class="p-badge">
-        <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3.2"/><path d="M2.5 20c0-3.6 2.5-6.5 5.5-6.5s5.5 2.9 5.5 6.5"/><path d="M16 21c0-3 2-5.5 4.5-5.5"/><circle cx="18.5" cy="9" r="2.3"/></svg>
-      </div>
-      <h3>Data Kependudukan</h3>
-      <p>Statistik jumlah penduduk, KK, usia, dan sarana-prasarana desa berdasarkan data monografi.</p>
-      <div class="p-link">Lihat Data <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </a>
-    <a href="/kegiatan" class="portal-card" onclick="return pindahHalus(event, '/kegiatan')">
-      <div class="p-badge">
-        <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-      </div>
-      <h3>Event &amp; Kegiatan</h3>
-      <p>Dokumentasi dan informasi kegiatan warga — gotong royong, posyandu, dan agenda desa lainnya.</p>
-      <div class="p-link">Lihat Kegiatan <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </a>
+    @foreach($layanan_cards as $card)
+      @if($card['link'] === '#modal-layanan')
+        <button class="portal-card" onclick="bukaModalLayanan()">
+          <div class="p-badge">
+            {!! $card['icon'] !!}
+          </div>
+          <h3>{{ $card['title'] }}</h3>
+          <p>{{ $card['desc'] }}</p>
+          <div class="p-link">Lihat Persyaratan <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+      @else
+        <a href="{{ $card['link'] }}" class="portal-card" @if(str_contains($card['link'], '/kegiatan')) onclick="return pindahHalus(event, '/kegiatan')" @endif>
+          <div class="p-badge">
+            {!! $card['icon'] !!}
+          </div>
+          <h3>{{ $card['title'] }}</h3>
+          <p>{{ $card['desc'] }}</p>
+          <div class="p-link">Lihat Detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </a>
+      @endif
+    @endforeach
   </div>
 
   <!-- ==================== TEMPLATE KARTU BERITA ==================== -->
@@ -297,13 +271,18 @@
           <span class="berita-badge">{{ $item->kategori }}</span>
           <h3 class="berita-title">{{ $item->judul }}</h3>
           <div class="berita-date">{{ date('d M Y', strtotime($item->tanggal)) }}</div>
-          <p class="berita-excerpt">{{ Str::limit(strip_tags($item->isi), 120) }}</p>
+          @php
+            $excerptClean = preg_replace('/!\[.*?\]\((https?:\/\/.*?)\)/i', '', $item->isi);
+            $excerptClean = preg_replace('/https?:\/\/\S+\.(?:jpg|jpeg|png|gif|webp|svg)\b/i', '', $excerptClean);
+            $excerptClean = trim(strip_tags($excerptClean));
+          @endphp
+          <p class="berita-excerpt">{{ Str::limit($excerptClean, 120) }}</p>
           <a class="berita-link" onclick="bukaBerita(this)" 
              data-id="{{ $item->id }}"
              data-judul="{{ $item->judul }}"
              data-kategori="{{ $item->kategori }}"
              data-tanggal="{{ date('d M Y', strtotime($item->tanggal)) }}"
-             data-foto="{{ $item->foto ? asset('storage/'.$item->foto) : 'https://placehold.co/900x480/e2e8f0/94a3b8?text=Gambar+Berita' }}"
+             data-foto="{{ $item->foto ? asset('storage/'.$item->foto) : 'https://placehold.co/600x400/e2e8f0/94a3b8?text=Gambar+Berita' }}"
              data-views="{{ $item->views }}">
             Baca Selengkapnya 
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
@@ -372,7 +351,17 @@
     const tanggal = link.getAttribute('data-tanggal');
     const foto = link.getAttribute('data-foto');
     const views = link.getAttribute('data-views');
-    const isi = link.querySelector('.berita-isi-full').textContent;
+    let isi = link.querySelector('.berita-isi-full').textContent;
+
+    // Parse Markdown image syntax: ![](URL)
+    isi = isi.replace(/!\[.*?\]\((https?:\/\/[^\s)]+)\)/gi, (match, url) => {
+        return `<img src="${url}" style="max-width:100%; border-radius:8px; display:block; margin:16px auto; box-shadow:0 4px 12px rgba(0,0,0,0.08);">`;
+    });
+
+    // Parse raw image URLs on their own line (wrapped in <p>)
+    isi = isi.replace(/<p>\s*(https?:\/\/[^\s<]+\.(?:jpg|jpeg|png|gif|webp|svg)(?:\?[^\s<]+)?)\s*<\/p>/gi, (match, url) => {
+        return `<img src="${url}" style="max-width:100%; border-radius:8px; display:block; margin:16px auto; box-shadow:0 4px 12px rgba(0,0,0,0.08);">`;
+    });
     
     document.getElementById('detail-bd-badge').textContent = kategori;
     document.getElementById('detail-bd-title').textContent = judul;

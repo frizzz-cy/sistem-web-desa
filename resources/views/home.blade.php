@@ -151,17 +151,74 @@
   .potensi-header p{color:var(--ink-soft); font-size:13.5px; margin-top:8px;}
 
   .potensi-carousel-wrap{ position:relative; overflow:hidden; }
-  .potensi-grid{
-    display:flex; gap:20px; overflow-x:hidden;
-    scrollbar-width:none; padding:12px 0;
-    touch-action:pan-y; /* blokir swipe geser horizontal manual, scroll vertikal halaman tetap normal */
+  .potensi-track{
+    display:flex; gap:20px;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: grab;
+    padding: 24px 0 32px;
   }
-  .potensi-grid::-webkit-scrollbar{display:none;}
+  .potensi-track.no-transition{ transition:none; }
+  .potensi-track:active { cursor: grabbing; }
   .potensi-card-wrap{
     flex:0 0 calc(100% - 40px);
+    position:relative;
   }
-  @media (min-width:600px){ .potensi-card-wrap{flex:0 0 calc(50% - 10px);} }
+  @media (min-width:600px){
+    .potensi-card-wrap{
+      flex:0 0 calc(50% - 30px);
+    }
+  }
 
+  .carousel-panah {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: var(--ground, #0B3B60);
+    color: #fff;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: opacity 0.2s, background 0.2s;
+  }
+  .carousel-panah:hover {
+    background: var(--moss, #52633B);
+  }
+  .carousel-panah.kiri {
+    left: 4px;
+  }
+  .carousel-panah.kanan {
+    right: 4px;
+  }
+  @media (max-width: 768px) {
+    .carousel-panah { display: none; }
+  }
+  
+  .potensi-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 14px;
+  }
+  .potensi-dots .dot-nav {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border, #DDE3E8);
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .potensi-dots .dot-nav.aktif {
+    background: var(--ground, #0B3B60);
+    transform: scale(1.2);
+  }
 
   .potensi-card{
     background:var(--paper-2); border:1px solid var(--line); border-radius:12px; overflow:hidden;
@@ -230,14 +287,19 @@
   }
 
   .modal-overlay{
-    display:none; position:fixed; inset:0; z-index:2000;
+    position:fixed; inset:0; z-index:2000;
     background:rgba(46,42,31,0.78);
-    align-items:center; justify-content:center; padding:20px;
+    display:flex; align-items:center; justify-content:center; padding:20px;
+    opacity:0; pointer-events:none; transition:opacity .3s ease;
   }
-  .modal-overlay.show{display:flex;}
+  .modal-overlay.show{opacity:1; pointer-events:auto;}
   .modal-box{
     background:var(--paper-2); border-radius:5px; max-width:440px; width:100%;
     padding:0 0 22px; position:relative; max-height:85vh; overflow-y:auto;
+    transform:scale(0.9) translateY(20px); transition:transform .3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .modal-overlay.show .modal-box{
+    transform:scale(1) translateY(0);
   }
   .modal-close{
     position:absolute; top:14px; right:14px; z-index:10;
@@ -324,53 +386,8 @@
   </div>
 </section>
 
-<section class="potensi-section">
-  <div class="potensi-header">
-    <div class="eyebrow-2">Hasil Bumi</div>
-    <h2>Potensi Ekonomi Desa</h2>
-    <p>Tiga komoditas utama yang menopang warga Munungkerep</p>
-  </div>
-
-  <div class="potensi-carousel-wrap">
-    <div class="potensi-grid" id="potensi-grid">
-      <div class="potensi-card-wrap" data-terkait="tembakau">
-        <div class="hover-preview">Komoditas unggulan warga, ditanam di lahan kering saat kemarau. Ketuk untuk detail lengkap.</div>
-        <button class="potensi-card" onclick="bukaPopupPotensi('tembakau')">
-          <div class="foto"><img src="/images/tembakau.jpg" alt="Tembakau"></div>
-          <div class="info">
-            <span class="tag">Komoditas Utama</span>
-            <h3>Tembakau</h3>
-            <p class="klik-hint">Lihat detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></p>
-          </div>
-        </button>
-      </div>
-      <div class="potensi-card-wrap" data-terkait="pandan">
-        <div class="hover-preview">Komoditas yang ditanam merata di seluruh desa, produksi skala rumahan. Ketuk untuk detail lengkap.</div>
-        <button class="potensi-card" onclick="bukaPopupPotensi('pandan')">
-          <div class="foto"><img src="/images/pandan.jpeg" alt="Pandan"></div>
-          <div class="info">
-            <span class="tag">Komoditas Pendukung</span>
-            <h3>Pandan</h3>
-            <p class="klik-hint">Lihat detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></p>
-          </div>
-        </button>
-      </div>
-      <div class="potensi-card-wrap" data-terkait="padi">
-        <div class="hover-preview">Komoditas pangan utama, ditanam di lahan basah/sawah saat musim hujan. Ketuk untuk detail lengkap.</div>
-        <button class="potensi-card" onclick="bukaPopupPotensi('padi')">
-          <div class="foto"><img src="/images/padi.jpg" alt="Padi"></div>
-          <div class="info">
-            <span class="tag">Produk Olahan</span>
-            <h3>Padi</h3>
-            <p class="klik-hint">Lihat detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></p>
-          </div>
-        </button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div style="max-width:700px; margin:0 auto 56px; padding:0 20px;">
+<!-- Section A (Stats Strip) dipindahkan ke atas potensi ekonomi bawah peta -->
+<div style="max-width:700px; margin:24px auto; padding:0 20px;">
   <div class="stats-strip" id="stats-strip">
     <div class="stat-item"><div class="stat-num" id="stat-total">–</div><div class="stat-label">Titik Terdata</div></div>
     <div class="stat-item"><div class="stat-num" id="stat-dusun">–</div><div class="stat-label">Dusun</div></div>
@@ -379,6 +396,42 @@
     <div class="stat-item"><div class="stat-num" id="stat-ekonomi">–</div><div class="stat-label">Potensi Ekonomi</div></div>
   </div>
 </div>
+
+<section class="potensi-section" style="padding-top: 10px;">
+  <div class="potensi-header">
+    <div class="eyebrow-2">Hasil Bumi</div>
+    <h2>Potensi Ekonomi Desa</h2>
+    <p>Tiga komoditas utama yang menopang warga Munungkerep</p>
+  </div>
+
+  <div class="potensi-carousel-wrap" id="potensi-carousel-wrap">
+    <!-- Panah navigasi geser -->
+    <button class="carousel-panah kiri" id="panah-kiri">‹</button>
+    
+    <div class="potensi-track" id="potensi-track">
+      @foreach($data_potensi as $key => $item)
+        <div class="potensi-card-wrap" data-terkait="{{ $key }}">
+          <div class="hover-preview">{{ Str::limit($item['isi'], 90) }} Ketuk untuk detail lengkap.</div>
+          <button class="potensi-card" onclick="bukaPopupPotensi('{{ $key }}')">
+            <div class="foto">
+              <img src="{{ !empty($item['foto'][0]) ? $item['foto'][0] : 'https://placehold.co/600x400?text=Gambar+Potensi' }}" alt="{{ $item['judul'] }}">
+            </div>
+            <div class="info">
+              <span class="tag">{{ $item['tag'] }}</span>
+              <h3>{{ $item['judul'] }}</h3>
+              <p class="klik-hint">Lihat detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></p>
+            </div>
+          </button>
+        </div>
+      @endforeach
+    </div>
+
+    <button class="carousel-panah kanan" id="panah-kanan">›</button>
+  </div>
+
+  <!-- Indikator dots -->
+  <div class="potensi-dots" id="potensi-dots"></div>
+</section>
 
 
 <div class="modal-overlay" id="modal-overlay" onclick="tutupPopupPotensi(event)">
@@ -608,164 +661,206 @@
     });
   });
 
-  const DATA_POTENSI = {
-    tembakau: {
-      tag: 'Komoditas Utama',
-      judul: 'Tembakau',
-      foto: ['/images/tembakau-1.jpg', '/images/tembakau-2.jpg', '/images/tembakau-3.jpg'],
-      isi: 'Komoditas unggulan Desa Munungkerep, ditanam di lahan tegalan/kering pada musim kemarau karena tidak membutuhkan banyak air dibanding tanaman lain, sehingga cocok dengan kondisi tanah desa yang berada di dataran tinggi Kecamatan Kabuh. Masa panen berlangsung antara bulan Juli hingga November.',
-      manfaat: [
-        'Diolah menjadi tembakau rajangan sebagai bahan baku rokok kretek — produk utama yang dijual ke pengepul',
-        'Bisa diolah lebih lanjut jadi cerutu atau tembakau lintingan, produk olahan bernilai jual lebih tinggi',
-        'Sisa/ampas tembakau dimanfaatkan sebagai pestisida alami — kandungan nikotinnya efektif mengusir hama tanaman',
-        'Batang dan daun sisa panen bisa diolah jadi pupuk kompos organik',
-        'Jadi sumber penghasilan utama petani saat musim kemarau, ketika tanaman lain sulit tumbuh di lahan kering'
-      ],
-      catatan: '📝 Masih perlu: luas lahan, jumlah petani/dusun penghasil, titik lokasi lahan',
-      produk: ['Rajangan', 'Cerutu', 'Lintingan', 'Pestisida Alami', 'Pupuk Kompos'],
-      cara: [
-        'Daun dipetik saat sudah matang, biasanya pagi hari setelah embun mengering',
-        'Daun diperam (curing) dulu sampai warnanya berubah dan agak lentur, tidak mudah hancur',
-        'Dirajang tipis-tipis pakai pisau tajam atau alat rajang tradisional',
-        'Hasil rajangan dijemur langsung di bawah matahari selama beberapa hari sampai kering merata',
-        'Setelah kering, difermentasi agar aroma dan rasanya lebih matang sebelum dikemas dan dijual'
-      ]
-    },
-    pandan: {
-      tag: 'Komoditas Pendukung',
-      judul: 'Pandan',
-      foto: ['/images/pandan-1.jpg', '/images/pandan-2.jpg', '/images/pandan-3.jpg'],
-      isi: 'Komoditas pendukung yang ditanam merata di seluruh wilayah Desa Munungkerep, bukan terpusat di dusun tertentu. Produksi dilakukan dalam skala rumahan oleh warga.',
-      manfaat: [
-        'Bahan pewangi & pewarna hijau alami untuk masakan dan kue tradisional',
-        'Bahan baku anyaman — tikar, tas, dan kerajinan tangan warga',
-        'Pembungkus alami untuk makanan tradisional',
-        'Diolah menjadi dupa atau pengharum ruangan alami',
-        'Akarnya kadang dimanfaatkan warga dalam ramuan tradisional rumahan',
-        'Ditanam di lahan miring juga membantu menahan erosi tanah, selain nilai ekonominya'
-      ],
-      catatan: '📝 Masih perlu: dijual ke mana/pembeli utama, titik lokasi lahan (kalau ada yang representatif)',
-      produk: ['Dupa', 'Pewarna Masakan', 'Pembungkus Makanan', 'Ramuan Tradisional'],
-      cara: [
-        'Daun pandan dipetik, lalu duri di tepinya dibersihkan pakai pisau atau senar',
-        'Daun dipotong/dibelah jadi ukuran seragam, biasanya sekitar 0,5–0,7 cm lebar',
-        'Direbus sebentar untuk menghilangkan getah dan melunakkan seratnya',
-        'Dijemur sampai benar-benar kering, lalu diluruskan dan dihaluskan',
-        'Setelah siap, baru dianyam sesuai motif dan bentuk yang diinginkan — tikar, tas, dompet, dan lainnya'
-      ]
-    },
-    anyaman: {
-      tag: 'Produk Olahan',
-      judul: 'Anyaman',
-      foto: ['/images/anyaman-1.jpg', '/images/anyaman-2.jpg', '/images/anyaman-3.jpg'],
-      isi: 'Kerajinan anyaman merupakan produk olahan turunan dari komoditas pandan yang tumbuh di Desa Munungkerep. Salah satu pelaku usaha yang menekuni kerajinan ini adalah UMKM Anyacraft, dengan tugu penanda lokasi sentra kerajinan yang bisa dilihat di peta desa.',
-      manfaat: [
-        'Menambah nilai jual daun pandan mentah menjadi produk kerajinan siap pakai',
-        'Membuka lapangan usaha rumahan bagi warga, terutama ibu-ibu dan pengrajin lokal',
-        'Produk seperti tikar, tas, dan dompet anyaman punya potensi dijual ke luar desa',
-        'Melestarikan keterampilan menganyam sebagai bagian dari budaya warga setempat'
-      ],
-      catatan: '📝 Masih perlu: profil UMKM Anyacraft lebih lengkap, harga jual, dan jangkauan pemasaran',
-      produk: ['Tikar', 'Tas', 'Dompet', 'Topi', 'Hiasan Dinding'],
-      cara: [
-        'Bahan baku pandan yang sudah kering dan halus (hasil dari proses pengolahan pandan) disiapkan terlebih dahulu',
-        'Helai pandan disusun dan dianyam mengikuti motif dasar sesuai bentuk produk yang dituju',
-        'Anyaman dirapikan dan tepinya dikunci/dijahit agar tidak mudah lepas',
-        'Produk jadi bisa diberi finishing tambahan seperti pewarnaan atau aksesoris sebelum dipasarkan'
-      ]
-    },
-    padi: {
-      tag: 'Produk Olahan',
-      judul: 'Padi',
-      foto: ['/images/padi.jpg'],
-      isi: 'Padi merupakan salah satu hasil pertanian utama di Desa Munungkerep yang ditanam oleh warga pada musim hujan di lahan basah/sawah. Hasil panen padi menjadi komoditas pangan pokok warga desa dan sebagian dipasarkan ke luar daerah.',
-      manfaat: [
-        'Sumber makanan pokok utama bagi warga Desa Munungkerep',
-        'Diolah menjadi beras konsumsi dan dipasarkan untuk meningkatkan ekonomi keluarga petani',
-        'Jerami sisa panen diolah menjadi pakan ternak sapi atau kambing',
-        'Sisa sekam padi digunakan sebagai bahan bakar pembuatan batu bata atau media tanam'
-      ],
-      catatan: '📝 Masih perlu: produktivitas panen per hektar dan data pemasaran beras',
-      produk: ['Beras', 'Tepung Beras', 'Pakan Ternak', 'Sekam Bakar'],
-      cara: [
-        'Pembibitan dan penanaman padi di sawah tadah hujan pada awal musim penghujan',
-        'Perawatan berkala meliputi pemupukan, pengairan yang cukup, dan penyiangan gulma',
-        'Pemanenan padi menggunakan sabit atau mesin combine harvester saat bulir padi menguning',
-        'Perontokan bulir padi dan penjemuran gabah hingga kadar air cukup rendah',
-        'Penggilingan gabah menjadi beras siap konsumsi'
-      ]
-    }
-  };
+  const DATA_POTENSI = {!! json_encode($data_potensi) !!};
 
 
-  // Carousel Potensi Ekonomi — geser halus terus-menerus ke kanan (sabuk/infinity loop)
+  // Carousel Potensi Ekonomi — Sabuk kontinu (infinite loop) dengan snap tengah
   (function(){
-    const wadahGrid = document.getElementById('potensi-grid');
-    if (!wadahGrid) return;
+    const wrap = document.getElementById('potensi-carousel-wrap');
+    const track = document.getElementById('potensi-track');
+    if (!track || !wrap) return;
 
-    // Kloning semua item kartu sebanyak dua kali untuk memastikan konten melebihi lebar layar
-    // dan bisa membuat efek loop tak terbatas yang mulus
-    const originalCards = Array.from(wadahGrid.children);
-    originalCards.forEach(card => {
-      const clone = card.cloneNode(true);
-      wadahGrid.appendChild(clone);
+    const origCards = Array.from(track.querySelectorAll('.potensi-card-wrap'));
+    const totalOri = origCards.length;
+    if (totalOri <= 1) return;
+
+    // Kloning kartu untuk efek sabuk kontinu
+    origCards.forEach(c => {
+      const clone = c.cloneNode(true);
+      clone.setAttribute('data-clone', 'true');
+      track.appendChild(clone);
     });
-    originalCards.forEach(card => {
-      const clone = card.cloneNode(true);
-      wadahGrid.appendChild(clone);
+    origCards.forEach(c => {
+      const clone = c.cloneNode(true);
+      clone.setAttribute('data-clone', 'true');
+      track.insertBefore(clone, track.firstChild);
     });
 
-    let jalan = true;
-    const kecepatan = 0.8; // px per frame
+    // Semua kartu termasuk kloning
+    let allCards = Array.from(track.querySelectorAll('.potensi-card-wrap'));
+    let currentIndex = totalOri; // mulai dari kartu asli pertama (setelah klon awal)
+    let timer = null;
+    let userInteracting = false;
+    const interval = 4000;
+    const gap = 20;
 
-    let originalWidth = 0;
-
-    // Hitung lebar total satu set kartu asli (termasuk gap)
-    function hitungLebar() {
-      const firstClone = wadahGrid.children[originalCards.length];
-      if (firstClone) {
-        originalWidth = firstClone.offsetLeft - originalCards[0].offsetLeft;
-      }
+    function getCardWidth() {
+      return allCards[0].offsetWidth + gap;
     }
 
-    // Jalankan hitung lebar pada load/resize dan pasang event listener
-    window.addEventListener('load', hitungLebar);
-    window.addEventListener('resize', hitungLebar);
-    
-    if (document.readyState === 'complete') {
-      hitungLebar();
-    } else {
-      document.addEventListener('DOMContentLoaded', hitungLebar);
+    function getOffset(idx) {
+      const cardW = getCardWidth();
+      const wrapW = wrap.offsetWidth;
+      // Posisikan kartu idx di tengah container
+      return -(idx * cardW) + (wrapW / 2) - (cardW / 2);
     }
 
-    function langkahGeser(){
-      if (originalWidth === 0) {
-        hitungLebar();
+    function goTo(idx, animate) {
+      if (animate) {
+        track.classList.remove('no-transition');
+      } else {
+        track.classList.add('no-transition');
       }
-
-      if (jalan && originalWidth > 0){
-        wadahGrid.scrollLeft += kecepatan;
-      }
-
-      // Bungkus scroll secara mulus saat mencapai batas
-      if (originalWidth > 0) {
-        if (wadahGrid.scrollLeft >= originalWidth * 2) {
-          wadahGrid.scrollLeft -= originalWidth;
-        } else if (wadahGrid.scrollLeft < originalWidth) {
-          wadahGrid.scrollLeft += originalWidth;
-        }
-      }
-      requestAnimationFrame(langkahGeser);
+      currentIndex = idx;
+      track.style.transform = `translateX(${getOffset(idx)}px)`;
+      updateDots();
     }
-    requestAnimationFrame(langkahGeser);
 
-    // Pause on hover
-    wadahGrid.addEventListener('mouseenter', () => { jalan = false; });
-    wadahGrid.addEventListener('mouseleave', () => { jalan = true; });
+    // Setelah transisi selesai, cek apakah perlu teleport
+    track.addEventListener('transitionend', () => {
+      // Jika sudah melewati set asli di kanan → teleport ke set asli
+      if (currentIndex >= totalOri * 2) {
+        goTo(currentIndex - totalOri, false);
+      }
+      // Jika sudah melewati set asli di kiri → teleport ke set asli
+      if (currentIndex < totalOri) {
+        goTo(currentIndex + totalOri, false);
+      }
+    });
 
-    // Pause on touch
-    wadahGrid.addEventListener('touchstart', () => { jalan = false; }, { passive: true });
-    wadahGrid.addEventListener('touchend', () => { jalan = true; }, { passive: true });
+    // Dot indikator
+    const dotsWrap = document.getElementById('potensi-dots');
+    function buildDots() {
+      if (!dotsWrap) return;
+      dotsWrap.innerHTML = '';
+      for (let i = 0; i < totalOri; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'dot-nav';
+        dot.onclick = () => {
+          userInteracting = true;
+          stopAutoPlay();
+          goTo(totalOri + i, true);
+          setTimeout(() => { userInteracting = false; startAutoPlay(); }, 3000);
+        };
+        dotsWrap.appendChild(dot);
+      }
+    }
+    buildDots();
+
+    function updateDots() {
+      if (!dotsWrap) return;
+      const dots = dotsWrap.querySelectorAll('.dot-nav');
+      const realIdx = currentIndex % totalOri;
+      dots.forEach((d, i) => d.classList.toggle('aktif', i === realIdx));
+    }
+
+    // Inisialisasi posisi awal tanpa animasi
+    goTo(currentIndex, false);
+    // Force reflow lalu aktifkan transisi
+    track.offsetHeight;
+    track.classList.remove('no-transition');
+
+    function nextSlide() {
+      if (userInteracting) return;
+      goTo(currentIndex + 1, true);
+    }
+
+    function startAutoPlay() {
+      stopAutoPlay();
+      timer = setInterval(nextSlide, interval);
+    }
+
+    function stopAutoPlay() {
+      if (timer) { clearInterval(timer); timer = null; }
+    }
+
+    startAutoPlay();
+
+    // Tombol panah
+    document.getElementById('panah-kiri').addEventListener('click', () => {
+      userInteracting = true;
+      stopAutoPlay();
+      goTo(currentIndex - 1, true);
+      setTimeout(() => { userInteracting = false; startAutoPlay(); }, 3000);
+    });
+    document.getElementById('panah-kanan').addEventListener('click', () => {
+      userInteracting = true;
+      stopAutoPlay();
+      goTo(currentIndex + 1, true);
+      setTimeout(() => { userInteracting = false; startAutoPlay(); }, 3000);
+    });
+
+    // Touch support (mobile swipe)
+    let touchStartX = 0;
+    let touchDelta = 0;
+
+    track.addEventListener('touchstart', (e) => {
+      userInteracting = true;
+      stopAutoPlay();
+      touchStartX = e.touches[0].clientX;
+      track.classList.add('no-transition');
+    }, { passive: true });
+
+    track.addEventListener('touchmove', (e) => {
+      touchDelta = e.touches[0].clientX - touchStartX;
+      const base = getOffset(currentIndex);
+      track.style.transform = `translateX(${base + touchDelta}px)`;
+    }, { passive: true });
+
+    track.addEventListener('touchend', () => {
+      track.classList.remove('no-transition');
+      const threshold = getCardWidth() * 0.25;
+      if (touchDelta < -threshold) {
+        goTo(currentIndex + 1, true);
+      } else if (touchDelta > threshold) {
+        goTo(currentIndex - 1, true);
+      } else {
+        goTo(currentIndex, true);
+      }
+      touchDelta = 0;
+      setTimeout(() => { userInteracting = false; startAutoPlay(); }, 2000);
+    }, { passive: true });
+
+    // Mouse drag (desktop)
+    let isDown = false;
+    let dragStartX = 0;
+    let dragDelta = 0;
+
+    track.addEventListener('mousedown', (e) => {
+      isDown = true;
+      userInteracting = true;
+      stopAutoPlay();
+      dragStartX = e.pageX;
+      dragDelta = 0;
+      track.classList.add('no-transition');
+      e.preventDefault();
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      dragDelta = e.pageX - dragStartX;
+      const base = getOffset(currentIndex);
+      track.style.transform = `translateX(${base + dragDelta}px)`;
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (!isDown) return;
+      isDown = false;
+      track.classList.remove('no-transition');
+      const threshold = getCardWidth() * 0.2;
+      if (dragDelta < -threshold) {
+        goTo(currentIndex + 1, true);
+      } else if (dragDelta > threshold) {
+        goTo(currentIndex - 1, true);
+      } else {
+        goTo(currentIndex, true);
+      }
+      dragDelta = 0;
+      setTimeout(() => { userInteracting = false; startAutoPlay(); }, 2000);
+    });
+
+    // Resize: recalculate
+    window.addEventListener('resize', () => goTo(currentIndex, false));
   })();
 
   function bukaPopupPotensi(kunci){
