@@ -24,10 +24,10 @@ class AuthController extends Controller
 
         $loginValue = $request->input('login_field');
 
-        // Deteksi otomatis: apakah yang diketik mengandung '@' (berarti email) atau teks biasa (username)
+        // Cek apakah input mengandung '@' (berarti email), jika tidak berarti username
         $loginType = filter_var($loginValue, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
-        // Susun data kredensial untuk dicocokkan ke database
+        // Susun data kredensial
         $credentials = [
             $loginType => $loginValue,
             'password' => $request->input('password')
@@ -37,8 +37,8 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             
-            // Jika berhasil, arahkan ke Dashboard Admin Produk
-            return redirect()->intended('/admin/produk'); 
+            // SETELAH LOGIN BERHASIL, ARAHKAN KE DASHBOARD ADMIN
+            return redirect()->intended('/admin/dashboard'); 
         }
 
         // Jika salah password atau username/email

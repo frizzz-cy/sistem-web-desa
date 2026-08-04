@@ -176,14 +176,15 @@
   .bd-content { font-size: 15px; color: #333; line-height: 1.75; }
   .bd-content p { margin-bottom: 16px; }
   .bd-content strong { color: #111; font-weight: 700; }
+  .bd-content img { max-width: 100%; height: auto; display: block; margin: 20px auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
 
-  /* ============ MODAL LAYANAN ADMINISTRASI ============ */
-  .modal-layanan-overlay{ display:none; position:fixed; inset:0; z-index:3000; background:rgba(11,40,63,0.75); align-items:center; justify-content:center; padding:20px; }
-  .modal-layanan-overlay.show{display:flex;}
-  .modal-layanan-box{ background:#fff; border-radius:12px; max-width:600px; width:100%; max-height:85vh; overflow-y:auto; position:relative; padding:28px 26px; }
-  .modal-layanan-close{ position:absolute; top:16px; right:16px; background:var(--biru-tua); color:#fff; border:none; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:15px; }
-  .modal-layanan-box h3{font-size:20px; font-weight:800; color:var(--biru-tua); margin-bottom:6px;}
-  .modal-layanan-box .sub{font-size:12.5px; color:var(--teks-muted); margin-bottom:20px;}
+  /* ============ MODAL LAYANAN ADMINISTRASI & INFORMASI PUBLIK ============ */
+  .modal-layanan-overlay, .modal-informasi-overlay{ display:none; position:fixed; inset:0; z-index:3000; background:rgba(11,40,63,0.78); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:20px; }
+  .modal-layanan-overlay.show, .modal-informasi-overlay.show{display:flex;}
+  .modal-layanan-box, .modal-informasi-box{ background:#fff; border-radius:14px; max-width:680px; width:100%; max-height:88vh; overflow-y:auto; position:relative; padding:28px 24px; box-shadow:0 20px 40px rgba(0,0,0,0.25); }
+  .modal-layanan-close, .modal-informasi-close{ position:absolute; top:18px; right:18px; background:var(--biru-tua); color:#fff; border:none; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:15px; display:flex; align-items:center; justify-content:center; }
+  .modal-layanan-box h3, .modal-informasi-box h3{font-size:20px; font-weight:800; color:var(--biru-tua); margin-bottom:6px;}
+  .modal-layanan-box .sub, .modal-informasi-box .sub{font-size:12.5px; color:var(--teks-muted); margin-bottom:20px;}
   .surat-item{border:1px solid var(--border); border-radius:8px; margin-bottom:10px; overflow:hidden;}
   .surat-item summary{ cursor:pointer; list-style:none; padding:14px 16px; font-weight:700; font-size:14px; color:var(--teks); display:flex; align-items:center; justify-content:space-between; background:var(--bg); }
   .surat-item summary::-webkit-details-marker{display:none;}
@@ -194,6 +195,18 @@
   .surat-item ul{padding-left:18px; margin-bottom:12px;}
   .surat-item li{font-size:13px; color:var(--teks-muted); line-height:1.7;}
   .surat-item .ket{ font-size:12.5px; color:var(--biru-tua); background:var(--biru-muda); padding:8px 12px; border-radius:6px; font-weight:600; }
+
+  /* Style khusus APBDes di Modal Informasi */
+  .apbdes-section { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 16px; overflow: hidden; }
+  .apbdes-head { padding: 12px 16px; background: var(--biru-tua); color: #fff; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 13.5px; }
+  .apbdes-head.belanja { background: var(--merah); }
+  .apbdes-head.pembiayaan { background: #0F6B58; }
+  .apbdes-head .total { background: rgba(255, 255, 255, 0.2); padding: 4px 10px; border-radius: 20px; font-size: 12.5px; letter-spacing: 0.02em; }
+  .apbdes-body { padding: 12px 16px; background: #FAFCFE; }
+  .apbdes-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px dashed #E2E8F0; font-size: 13px; }
+  .apbdes-row:last-child { border-bottom: none; }
+  .apbdes-row .label { color: #4A5568; }
+  .apbdes-row .val { font-weight: 700; color: #1A202C; }
 </style>
 </head>
 <body>
@@ -203,10 +216,9 @@
 <!-- HERO HEADER -->
 <header class="hero" id="hero-header">
   <div class="hero-slides" id="hero-slides">
-    <div class="hero-slide aktif" style="background-color:#0B3B60;" data-src="/images/slider/sdn2.jpeg"></div>
-    <div class="hero-slide" style="background-color:#0B3B60;" data-src="/images/slider/tknusa.jpeg"></div>
-    <div class="hero-slide" style="background-color:#0B3B60;" data-src="/images/slider/sentra.jpg"></div>
-    <div class="hero-slide" style="background-color:#0B3B60;" data-src="/images/carousel/slide-4.jpg"></div>
+    @foreach($hero_slides as $index => $slide)
+      <div class="hero-slide {{ $index === 0 ? 'aktif' : '' }}" style="background-color:#0B3B60;" data-src="{{ $slide }}"></div>
+    @endforeach
   </div>
   <div class="hero-partikel" id="hero-partikel"></div>
   <div class="hero-inner">
@@ -222,9 +234,11 @@
     <h2>Mengenal Desa Munungkerep</h2>
   </div>
   <div class="tentang reveal">
-    <p>Desa Munungkerep merupakan salah satu desa di Kecamatan Kabuh, Kabupaten Jombang, Jawa Timur, yang berada di kawasan dataran tinggi dengan kondisi tanah kering pada musim kemarau.</p>
-    <p>Desa ini terdiri dari 7 dusun Munungkerep, Karanggebang, Duren, Slumbung, Kalipang, Kadenan, dan Jatirubuh dengan mayoritas warga berprofesi sebagai petani. Tembakau menjadi komoditas unggulan yang ditanam warga saat musim kemarau, didampingi pandan sebagai komoditas pendukung yang tumbuh merata di seluruh wilayah desa.</p>
-    <p>Melalui portal ini, kami berupaya menghadirkan informasi desa secara terbuka — mulai dari peta wilayah, potensi ekonomi, struktur pemerintahan, hingga data profil desa agar mudah diakses oleh warga dan masyarakat umum.</p>
+    @foreach($tentang as $para)
+      @if(!empty($para))
+        <p>{{ $para }}</p>
+      @endif
+    @endforeach
   </div>
 
   <div class="sect-head">
@@ -232,54 +246,36 @@
   </div>
 
   <div class="portal-grid reveal">
-    <button class="portal-card" onclick="bukaModalLayanan()">
-      <div class="p-badge">
-        <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h8l4 4v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M15 3v4h4"/><path d="M9 12h6M9 16h6M9 8h3"/></svg>
-      </div>
-      <h3>Layanan Administrasi</h3>
-      <p>Persyaratan lengkap surat-menyurat desa — domisili, usaha, KTP, KK, hingga surat tidak mampu.</p>
-      <div class="p-link">Lihat Persyaratan <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </button>
-    <a href="/profil-desa" class="portal-card">
-      <div class="p-badge">
-        <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V7l8-4 8 4v14"/><path d="M9 21v-6h6v6M4 21h16"/></svg>
-      </div>
-      <h3>Informasi Publik</h3>
-      <p>Struktur organisasi pemerintah desa, anggaran APBDes, kondisi geografis, data demografis, hingga visi &amp; misi.</p>
-      <div class="p-link">Lihat Profil <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </a>
-    <a href="/profil-desa#pemerintahan" class="portal-card">
-      <div class="p-badge">
-        <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="18" cy="8" r="2.2"/><path d="M15.5 20c.3-2.5 2-4.5 4.3-5"/></svg>
-      </div>
-      <h3>Struktur Pemerintahan</h3>
-      <p>Kenali Kepala Desa, perangkat desa, dan Kepala Dusun yang melayani warga Munungkerep.</p>
-      <div class="p-link">Lihat Struktur <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </a>
-    <a href="/profil-desa#anggaran" class="portal-card">
-      <div class="p-badge">
-        <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-9.8-9.2C.6 7.8 2.4 4.5 5.6 4c2-.3 3.9.7 4.9 2.4 1-1.7 2.9-2.7 4.9-2.4 3.2.5 5 3.8 3.4 7.3-2.3 4.6-9.8 9.2-9.8 9.2Z"/></svg>
-      </div>
-      <h3>Bantuan Sosial</h3>
-      <p>Lihat rincian APBDes — realisasi tahun berjalan dan rencana anggaran tahun berikutnya, terbuka untuk warga.</p>
-      <div class="p-link">Lihat Anggaran <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </a>
-    <a href="/profil-desa#demografis" class="portal-card">
-      <div class="p-badge">
-        <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3.2"/><path d="M2.5 20c0-3.6 2.5-6.5 5.5-6.5s5.5 2.9 5.5 6.5"/><path d="M16 21c0-3 2-5.5 4.5-5.5"/><circle cx="18.5" cy="9" r="2.3"/></svg>
-      </div>
-      <h3>Data Kependudukan</h3>
-      <p>Statistik jumlah penduduk, KK, usia, dan sarana-prasarana desa berdasarkan data monografi.</p>
-      <div class="p-link">Lihat Data <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </a>
-    <a href="/kegiatan" class="portal-card" onclick="return pindahHalus(event, '/kegiatan')">
-      <div class="p-badge">
-        <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
-      </div>
-      <h3>Event &amp; Kegiatan</h3>
-      <p>Dokumentasi dan informasi kegiatan warga — gotong royong, posyandu, dan agenda desa lainnya.</p>
-      <div class="p-link">Lihat Kegiatan <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-    </a>
+    @foreach($layanan_cards as $card)
+      @if($card['link'] === '#modal-layanan')
+        <button class="portal-card" onclick="bukaModalLayanan()">
+          <div class="p-badge">
+            {!! $card['icon'] !!}
+          </div>
+          <h3>{{ $card['title'] }}</h3>
+          <p>{{ $card['desc'] }}</p>
+          <div class="p-link">Lihat Persyaratan <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+      @elseif($card['link'] === '#modal-informasi' || $card['link'] === '#modal-apbdes')
+        <button class="portal-card" onclick="bukaModalInformasi()">
+          <div class="p-badge">
+            {!! $card['icon'] !!}
+          </div>
+          <h3>{{ $card['title'] }}</h3>
+          <p>{{ $card['desc'] }}</p>
+          <div class="p-link">Lihat Rincian <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+      @else
+        <a href="{{ $card['link'] }}" class="portal-card" @if(str_contains($card['link'], '/kegiatan')) onclick="return pindahHalus(event, '/kegiatan')" @endif>
+          <div class="p-badge">
+            {!! $card['icon'] !!}
+          </div>
+          <h3>{{ $card['title'] }}</h3>
+          <p>{{ $card['desc'] }}</p>
+          <div class="p-link">Lihat Detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </a>
+      @endif
+    @endforeach
   </div>
 
   <!-- ==================== TEMPLATE KARTU BERITA ==================== -->
@@ -289,49 +285,37 @@
     </div>
     
     <div class="berita-grid">
-      
-      <!-- Card Template 1 -->
+      @forelse($beritas as $item)
       <div class="berita-card">
-        <img src="https://placehold.co/600x400/e2e8f0/94a3b8?text=Gambar+Berita+2" alt="Thumbnail Berita" class="berita-img">
+        <img src="{{ $item->foto ? asset('storage/'.$item->foto) : 'https://placehold.co/600x400/e2e8f0/94a3b8?text=Gambar+Berita' }}" alt="{{ $item->judul }}" class="berita-img" loading="lazy">
         <div class="berita-content">
-          <span class="berita-badge">Umum</span>
-          <h3 class="berita-title">[Judul Berita 2 Akan Muncul Di Sini]</h3>
-          <div class="berita-date">DD Bulan YYYY</div>
-          <p class="berita-excerpt">[Cuplikan isi berita atau paragraf pembuka akan ditampilkan di sini...]</p>
-          <a class="berita-link" onclick="bukaBerita(event)">Baca Selengkapnya 
+          <span class="berita-badge">{{ $item->kategori }}</span>
+          <h3 class="berita-title">{{ $item->judul }}</h3>
+          <div class="berita-date">{{ date('d M Y', strtotime($item->tanggal)) }}</div>
+          @php
+            $excerptClean = preg_replace('/!\[.*?\]\((https?:\/\/.*?)\)/i', '', $item->isi);
+            $excerptClean = preg_replace('/https?:\/\/\S+\.(?:jpg|jpeg|png|gif|webp|svg)\b/i', '', $excerptClean);
+            $excerptClean = trim(strip_tags($excerptClean));
+          @endphp
+          <p class="berita-excerpt">{{ Str::limit($excerptClean, 120) }}</p>
+          <a class="berita-link" onclick="bukaBerita(this)" 
+             data-id="{{ $item->id }}"
+             data-judul="{{ $item->judul }}"
+             data-kategori="{{ $item->kategori }}"
+             data-tanggal="{{ date('d M Y', strtotime($item->tanggal)) }}"
+             data-foto="{{ $item->foto ? asset('storage/'.$item->foto) : 'https://placehold.co/600x400/e2e8f0/94a3b8?text=Gambar+Berita' }}"
+             data-views="{{ $item->views }}">
+            Baca Selengkapnya 
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+            <span class="berita-isi-full" style="display:none;">{{ $item->isi }}</span>
           </a>
         </div>
       </div>
-
-      <!-- Card Template 2 -->
-      <div class="berita-card">
-        <img src="https://placehold.co/600x400/e2e8f0/94a3b8?text=Gambar+Berita+2" alt="Thumbnail Berita" class="berita-img">
-        <div class="berita-content">
-          <span class="berita-badge">Umum</span>
-          <h3 class="berita-title">[Judul Berita 2 Akan Muncul Di Sini]</h3>
-          <div class="berita-date">DD Bulan YYYY</div>
-          <p class="berita-excerpt">[Cuplikan isi berita atau paragraf pembuka akan ditampilkan di sini...]</p>
-          <a class="berita-link" onclick="bukaBerita(event)">Baca Selengkapnya 
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
-          </a>
-        </div>
+      @empty
+      <div class="empty-state" style="text-align: center; padding: 40px 20px; color: var(--teks-muted); font-size: 14px; background: #fff; border-radius: 12px; border: 1px dashed var(--border); grid-column: 1 / -1;">
+        Belum ada berita desa terbaru yang dipublikasikan.
       </div>
-
-      <!-- Card Template 3 -->
-      <div class="berita-card">
-        <img src="https://placehold.co/600x400/e2e8f0/94a3b8?text=Gambar+Berita+3" alt="Thumbnail Berita" class="berita-img">
-        <div class="berita-content">
-          <span class="berita-badge">Umum</span>
-          <h3 class="berita-title">[Judul Berita 3 Akan Muncul Di Sini]</h3>
-          <div class="berita-date">DD Bulan YYYY</div>
-          <p class="berita-excerpt">[Cuplikan isi berita atau paragraf pembuka akan ditampilkan di sini...]</p>
-          <a class="berita-link" onclick="bukaBerita(event)">Baca Selengkapnya 
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
-          </a>
-        </div>
-      </div>
-
+      @endforelse
     </div>
   </div>
 
@@ -347,26 +331,22 @@
 
   <!-- Kartu Artikel Pembungkus -->
   <div class="berita-detail-card">
-    <div class="bd-badge">UMUM</div>
+    <div class="bd-badge" id="detail-bd-badge">UMUM</div>
     
-    <h1 class="bd-title">Resmi Dibuka! Kelompok 5 KPM Unipdu 2026 Siap Berkolaborasi dan Mengabdi di Desa Munungkerep</h1>
+    <h1 class="bd-title" id="detail-bd-title">Judul Berita</h1>
     
     <div class="bd-meta">
-      <span>Dipublikasikan: 25 Jul 2026</span>
+      <span id="detail-bd-date">Dipublikasikan: -</span>
       <span>&bull;</span>
-      <span>Dilihat: 177x</span>
+      <span id="detail-bd-views">Dilihat: 0x</span>
     </div>
 
     <!-- Gambar Artikel -->
-    <img src="https://placehold.co/900x480/e2e8f0/94a3b8?text=Gambar+Full+Berita" alt="Gambar Detail Berita" class="bd-img">
+    <img src="" alt="Gambar Detail Berita" class="bd-img" id="detail-bd-img">
 
     <!-- Isi Artikel -->
-    <div class="bd-content">
-      <p><strong>JOMBANG</strong> – Suasana hangat, penuh antusiasme, dan semangat kebersamaan menyelimuti Balai Desa Munungkerep pada Rabu (08/07/2026). Jajaran Pemerintah Desa bersama mahasiswa <strong>Universitas Pesantren Tinggi Darul 'Ulum (Unipdu)</strong> Jombang resmi menggelar acara Pembukaan <strong>Kuliah Pengabdian Masyarakat (KPM) 2026</strong> untuk Kelompok 5.</p>
-      
-      <p>[Teks dummy/placeholder untuk isi paragraf selanjutnya...] Dalam sambutannya, Kepala Desa menyampaikan apresiasi atas kehadiran mahasiswa yang diharapkan dapat memberikan kontribusi inovasi dan pendampingan di sektor pertanian maupun pemberdayaan UMKM yang ada di lingkungan desa.</p>
-      
-      <p>[Teks dummy/placeholder untuk paragraf penutup...] Kegiatan KPM ini akan berlangsung selama satu bulan penuh, dengan fokus pada program-program pengabdian yang terintegrasi dengan kebutuhan masyarakat. Selamat bertugas kepada Kelompok 5, semoga sukses dan membawa manfaat bagi Desa Munungkerep.</p>
+    <div class="bd-content" id="detail-bd-content">
+      <!-- Paragraf isi berita dimasukkan secara dinamis -->
     </div>
   </div>
 </div>
@@ -381,12 +361,103 @@
   </div>
 </div>
 
+<!-- Modal Informasi Publik / Transparansi APBDes -->
+<div class="modal-informasi-overlay" id="modal-informasi-overlay" onclick="tutupModalInformasi(event)">
+  <div class="modal-informasi-box">
+    <button class="modal-informasi-close" onclick="tutupModalInformasi()">✕</button>
+    <h3>Informasi Publik &amp; Transparansi APBDes</h3>
+    <div class="sub">Rincian Anggaran Pendapatan dan Belanja Desa (APBDes) Desa Munungkerep</div>
+
+    <!-- 1. PENDAPATAN DESA -->
+    <div class="apbdes-section">
+      <div class="apbdes-head">
+        <span><i class="fas fa-wallet" style="margin-right:6px;"></i> PENDAPATAN DESA</span>
+        <span class="total">Rp 1.663.629.803,00</span>
+      </div>
+      <div class="apbdes-body">
+        <div class="apbdes-row"><span class="label">Pendapatan Asli Desa (PAD)</span><span class="val">Rp 230.760.000,00</span></div>
+        <div class="apbdes-row"><span class="label">Dana Desa (DD)</span><span class="val">Rp 303.093.000,00</span></div>
+        <div class="apbdes-row"><span class="label">Alokasi Dana Desa (ADD)</span><span class="val">Rp 376.615.000,00</span></div>
+        <div class="apbdes-row"><span class="label">Bagi Hasil Pajak &amp; Retribusi (PDRD)</span><span class="val">Rp 85.805.300,00</span></div>
+        <div class="apbdes-row"><span class="label">Bantuan Keuangan (BK)</span><span class="val">Rp 539.600.603,00</span></div>
+        <div class="apbdes-row"><span class="label">Lain-Lain Pendapatan Sah (DLL)</span><span class="val">Rp 127.755.900,00</span></div>
+      </div>
+    </div>
+
+    <!-- 2. BELANJA DESA -->
+    <div class="apbdes-section">
+      <div class="apbdes-head belanja">
+        <span><i class="fas fa-shopping-bag" style="margin-right:6px;"></i> BELANJA DESA</span>
+        <span class="total">Rp 1.676.895.127,92</span>
+      </div>
+      <div class="apbdes-body">
+        <div class="apbdes-row"><span class="label">Penyelenggaraan Pemerintahan Desa</span><span class="val">Rp 866.594.524,92</span></div>
+        <div class="apbdes-row"><span class="label">Pelaksanaan Pembangunan Desa</span><span class="val">Rp 582.090.603,00</span></div>
+        <div class="apbdes-row"><span class="label">Pembinaan Kemasyarakatan</span><span class="val">Rp 42.450.000,00</span></div>
+        <div class="apbdes-row"><span class="label">Pemberdayaan Masyarakat</span><span class="val">Rp 158.000.000,00</span></div>
+        <div class="apbdes-row"><span class="label">Penanggulangan Bencana &amp; Keadaan Darurat</span><span class="val">Rp 27.760.000,00</span></div>
+      </div>
+    </div>
+
+    <!-- 3. PEMBIAYAAN DESA -->
+    <div class="apbdes-section">
+      <div class="apbdes-head pembiayaan">
+        <span><i class="fas fa-coins" style="margin-right:6px;"></i> PEMBIAYAAN DESA (NETTO)</span>
+        <span class="total">Rp 13.265.324,92</span>
+      </div>
+      <div class="apbdes-body">
+        <div class="apbdes-row"><span class="label">Penerimaan Pembiayaan</span><span class="val">Rp 13.265.324,92</span></div>
+        <div class="apbdes-row"><span class="label">Pengeluaran Pembiayaan</span><span class="val">Rp 0,00</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 @include('partials.footer')
 
 <script>
   // ================= LOGIKA BUKA/TUTUP HALAMAN BERITA =================
-  function bukaBerita(event) {
-    if(event) event.preventDefault(); // Mencegah pindah URL
+  function bukaBerita(link) {
+    const id = link.getAttribute('data-id');
+    const judul = link.getAttribute('data-judul');
+    const kategori = link.getAttribute('data-kategori');
+    const tanggal = link.getAttribute('data-tanggal');
+    const foto = link.getAttribute('data-foto');
+    const views = link.getAttribute('data-views');
+    let isi = link.querySelector('.berita-isi-full').textContent;
+
+    // Parse Markdown image syntax: ![](URL)
+    isi = isi.replace(/!\[.*?\]\((https?:\/\/[^\s)]+)\)/gi, (match, url) => {
+        return `<img src="${url}" style="max-width:100%; border-radius:8px; display:block; margin:16px auto; box-shadow:0 4px 12px rgba(0,0,0,0.08);">`;
+    });
+
+    // Parse raw image URLs on their own line (wrapped in <p>)
+    isi = isi.replace(/<p>\s*(https?:\/\/[^\s<]+\.(?:jpg|jpeg|png|gif|webp|svg)(?:\?[^\s<]+)?)\s*<\/p>/gi, (match, url) => {
+        return `<img src="${url}" style="max-width:100%; border-radius:8px; display:block; margin:16px auto; box-shadow:0 4px 12px rgba(0,0,0,0.08);">`;
+    });
+    
+    document.getElementById('detail-bd-badge').textContent = kategori;
+    document.getElementById('detail-bd-title').textContent = judul;
+    document.getElementById('detail-bd-date').textContent = `Dipublikasikan: ${tanggal}`;
+    document.getElementById('detail-bd-views').textContent = `Dilihat: ${views}x`;
+    document.getElementById('detail-bd-img').src = foto;
+    document.getElementById('detail-bd-img').alt = judul;
+    
+    const contentDiv = document.getElementById('detail-bd-content');
+    contentDiv.innerHTML = isi;
+    
+    // Kirim request AJAX (fetch) untuk menambah jumlah tayang secara asinkronus
+    if (id) {
+      fetch(`/berita/${id}/view`)
+        .then(response => response.json())
+        .then(data => {
+          // Perbarui teks tayangan di halaman detail
+          document.getElementById('detail-bd-views').textContent = `Dilihat: ${data.views}x`;
+          // Perbarui nilai data-views pada kartu berita agar jika diklik ulang datanya sinkron
+          link.setAttribute('data-views', data.views);
+        })
+        .catch(err => console.error('Gagal memperbarui jumlah tayangan:', err));
+    }
     
     // Sembunyikan Halaman Utama (Hero + Main Konten)
     document.getElementById('hero-header').style.display = 'none';
@@ -440,6 +511,16 @@
   function tutupModalLayanan(event){
     if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-layanan-close')) return;
     document.getElementById('modal-layanan-overlay').classList.remove('show');
+  }
+
+  // ================= MODAL INFORMASI PUBLIK & APBDES =================
+  function bukaModalInformasi(){
+    document.getElementById('modal-informasi-overlay').classList.add('show');
+  }
+
+  function tutupModalInformasi(event){
+    if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-informasi-close')) return;
+    document.getElementById('modal-informasi-overlay').classList.remove('show');
   }
 
   // ================= SLIDER & ANIMASI (TETAP SAMA) =================

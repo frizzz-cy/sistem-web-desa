@@ -18,4 +18,15 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*'),
         );
+        
+        $exceptions->render(function (\Illuminate\Http\Exceptions\PostTooLargeException $e, Request $request) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'message' => 'Ukuran data/file yang diunggah melebihi kapasitas batas maksimum server.'
+                ], 413);
+            }
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Ukuran file gambar terlalu besar untuk diunggah langsung. Gambar telah kami kompres otomatis, silakan coba unggah kembali.');
+        });
     })->create();
