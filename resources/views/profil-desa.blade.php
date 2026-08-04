@@ -226,6 +226,40 @@
     box-shadow: 0 8px 18px rgba(22,104,163,0.14) !important;
   }
 
+  /* RESPONSIVE ORGANOGRAM KHUSUS TAMPILAN MOBILE HP (< 640px) */
+  @media (max-width: 640px) {
+    .bagan-l2-wrap {
+      flex-direction: column !important;
+      gap: 20px !important;
+    }
+    .bagan-l2-col {
+      width: 100% !important;
+    }
+    .bagan-center-line {
+      display: none !important;
+    }
+    .bagan-top-bar {
+      width: 80% !important;
+    }
+    .bagan-l3-wrap {
+      display: grid !important;
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 8px !important;
+    }
+    .bagan-sub-grid {
+      gap: 6px !important;
+    }
+    .bagan-sub-card {
+      padding: 8px 4px !important;
+    }
+    .bagan-sub-card div {
+      white-space: normal !important;
+      overflow: visible !important;
+      text-overflow: clip !important;
+      word-break: break-word !important;
+    }
+  }
+
   /* Tombol Geser Slider */
   .btn-pigora-nav {
     position: absolute;
@@ -691,7 +725,7 @@
         <div style="width: 2px; height: 26px; background: #0B3B60; margin: 0 auto;"></div>
 
         <!-- GARIS HORISONTAL PERCABANGAN PELAKSANA TEKNIS & SEKRETARIS DESA -->
-        <div style="position: relative; width: 50%; margin: 0 auto; height: 26px;">
+        <div style="position: relative; width: 50%; margin: 0 auto; height: 26px;" class="bagan-top-bar">
           <!-- Garis Horisontal -->
           <div style="height: 2px; background: #0B3B60; width: 100%;"></div>
           <!-- Garis Turun Ke Pelaksana Teknis (Kiri) -->
@@ -701,13 +735,13 @@
         </div>
 
         <!-- LEVEL 2: NODE PELAKSANA TEKNIS (KIRI) & SEKRETARIS DESA (KANAN) -->
-        <div style="display: flex; justify-content: space-between; gap: 12px; width: 100%; margin: 0 auto; position: relative; z-index: 2;">
+        <div style="display: flex; justify-content: space-between; gap: 12px; width: 100%; margin: 0 auto; position: relative; z-index: 2;" class="bagan-l2-wrap">
           
           <!-- GARIS VERTIKAL TENGAH PRESISI TANPA CELAH TERPOTONG (DESCENT TO KASUN) -->
-          <div style="position: absolute; left: 50%; top: -26px; bottom: -40px; width: 2px; background: #0B3B60; transform: translateX(-50%); z-index: 1;"></div>
+          <div style="position: absolute; left: 50%; top: -26px; bottom: -40px; width: 2px; background: #0B3B60; transform: translateX(-50%); z-index: 1;" class="bagan-center-line"></div>
           
           <!-- BRANCH KIRI: PELAKSANA TEKNIS -->
-          <div style="flex: 1; text-align: center; min-width: 0;">
+          <div style="flex: 1; text-align: center; min-width: 0;" class="bagan-l2-col">
             <div style="width: 100%; max-width: 200px; margin: 0 auto; background: #1668A3; color: #fff; border-radius: 6px; padding: 6px 8px; font-weight: 800; font-size: 12px; text-transform: uppercase; box-shadow: 0 2px 8px rgba(22,104,163,0.15);">
               Pelaksana Teknis
             </div>
@@ -724,40 +758,40 @@
             </div>
 
             <!-- 3 KASI CARDS -->
-            <div style="display: flex; justify-content: space-between; gap: 4px; width: 100%;">
+            <div style="display: flex; justify-content: space-between; gap: 4px; width: 100%;" class="bagan-sub-grid">
               <!-- Kasi Kesra -->
-              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kasi Kesra', 'Rusdi', '/images/perangkat/rusdi.jpg')" class="org-subcard">
+              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kasi Kesra', 'Rusdi', '/images/perangkat/rusdi.jpg')" class="org-subcard bagan-sub-card">
                 <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #1668A3; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
                   <img src="/images/perangkat/rusdi.jpg" alt="Rusdi" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
                 </div>
                 <div style="font-size: 10px; font-weight: 800; color: #1668A3; line-height: 1.2;">Kasi Kesra</div>
-                <div style="font-size: 10px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Rusdi</div>
+                <div style="font-size: 10px; font-weight: 700; color: var(--ink);">Rusdi</div>
               </div>
 
               <!-- Kasi Pelayanan -->
-              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kasi Pelayanan', 'Sugito', '/images/perangkat/sugito.jpg')" class="org-subcard">
+              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kasi Pelayanan', 'Sugito', '/images/perangkat/sugito.jpg')" class="org-subcard bagan-sub-card">
                 <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #1668A3; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
                   <img src="/images/perangkat/sugito.jpg" alt="Sugito" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
                 </div>
                 <div style="font-size: 10px; font-weight: 800; color: #1668A3; line-height: 1.2;">Kasi Pelayanan</div>
-                <div style="font-size: 10px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Sugito</div>
+                <div style="font-size: 10px; font-weight: 700; color: var(--ink);">Sugito</div>
               </div>
 
               <!-- Kasi Pemerintahan -->
-              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kasi Pemerintahan', 'Suyatemo', '/images/perangkat/suyatemo.jpg')" class="org-subcard">
+              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kasi Pemerintahan', 'Suyatemo', '/images/perangkat/suyatemo.jpg')" class="org-subcard bagan-sub-card">
                 <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #1668A3; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
                   <img src="/images/perangkat/suyatemo.jpg" alt="Suyatemo" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
                 </div>
                 <div style="font-size: 10px; font-weight: 800; color: #1668A3; line-height: 1.2;">Kasi Pemerintahan</div>
-                <div style="font-size: 10px; font-weight: 700; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Suyatemo</div>
+                <div style="font-size: 10px; font-weight: 700; color: var(--ink);">Suyatemo</div>
               </div>
             </div>
           </div>
 
           <!-- BRANCH KANAN: SEKRETARIS DESA -->
-          <div style="flex: 1; text-align: center; min-width: 0;">
+          <div style="flex: 1; text-align: center; min-width: 0;" class="bagan-l2-col">
             <!-- Sekdes Card -->
-            <div style="width: 100%; max-width: 200px; margin: 0 auto; background: #fff; border: 2px solid #0B3B60; border-radius: 6px; padding: 5px 8px; font-weight: 800; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.04);" onclick="bukaPopupOrang('Sekretaris Desa', 'Siswanto', '/images/perangkat/siswanto.jpg')" class="org-subcard">
+            <div style="width: 100%; max-width: 200px; margin: 0 auto; background: #fff; border: 2px solid #0B3B60; border-radius: 6px; padding: 5px 8px; font-weight: 800; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.04);" onclick="bukaPopupOrang('Sekretaris Desa', 'Siswanto', '/images/perangkat/siswanto.jpg')" class="org-subcard bagan-sub-card">
               <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
                 <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #1668A3; overflow: hidden; background: #F4F6F8; flex-shrink: 0;">
                   <img src="/images/perangkat/siswanto.jpg" alt="Siswanto" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
@@ -781,32 +815,32 @@
             </div>
 
             <!-- 3 KAUR CARDS -->
-            <div style="display: flex; justify-content: space-between; gap: 4px; width: 100%;">
+            <div style="display: flex; justify-content: space-between; gap: 4px; width: 100%;" class="bagan-sub-grid">
               <!-- Kaur TU & Umum -->
-              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kaur TU &amp; Umum', 'Suntari', '/images/perangkat/suntari.jpg')" class="org-subcard">
+              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kaur TU &amp; Umum', 'Suntari', '/images/perangkat/suntari.jpg')" class="org-subcard bagan-sub-card">
                 <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #1668A3; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
                   <img src="/images/perangkat/suntari.jpg" alt="Suntari" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
                 </div>
                 <div style="font-size: 10px; font-weight: 800; color: var(--ink); line-height: 1.2;">Kaur TU &amp; Umum</div>
-                <div style="font-size: 10px; font-weight: 700; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Suntari</div>
+                <div style="font-size: 10px; font-weight: 700; color: var(--ink-soft);">Suntari</div>
               </div>
 
               <!-- Kaur Keuangan -->
-              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kaur Keuangan', 'Agus Sukisno', '/images/perangkat/agus-sukisno.jpg')" class="org-subcard">
+              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kaur Keuangan', 'Agus Sukisno', '/images/perangkat/agus-sukisno.jpg')" class="org-subcard bagan-sub-card">
                 <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #1668A3; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
                   <img src="/images/perangkat/agus-sukisno.jpg" alt="Agus Sukisno" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
                 </div>
                 <div style="font-size: 10px; font-weight: 800; color: var(--ink); line-height: 1.2;">Kaur Keuangan</div>
-                <div style="font-size: 10px; font-weight: 700; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Agus Sukisno</div>
+                <div style="font-size: 10px; font-weight: 700; color: var(--ink-soft);">Agus Sukisno</div>
               </div>
 
               <!-- Kaur Perencanaan -->
-              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kaur Perencanaan', 'Iskan', '/images/perangkat/iskan.jpg')" class="org-subcard">
+              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kaur Perencanaan', 'Iskan', '/images/perangkat/iskan.jpg')" class="org-subcard bagan-sub-card">
                 <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #1668A3; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
                   <img src="/images/perangkat/iskan.jpg" alt="Iskan" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
                 </div>
                 <div style="font-size: 10px; font-weight: 800; color: var(--ink); line-height: 1.2;">Kaur Perencanaan</div>
-                <div style="font-size: 10px; font-weight: 700; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Iskan</div>
+                <div style="font-size: 10px; font-weight: 700; color: var(--ink-soft);">Iskan</div>
               </div>
             </div>
 
@@ -826,45 +860,45 @@
           </div>
 
           <!-- 4 KASUN CARDS -->
-          <div style="display: flex; justify-content: space-between; gap: 6px; width: 100%;">
+          <div style="display: flex; justify-content: space-between; gap: 6px; width: 100%;" class="bagan-l3-wrap">
             <!-- Kasun 1 -->
-            <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kadus Munungkerep', 'Juni Hadi', '/images/perangkat/juni-hadi.jpg')" class="org-subcard">
+            <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kadus Munungkerep', 'Juni Hadi', '/images/perangkat/juni-hadi.jpg')" class="org-subcard bagan-sub-card">
               <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #52633B; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
                 <img src="/images/perangkat/juni-hadi.jpg" alt="Juni Hadi" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
               </div>
               <div style="font-size: 10.5px; font-weight: 800; color: var(--ink);">KASUN</div>
-              <div style="font-size: 10px; color: var(--ink-soft); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Juni Hadi</div>
-              <div style="font-size: 9px; color: #52633B; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Dusun Munungkerep</div>
+              <div style="font-size: 10px; color: var(--ink-soft); font-weight: 600;">Juni Hadi</div>
+              <div style="font-size: 9px; color: #52633B; font-weight: 700;">Dusun Munungkerep</div>
             </div>
 
             <!-- Kasun 2 -->
-            <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kadus Karanggebang &amp; Slumbung', 'Heru Purnadi', '/images/perangkat/heru-purnadi.jpg')" class="org-subcard">
+            <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kadus Karanggebang &amp; Slumbung', 'Heru Purnadi', '/images/perangkat/heru-purnadi.jpg')" class="org-subcard bagan-sub-card">
               <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #52633B; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
                 <img src="/images/perangkat/heru-purnadi.jpg" alt="Heru Purnadi" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
               </div>
               <div style="font-size: 10.5px; font-weight: 800; color: var(--ink);">KASUN</div>
-              <div style="font-size: 10px; color: var(--ink-soft); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Heru Purnadi</div>
-              <div style="font-size: 9px; color: #52633B; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Karanggebang &amp; Slumbung</div>
+              <div style="font-size: 10px; color: var(--ink-soft); font-weight: 600;">Heru Purnadi</div>
+              <div style="font-size: 9px; color: #52633B; font-weight: 700;">Karanggebang &amp; Slumbung</div>
             </div>
 
             <!-- Kasun 3 -->
-            <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kadus Kadenan &amp; Jatirubuh', 'Wagimin', '/images/perangkat/wagimin.jpg')" class="org-subcard">
+            <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kadus Kadenan &amp; Jatirubuh', 'Wagimin', '/images/perangkat/wagimin.jpg')" class="org-subcard bagan-sub-card">
               <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #52633B; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
                 <img src="/images/perangkat/wagimin.jpg" alt="Wagimin" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
               </div>
               <div style="font-size: 10.5px; font-weight: 800; color: var(--ink);">KASUN</div>
-              <div style="font-size: 10px; color: var(--ink-soft); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Wagimin</div>
-              <div style="font-size: 9px; color: #52633B; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Kadenan &amp; Jatirubuh</div>
+              <div style="font-size: 10px; color: var(--ink-soft); font-weight: 600;">Wagimin</div>
+              <div style="font-size: 9px; color: #52633B; font-weight: 700;">Kadenan &amp; Jatirubuh</div>
             </div>
 
             <!-- Kasun 4 -->
-            <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kadus Kalipang &amp; Duren', 'Hartatik', '/images/perangkat/hartatik.jpg')" class="org-subcard">
+            <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kadus Kalipang &amp; Duren', 'Hartatik', '/images/perangkat/hartatik.jpg')" class="org-subcard bagan-sub-card">
               <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #52633B; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
                 <img src="/images/perangkat/hartatik.jpg" alt="Hartatik" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
               </div>
               <div style="font-size: 10.5px; font-weight: 800; color: var(--ink);">KASUN</div>
-              <div style="font-size: 10px; color: var(--ink-soft); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Hartatik</div>
-              <div style="font-size: 9px; color: #52633B; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Kalipang &amp; Duren</div>
+              <div style="font-size: 10px; color: var(--ink-soft); font-weight: 600;">Hartatik</div>
+              <div style="font-size: 9px; color: #52633B; font-weight: 700;">Kalipang &amp; Duren</div>
             </div>
           </div>
         </div>
