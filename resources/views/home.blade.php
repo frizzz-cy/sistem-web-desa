@@ -8,7 +8,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
+  @media (min-width: 768px) {
+    .grid-demografi-wrapper {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+  }
   :root{
     --ground:#0B3B60;
     --paper:#F4F6F8;
@@ -355,9 +361,11 @@
 
 <section class="demografi-section">
   <div class="demografi-text">
-    <div class="eyebrow-2">Demografi</div>
+    <div class="eyebrow-2">Demografi &amp; Geografis</div>
     <h2>Demografi Penduduk</h2>
-    <p>Desa Munungkerep dihuni oleh 2.120 jiwa yang tersebar di 7 dusun, dengan mayoritas warga berprofesi sebagai petani. Data ini bersumber dari papan monografi desa dan menjadi gambaran umum kondisi kependudukan.</p>
+    <p>Desa Munungkerep dihuni oleh <strong>2.113 Jiwa</strong> (1.042 Laki-laki, 1.071 Perempuan) yang tersebar di 7 dusun dengan total <strong>761 Kepala Keluarga (KK)</strong>, serta memiliki luas wilayah <strong>209,909 Hektar</strong>. Mayoritas warga berprofesi di sektor pertanian (<strong>986 Petani</strong> &amp; <strong>457 Buruh Tani</strong>) dengan iklim kemarau dan penghujan yang berpengaruh langsung terhadap pola tanam warga.</p>
+    <p>Ditinjau dari golongan umur, kelompok angkatan kerja usia produktif <strong>41–55 tahun (602 jiwa)</strong> dan <strong>26–40 tahun (505 jiwa)</strong> merupakan jumlah terbanyak (total angkatan kerja 1.169 orang), disusul usia 16–25 tahun (280 jiwa), 6–15 tahun (274 jiwa), 56–70 tahun (243 jiwa), serta balita 0–5 tahun (209 jiwa). Dari segi keagamaan, 100% masyarakat Desa Munungkerep beragama <strong>Islam</strong>.</p>
+    <p>Di bidang pendidikan dan kesehatan, desa ini ditunjang oleh 1 Gedung TK, 2 Gedung SD, Polindes, 7 Posyandu, 7 Posyandu Lansia, dan Pos Jubastik. Tingkat pendidikan warga mencakup 40 Sarjana (S-1), 23 Diploma, 160 SLTA, 309 SLTP, dan 467 tamatan SD. Populasi ternak warga meliputi 450 ayam/itik, 170 kambing, dan 76 ekor sapi.</p>
     <p>Peta di bawah memuat sarana desa, titik ibadah, dan potensi ekonomi warga, dihimpun langsung dari survei lapangan Tim KKN 2026. Ketuk titik pada peta untuk detail lengkap.</p>
   </div>
   <div class="main-layout">

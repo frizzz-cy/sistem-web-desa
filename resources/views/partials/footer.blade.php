@@ -6,16 +6,21 @@
     font-family: 'Plus Jakarta Sans', sans-serif;
   }
   .footer-inner {
-    max-width: 1180px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 48px 20px 24px;
     display: grid;
     grid-template-columns: 1fr;
     gap: 32px;
   }
-  @media (min-width: 820px) {
+  @media (min-width: 640px) {
     .footer-inner {
-      grid-template-columns: 1.3fr 1fr 1fr 1fr;
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1024px) {
+    .footer-inner {
+      grid-template-columns: 1.3fr 1fr 1fr 0.9fr 0.8fr;
     }
   }
 
@@ -80,15 +85,36 @@
     color: #fff;
   }
 
-  .kontak-item {
+  .jam-pelayanan {
+    background: rgba(22, 104, 163, 0.12);
+    border: 1px solid rgba(22, 104, 163, 0.25);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 14px;
+  }
+  .jam-pelayanan .jam-title {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #4CB5FF;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .jam-pelayanan .jam-waktu {
+    font-size: 12px;
+    color: #D8D8D8;
+  }
+
+  .kontak-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
     margin-bottom: 12px;
   }
   .kontak-icon {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     background: rgba(255, 255, 255, 0.05);
     border-radius: 6px;
     display: flex;
@@ -96,11 +122,26 @@
     justify-content: center;
     color: #fff;
     flex-shrink: 0;
+    margin-top: 2px;
+    font-size: 13px;
   }
-  .kontak-item p.placeholder {
-    color: #5A6270;
-    font-style: italic;
-    font-size: 11.5px;
+  .kontak-info {
+    display: flex;
+    flex-direction: column;
+  }
+  .kontak-label {
+    font-size: 10.5px;
+    color: #7A7A7A;
+    line-height: 1.3;
+  }
+  .kontak-val {
+    color: #D8D8D8;
+    font-size: 12.5px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .kontak-val:hover {
+    color: #fff;
   }
 
   .footer-wilayah {
@@ -129,7 +170,7 @@
     padding: 18px 20px;
     font-size: 12px;
     color: #7A7A7A;
-    max-width: 1180px;
+    max-width: 1200px;
     margin: 0 auto;
   }
 </style>
@@ -138,10 +179,10 @@
 
 <footer>
   <div class="footer-inner">
+    <!-- BRAND DESA -->
     <div class="footer-brand">
       <div class="baris-logo">
         <div class="footer-logo">
-          <!-- Pastikan gambar /images/kabupaten.png menggunakan file PNG transparan yang baru -->
           <img src="/images/kabupaten.png" alt="Logo Kabupaten Jombang" onerror="this.style.display='none'">
         </div>
         <div>
@@ -152,6 +193,53 @@
       <p>Portal resmi Desa Munungkerep untuk transparansi informasi, peta wilayah, dan pelayanan publik bagi seluruh warga dan masyarakat umum.</p>
     </div>
 
+    <!-- INFORMASI LAYANAN -->
+    <div class="footer-col">
+      <h4>Informasi Layanan</h4>
+      <div class="jam-pelayanan">
+        <div class="jam-title"><i class="fas fa-clock"></i> Jam Kantor Balai Desa:</div>
+        <div class="jam-waktu">Senin – Jumat: 08.00 – 15.00 WIB</div>
+      </div>
+      <a href="javascript:void(0)" onclick="if(typeof bukaModalLayanan === 'function'){ bukaModalLayanan(); } else { window.location.href='/#modal-layanan'; }"><i class="fas fa-file-signature" style="margin-right:6px; font-size:11px;"></i> Surat Administrasi</a>
+      <a href="/profil-desa#demografis"><i class="fas fa-id-card" style="margin-right:6px; font-size:11px;"></i> Pelayanan Kependudukan</a>
+      <a href="/peta"><i class="fas fa-map-marked-alt" style="margin-right:6px; font-size:11px;"></i> Peta Interaktif &amp; Potensi</a>
+      <a href="/profil-desa#anggaran"><i class="fas fa-chart-pie" style="margin-right:6px; font-size:11px;"></i> Transparansi APBDes</a>
+    </div>
+
+    <!-- INFORMASI PENGADUAN & CALL CENTER -->
+    <div class="footer-col">
+      <h4>Pengaduan &amp; Informasi</h4>
+      <div class="kontak-item">
+        <div class="kontak-icon" style="background: rgba(37, 211, 102, 0.15); color: #25D366;"><i class="fab fa-whatsapp"></i></div>
+        <div class="kontak-info">
+          <span class="kontak-label">Pengaduan &amp; Call Center:</span>
+          <a href="https://wa.me/6281234922365" target="_blank" class="kontak-val">0812-3492-2365</a>
+        </div>
+      </div> 
+      <div class="kontak-item">
+        <div class="kontak-icon" style="background: rgba(212, 160, 23, 0.15); color: #D4A017;"><i class="fas fa-headset"></i></div>
+        <div class="kontak-info">
+          <span class="kontak-label">Khusus Layanan Informasi:</span>
+          <a href="https://wa.me/6281234922365" target="_blank" class="kontak-val">0812-3492-2365</a>
+        </div>
+      </div>
+      <div class="kontak-item">
+        <div class="kontak-icon" style="background: rgba(22, 104, 163, 0.15); color: #4CB5FF;"><i class="fas fa-envelope"></i></div>
+        <div class="kontak-info">
+          <span class="kontak-label">Email Resmi Desa:</span>
+          <a href="mailto:munungkerep11@gmail.com" class="kontak-val">munungkerep11@gmail.com</a>
+        </div>
+      </div>
+      <div class="kontak-item">
+        <div class="kontak-icon" style="background: rgba(198, 40, 40, 0.15); color: #ef5350;"><i class="fas fa-box-archive"></i></div>
+        <div class="kontak-info">
+          <span class="kontak-label">Kotak Aspirasi Warga:</span>
+          <span class="kontak-val" style="font-weight: 500; font-size: 12px;">Balai Desa Munungkerep</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAUTAN CEPAK -->
     <div class="footer-col">
       <h4>Tautan Cepat</h4>
       <a href="/">Beranda</a>
@@ -160,22 +248,7 @@
       <a href="/kegiatan">Event &amp; Kegiatan</a>
     </div>
 
-    <div class="footer-col">
-      <h4>Hubungi Kami</h4>
-      <div class="kontak-item">
-        <div class="kontak-icon"><i class="fas fa-phone-alt"></i></div>
-        <p class="placeholder">📝 Nomor kantor desa belum diisi</p>
-      </div>
-      <div class="kontak-item">
-        <div class="kontak-icon"><i class="fas fa-envelope"></i></div>
-        <p class="placeholder">📝 Email kantor desa belum diisi</p>
-      </div>
-      <div class="kontak-item">
-        <div class="kontak-icon"><i class="fas fa-map-marker-alt"></i></div>
-        <p>Kantor Desa Munungkerep</p>
-      </div>
-    </div>
-
+    <!-- DETAIL WILAYAH -->
     <div class="footer-col">
       <h4>Detail Wilayah</h4>
       <div class="footer-wilayah">

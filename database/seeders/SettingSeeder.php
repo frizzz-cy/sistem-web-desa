@@ -30,7 +30,7 @@ class SettingSeeder extends Seeder
                     'icon' => '<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V7l8-4 8 4v14"/><path d="M9 21v-6h6v6M4 21h16"/></svg>',
                     'title' => 'Informasi Publik',
                     'desc' => 'Struktur organisasi pemerintah desa, anggaran APBDes, kondisi geografis, data demografis, hingga visi & misi.',
-                    'link' => '/profil-desa'
+                    'link' => '#modal-informasi'
                 ],
                 [
                     'icon' => '<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="18" cy="8" r="2.2"/><path d="M15.5 20c.3-2.5 2-4.5 4.3-5"/></svg>',
@@ -39,10 +39,10 @@ class SettingSeeder extends Seeder
                     'link' => '/profil-desa#pemerintahan'
                 ],
                 [
-                    'icon' => '<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-9.8-9.2C.6 7.8 2.4 4.5 5.6 4c2-.3 3.9.7 4.9 2.4 1-1.7 2.9-2.7 4.9-2.4 3.2.5 5 3.8 3.4 7.3-2.3 4.6-9.8 9.2-9.8 9.2Z"/></svg>',
-                    'title' => 'Bantuan Sosial',
+                    'icon' => '<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+                    'title' => 'Anggaran Desa',
                     'desc' => 'Lihat rincian APBDes — realisasi tahun berjalan dan rencana anggaran tahun berikutnya, terbuka untuk warga.',
-                    'link' => '/profil-desa#anggaran'
+                    'link' => '#modal-informasi'
                 ],
                 [
                     'icon' => '<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3.2"/><path d="M2.5 20c0-3.6 2.5-6.5 5.5-6.5s5.5 2.9 5.5 6.5"/><path d="M16 21c0-3 2-5.5 4.5-5.5"/><circle cx="18.5" cy="9" r="2.3"/></svg>',

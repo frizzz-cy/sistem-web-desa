@@ -178,13 +178,13 @@
   .bd-content strong { color: #111; font-weight: 700; }
   .bd-content img { max-width: 100%; height: auto; display: block; margin: 20px auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
 
-  /* ============ MODAL LAYANAN ADMINISTRASI ============ */
-  .modal-layanan-overlay{ display:none; position:fixed; inset:0; z-index:3000; background:rgba(11,40,63,0.75); align-items:center; justify-content:center; padding:20px; }
-  .modal-layanan-overlay.show{display:flex;}
-  .modal-layanan-box{ background:#fff; border-radius:12px; max-width:600px; width:100%; max-height:85vh; overflow-y:auto; position:relative; padding:28px 26px; }
-  .modal-layanan-close{ position:absolute; top:16px; right:16px; background:var(--biru-tua); color:#fff; border:none; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:15px; }
-  .modal-layanan-box h3{font-size:20px; font-weight:800; color:var(--biru-tua); margin-bottom:6px;}
-  .modal-layanan-box .sub{font-size:12.5px; color:var(--teks-muted); margin-bottom:20px;}
+  /* ============ MODAL LAYANAN ADMINISTRASI & INFORMASI PUBLIK ============ */
+  .modal-layanan-overlay, .modal-informasi-overlay{ display:none; position:fixed; inset:0; z-index:3000; background:rgba(11,40,63,0.78); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:20px; }
+  .modal-layanan-overlay.show, .modal-informasi-overlay.show{display:flex;}
+  .modal-layanan-box, .modal-informasi-box{ background:#fff; border-radius:14px; max-width:680px; width:100%; max-height:88vh; overflow-y:auto; position:relative; padding:28px 24px; box-shadow:0 20px 40px rgba(0,0,0,0.25); }
+  .modal-layanan-close, .modal-informasi-close{ position:absolute; top:18px; right:18px; background:var(--biru-tua); color:#fff; border:none; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:15px; display:flex; align-items:center; justify-content:center; }
+  .modal-layanan-box h3, .modal-informasi-box h3{font-size:20px; font-weight:800; color:var(--biru-tua); margin-bottom:6px;}
+  .modal-layanan-box .sub, .modal-informasi-box .sub{font-size:12.5px; color:var(--teks-muted); margin-bottom:20px;}
   .surat-item{border:1px solid var(--border); border-radius:8px; margin-bottom:10px; overflow:hidden;}
   .surat-item summary{ cursor:pointer; list-style:none; padding:14px 16px; font-weight:700; font-size:14px; color:var(--teks); display:flex; align-items:center; justify-content:space-between; background:var(--bg); }
   .surat-item summary::-webkit-details-marker{display:none;}
@@ -195,6 +195,18 @@
   .surat-item ul{padding-left:18px; margin-bottom:12px;}
   .surat-item li{font-size:13px; color:var(--teks-muted); line-height:1.7;}
   .surat-item .ket{ font-size:12.5px; color:var(--biru-tua); background:var(--biru-muda); padding:8px 12px; border-radius:6px; font-weight:600; }
+
+  /* Style khusus APBDes di Modal Informasi */
+  .apbdes-section { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 16px; overflow: hidden; }
+  .apbdes-head { padding: 12px 16px; background: var(--biru-tua); color: #fff; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 13.5px; }
+  .apbdes-head.belanja { background: var(--merah); }
+  .apbdes-head.pembiayaan { background: #0F6B58; }
+  .apbdes-head .total { background: rgba(255, 255, 255, 0.2); padding: 4px 10px; border-radius: 20px; font-size: 12.5px; letter-spacing: 0.02em; }
+  .apbdes-body { padding: 12px 16px; background: #FAFCFE; }
+  .apbdes-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px dashed #E2E8F0; font-size: 13px; }
+  .apbdes-row:last-child { border-bottom: none; }
+  .apbdes-row .label { color: #4A5568; }
+  .apbdes-row .val { font-weight: 700; color: #1A202C; }
 </style>
 </head>
 <body>
@@ -243,6 +255,15 @@
           <h3>{{ $card['title'] }}</h3>
           <p>{{ $card['desc'] }}</p>
           <div class="p-link">Lihat Persyaratan <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+      @elseif($card['link'] === '#modal-informasi' || $card['link'] === '#modal-apbdes')
+        <button class="portal-card" onclick="bukaModalInformasi()">
+          <div class="p-badge">
+            {!! $card['icon'] !!}
+          </div>
+          <h3>{{ $card['title'] }}</h3>
+          <p>{{ $card['desc'] }}</p>
+          <div class="p-link">Lihat Rincian <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         </button>
       @else
         <a href="{{ $card['link'] }}" class="portal-card" @if(str_contains($card['link'], '/kegiatan')) onclick="return pindahHalus(event, '/kegiatan')" @endif>
@@ -337,6 +358,58 @@
     <h3>Layanan Administrasi Desa</h3>
     <div class="sub">Ketuk tiap jenis surat untuk lihat persyaratan lengkap</div>
     <div id="daftar-surat"></div>
+  </div>
+</div>
+
+<!-- Modal Informasi Publik / Transparansi APBDes -->
+<div class="modal-informasi-overlay" id="modal-informasi-overlay" onclick="tutupModalInformasi(event)">
+  <div class="modal-informasi-box">
+    <button class="modal-informasi-close" onclick="tutupModalInformasi()">✕</button>
+    <h3>Informasi Publik &amp; Transparansi APBDes</h3>
+    <div class="sub">Rincian Anggaran Pendapatan dan Belanja Desa (APBDes) Desa Munungkerep</div>
+
+    <!-- 1. PENDAPATAN DESA -->
+    <div class="apbdes-section">
+      <div class="apbdes-head">
+        <span><i class="fas fa-wallet" style="margin-right:6px;"></i> PENDAPATAN DESA</span>
+        <span class="total">Rp 1.663.629.803,00</span>
+      </div>
+      <div class="apbdes-body">
+        <div class="apbdes-row"><span class="label">Pendapatan Asli Desa (PAD)</span><span class="val">Rp 230.760.000,00</span></div>
+        <div class="apbdes-row"><span class="label">Dana Desa (DD)</span><span class="val">Rp 303.093.000,00</span></div>
+        <div class="apbdes-row"><span class="label">Alokasi Dana Desa (ADD)</span><span class="val">Rp 376.615.000,00</span></div>
+        <div class="apbdes-row"><span class="label">Bagi Hasil Pajak &amp; Retribusi (PDRD)</span><span class="val">Rp 85.805.300,00</span></div>
+        <div class="apbdes-row"><span class="label">Bantuan Keuangan (BK)</span><span class="val">Rp 539.600.603,00</span></div>
+        <div class="apbdes-row"><span class="label">Lain-Lain Pendapatan Sah (DLL)</span><span class="val">Rp 127.755.900,00</span></div>
+      </div>
+    </div>
+
+    <!-- 2. BELANJA DESA -->
+    <div class="apbdes-section">
+      <div class="apbdes-head belanja">
+        <span><i class="fas fa-shopping-bag" style="margin-right:6px;"></i> BELANJA DESA</span>
+        <span class="total">Rp 1.676.895.127,92</span>
+      </div>
+      <div class="apbdes-body">
+        <div class="apbdes-row"><span class="label">Penyelenggaraan Pemerintahan Desa</span><span class="val">Rp 866.594.524,92</span></div>
+        <div class="apbdes-row"><span class="label">Pelaksanaan Pembangunan Desa</span><span class="val">Rp 582.090.603,00</span></div>
+        <div class="apbdes-row"><span class="label">Pembinaan Kemasyarakatan</span><span class="val">Rp 42.450.000,00</span></div>
+        <div class="apbdes-row"><span class="label">Pemberdayaan Masyarakat</span><span class="val">Rp 158.000.000,00</span></div>
+        <div class="apbdes-row"><span class="label">Penanggulangan Bencana &amp; Keadaan Darurat</span><span class="val">Rp 27.760.000,00</span></div>
+      </div>
+    </div>
+
+    <!-- 3. PEMBIAYAAN DESA -->
+    <div class="apbdes-section">
+      <div class="apbdes-head pembiayaan">
+        <span><i class="fas fa-coins" style="margin-right:6px;"></i> PEMBIAYAAN DESA (NETTO)</span>
+        <span class="total">Rp 13.265.324,92</span>
+      </div>
+      <div class="apbdes-body">
+        <div class="apbdes-row"><span class="label">Penerimaan Pembiayaan</span><span class="val">Rp 13.265.324,92</span></div>
+        <div class="apbdes-row"><span class="label">Pengeluaran Pembiayaan</span><span class="val">Rp 0,00</span></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -438,6 +511,16 @@
   function tutupModalLayanan(event){
     if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-layanan-close')) return;
     document.getElementById('modal-layanan-overlay').classList.remove('show');
+  }
+
+  // ================= MODAL INFORMASI PUBLIK & APBDES =================
+  function bukaModalInformasi(){
+    document.getElementById('modal-informasi-overlay').classList.add('show');
+  }
+
+  function tutupModalInformasi(event){
+    if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-informasi-close')) return;
+    document.getElementById('modal-informasi-overlay').classList.remove('show');
   }
 
   // ================= SLIDER & ANIMASI (TETAP SAMA) =================
