@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/ykjnbqex/sistem-web-desa/
+    - /bin/cp -R * $DEPLOYPATH
