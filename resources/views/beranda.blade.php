@@ -282,6 +282,15 @@
           <p>{{ $card['desc'] }}</p>
           <div class="p-link">Lihat Data <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         </button>
+      @elseif($card['link'] === '#modal-kelembagaan' || $card['title'] === 'Kelembagaan Desa')
+        <button class="portal-card" onclick="bukaModalKelembagaan()">
+          <div class="p-badge">
+            {!! $card['icon'] !!}
+          </div>
+          <h3>{{ $card['title'] }}</h3>
+          <p>{{ $card['desc'] }}</p>
+          <div class="p-link">Lihat Detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
       @else
         <a href="{{ $card['link'] }}" class="portal-card" @if(str_contains($card['link'], '/kegiatan')) onclick="return pindahHalus(event, '/kegiatan')" @endif>
           <div class="p-badge">
@@ -670,6 +679,78 @@
   </div>
 </div>
 
+<!-- Modal Kelembagaan Desa -->
+<div class="modal-informasi-overlay" id="modal-kelembagaan-overlay" onclick="tutupModalKelembagaan(event)">
+  <div class="modal-informasi-box" style="max-width:720px;">
+    <button class="modal-informasi-close" onclick="tutupModalKelembagaan()">✕</button>
+    <h3>Kelembagaan &amp; Organisasi Desa</h3>
+    <div class="sub">Daftar Kelembagaan Resmi &amp; Organisasi Kemasyarakatan Desa Munungkerep</div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+      <!-- BPD -->
+      <div style="background: #F8FAFC; border: 1.5px solid #CBD5E1; padding: 14px; border-radius: 10px;">
+        <div style="font-size: 14px; font-weight: 800; color: var(--biru-tua); margin-bottom: 4px;">
+          🏛️ BPD (Badan Permusyawaratan Desa)
+        </div>
+        <div style="font-size: 12.5px; color: var(--teks-muted); line-height: 1.55;">
+          Bertindak sebagai perwujudan demokrasi desa untuk menetapkan Peraturan Desa bersama Kepala Desa dan menampung aspirasi masyarakat.
+        </div>
+      </div>
+
+      <!-- PKK DHARMA WANITA -->
+      <div style="background: #F8FAFC; border: 1.5px solid #CBD5E1; padding: 14px; border-radius: 10px;">
+        <div style="font-size: 14px; font-weight: 800; color: #DB2777; margin-bottom: 4px;">
+          🌺 PKK &amp; Dharma Wanita Desa
+        </div>
+        <div style="font-size: 12.5px; color: var(--teks-muted); line-height: 1.55;">
+          Pemberdayaan kesejahteraan keluarga, kegiatan sosial, dan kemasyarakatan wanita Desa Munungkerep.
+        </div>
+      </div>
+
+      <!-- KARANG TARUNA -->
+      <div style="background: #F8FAFC; border: 1.5px solid #CBD5E1; padding: 14px; border-radius: 10px;">
+        <div style="font-size: 14px; font-weight: 800; color: #0284C7; margin-bottom: 4px;">
+          ⚡ Karang Taruna Desa
+        </div>
+        <div style="font-size: 12.5px; color: var(--teks-muted); line-height: 1.55;">
+          Wadah pembinaan kepemudaan, olah raga, kreativitas sosial, dan kegiatan gotong royong pemuda desa.
+        </div>
+      </div>
+
+      <!-- REMAJA MASJID & JAMIYAH -->
+      <div style="background: #F8FAFC; border: 1.5px solid #CBD5E1; padding: 14px; border-radius: 10px;">
+        <div style="font-size: 14px; font-weight: 800; color: #0F6B58; margin-bottom: 4px;">
+          🕌 Remaja Masjid &amp; Jamiyah Yasin Tahlil
+        </div>
+        <div style="font-size: 12.5px; color: var(--teks-muted); line-height: 1.55;">
+          Wadah pembinaan kerohanian Islam, pengajian rutin, dan kebersamaan warga di 7 dusun.
+        </div>
+      </div>
+
+      <!-- POSYANDU BALITA & LANSIA -->
+      <div style="background: #F8FAFC; border: 1.5px solid #CBD5E1; padding: 14px; border-radius: 10px;">
+        <div style="font-size: 14px; font-weight: 800; color: #1668A3; margin-bottom: 4px;">
+          🏥 Posyandu Balita &amp; Lansia (7 Unit)
+        </div>
+        <div style="font-size: 12.5px; color: var(--teks-muted); line-height: 1.55;">
+          Pelayanan kesehatan dasar ibu, balita, dan lansia terpadu di 7 dusun Desa Munungkerep.
+        </div>
+      </div>
+
+      <!-- KELOMPOK ARISAN -->
+      <div style="background: #F8FAFC; border: 1.5px solid #CBD5E1; padding: 14px; border-radius: 10px;">
+        <div style="font-size: 14px; font-weight: 800; color: #D4A017; margin-bottom: 4px;">
+          🤝 Kelompok Arisan &amp; Kemasyarakatan
+        </div>
+        <div style="font-size: 12.5px; color: var(--teks-muted); line-height: 1.55;">
+          Wadah silaturahmi, gotong royong, dan arisan warga desa di tingkat RT dan RW.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
 @include('partials.footer')
 
 <script>
@@ -797,6 +878,16 @@
   function tutupModalDemografi(event){
     if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-informasi-close')) return;
     document.getElementById('modal-demografi-overlay').classList.remove('show');
+  }
+
+  // ================= MODAL KELEMBAGAAN DESA =================
+  function bukaModalKelembagaan(){
+    document.getElementById('modal-kelembagaan-overlay').classList.add('show');
+  }
+
+  function tutupModalKelembagaan(event){
+    if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-informasi-close')) return;
+    document.getElementById('modal-kelembagaan-overlay').classList.remove('show');
   }
 
   // ================= SLIDER & ANIMASI (TETAP SAMA) =================
