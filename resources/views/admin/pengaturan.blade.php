@@ -208,6 +208,45 @@
                         </div>
                     </div>
                 @endforeach
+            <!-- SECTION 4: PERANGKAT DESA & ORGANOGRAM -->
+            <div class="setting-section">
+                <div class="section-header">4. Perangkat Desa &amp; Bagan Organogram</div>
+                <p style="margin-top:0; margin-bottom:16px; font-size:12.5px; color:var(--teks-muted);">Kelola foto, nama pejabat, jabatan, dan profil singkat 12 posisi Perangkat Desa. Perubahan di sini akan langsung memperbarui bagan susunan organisasi pada halaman Profil Desa secara otomatis.</p>
+                
+                <div class="card-grid">
+                    @foreach($data_perangkat as $key => $item)
+                        <div class="portal-edit-card">
+                            <input type="hidden" name="perangkat_keys[]" value="{{ $key }}">
+                            <div style="display:flex; align-items:center; gap:12px; margin-bottom:14px;">
+                                <img src="{{ $item['foto'] ?? '/images/perangkat/avatar.png' }}" style="width:54px; height:54px; border-radius:50%; object-fit:cover; border:2px solid var(--biru-tua);" alt="Foto {{ $item['nama'] }}">
+                                <div>
+                                    <span style="font-size:11px; font-weight:800; background:#E0F2FE; color:#0369A1; padding:3px 8px; border-radius:4px; text-transform:uppercase;">POSISI: {{ strtoupper($key) }}</span>
+                                    <h4 style="margin:4px 0 0; font-size:14px; color:var(--biru-tua);">{{ $item['jabatan'] }}</h4>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom:10px;">
+                                <label style="font-size:12px;">Jabatan Resmi</label>
+                                <input type="text" name="perangkat_jabatan[]" value="{{ old('perangkat_jabatan.'.$loop->index, $item['jabatan']) }}" required>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom:10px;">
+                                <label style="font-size:12px;">Nama Pejabat</label>
+                                <input type="text" name="perangkat_nama[]" value="{{ old('perangkat_nama.'.$loop->index, $item['nama']) }}" required>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom:10px;">
+                                <label style="font-size:12px;">Upload Foto Pejabat (Opsional)</label>
+                                <input type="file" name="perangkat_foto_{{ $key }}" accept="image/*" style="font-size:12px;">
+                            </div>
+
+                            <div class="form-group" style="margin-bottom:0;">
+                                <label style="font-size:12px;">Profil Singkat / Tugas Utama</label>
+                                <textarea name="perangkat_note[]" rows="3" required placeholder="Tulis profil singkat atau deskripsi tugas...">{{ old('perangkat_note.'.$loop->index, $item['note']) }}</textarea>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
             </div>
 
             <!-- Form Actions -->

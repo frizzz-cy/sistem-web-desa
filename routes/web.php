@@ -132,7 +132,11 @@ Route::get('/peta', function () {
     }
     return view('home', compact('data_potensi'));
 });
-Route::get('/profil-desa', function () { return view('profil-desa'); });
+Route::get('/profil-desa', function () { 
+    $perangkat_json = Setting::get('data_perangkat');
+    $perangkat = $perangkat_json ? json_decode($perangkat_json, true) : [];
+    return view('profil-desa', compact('perangkat')); 
+});
 Route::get('/kegiatan', function () { 
     $kegiatans = Kegiatan::latest()->get();
     return view('kegiatan', compact('kegiatans')); 

@@ -648,15 +648,31 @@
       <h2>Pemerintahan Desa</h2>
     </div>
 
+    @php
+      $p = $perangkat ?? [];
+      $kades = $p['kades'] ?? ['jabatan'=>'Kepala Desa','nama'=>'Sutrismi','foto'=>'/images/perangkat/kepala desa.png','note'=>'Kepala Desa Munungkerep memimpin dan bertanggung jawab atas seluruh penyelenggaraan pemerintahan desa.'];
+      $sekdes = $p['sekdes'] ?? ['jabatan'=>'Sekretaris Desa','nama'=>'Siswanto','foto'=>'/images/perangkat/siswanto.jpg','note'=>'Sekretaris Desa memimpin Sekretariat Desa dan membantu Kepala Desa dalam administrasi dan pelayanan.'];
+      $kasi_kesra = $p['kasi_kesra'] ?? ['jabatan'=>'Kasi Kesra','nama'=>'Rusdi','foto'=>'/images/perangkat/rusdi.jpg','note'=>'Kepala Seksi Kesejahteraan Rakyat memimpin kegiatan keagamaan, sosial, dan kesejahteraan warga desa.'];
+      $kasi_pelayanan = $p['kasi_pelayanan'] ?? ['jabatan'=>'Kasi Pelayanan','nama'=>'Sugito','foto'=>'/images/perangkat/sugito.jpg','note'=>'Kepala Seksi Pelayanan mengelola dan melayani permohonan surat-menyurat serta administrasi kependudukan.'];
+      $kasi_pemerintahan = $p['kasi_pemerintahan'] ?? ['jabatan'=>'Kasi Pemerintahan','nama'=>'Suyatemo','foto'=>'/images/perangkat/suyatemo.jpg','note'=>'Kepala Seksi Pemerintahan mengelola administrasi pertanahan, ketentraman, dan ketertiban umum.'];
+      $kaur_tu = $p['kaur_tu'] ?? ['jabatan'=>'Kaur TU & Umum','nama'=>'Suntari','foto'=>'/images/perangkat/suntari.jpg','note'=>'Kepala Urusan Tata Usaha & Umum mengelola urusan persuratan, kearsipan, dan inventaris desa.'];
+      $kaur_keuangan = $p['kaur_keuangan'] ?? ['jabatan'=>'Kaur Keuangan','nama'=>'Agus Sukisno','foto'=>'/images/perangkat/agus-sukisno.jpg','note'=>'Kepala Urusan Keuangan mengelola administrasi pembukuan dan keuangan APBDes Munungkerep.'];
+      $kaur_perencanaan = $p['kaur_perencanaan'] ?? ['jabatan'=>'Kaur Perencanaan','nama'=>'Iskan','foto'=>'/images/perangkat/iskan.jpg','note'=>'Kepala Urusan Perencanaan mengelola penyusunan RKPDes dan laporan berkala.'];
+      $kasun_1 = $p['kasun_1'] ?? ['jabatan'=>'Kadus Munungkerep','nama'=>'Juni Hadi','foto'=>'/images/perangkat/juni-hadi.jpg','note'=>'Kepala Dusun Munungkerep membina ketentraman dan pelayanan warga di wilayah Dusun Munungkerep.'];
+      $kasun_2 = $p['kasun_2'] ?? ['jabatan'=>'Kadus Karanggebang & Slumbung','nama'=>'Heru Purnadi','foto'=>'/images/perangkat/heru-purnadi.jpg','note'=>'Kepala Dusun Karanggebang & Slumbung membina ketentraman dan pelayanan warga di Dusun Karanggebang & Slumbung.'];
+      $kasun_3 = $p['kasun_3'] ?? ['jabatan'=>'Kadus Kadenan & Jatirubuh','nama'=>'Wagimin','foto'=>'/images/perangkat/wagimin.jpg','note'=>'Kepala Dusun Kadenan & Jatirubuh membina ketentraman dan pelayanan warga di Dusun Kadenan & Jatirubuh.'];
+      $kasun_4 = $p['kasun_4'] ?? ['jabatan'=>'Kadus Kalipang & Duren','nama'=>'Hartatik','foto'=>'/images/perangkat/hartatik.jpg','note'=>'Kepala Dusun Kalipang & Duren membina ketentraman dan pelayanan warga di Dusun Kalipang & Duren.'];
+    @endphp
+
     <div class="card" id="visimisi" style="margin-bottom:24px;">
       <div class="sambutan-wrapper">
         <div class="kades-profile">
           <div class="kades-photo-frame">
-            <img src="/images/perangkat/kepala desa.png" alt="Sutrismi" onerror="this.parentElement.style.display='none'">
+            <img src="{{ $kades['foto'] }}" alt="{{ $kades['nama'] }}" onerror="this.parentElement.style.display='none'">
           </div>
-          <div class="kades-name">Sutrismi</div>
-          <div class="kades-title">Kepala Desa Munungkerep</div>
-          <a href="javascript:void(0)" class="btn-biografi" onclick="bukaPopupOrang('Kepala Desa', 'Sutrismi', '/images/perangkat/kepala desa.png')">
+          <div class="kades-name">{{ $kades['nama'] }}</div>
+          <div class="kades-title">{{ $kades['jabatan'] }} Munungkerep</div>
+          <a href="javascript:void(0)" class="btn-biografi" onclick="bukaPopupOrang('{{ addslashes($kades['jabatan']) }}', '{{ addslashes($kades['nama']) }}', '{{ addslashes($kades['foto']) }}', '{{ addslashes($kades['note']) }}')">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             Profil Singkat
           </a>
@@ -687,10 +703,10 @@
         <p style="font-size: 12px; color: var(--ink-soft);">Bagan Resmi Hubungan Kerja, Garis Komando, dan Garis Koordinasi</p>
       </div>
 
-      <!-- FLUID RESPONSIVE CONTAINER (FIT SCREEN 100% TANPA SCROLL KHUSUS HAPUS MIN-WIDTH) -->
+      <!-- FLUID RESPONSIVE CONTAINER -->
       <div style="width: 100%; max-width: 100%; margin: 0 auto; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif;" class="bagan-official-wrap">
 
-        <!-- LEVEL 1: BPD (KIRI) & KEPALA DESA (KANAN) -->
+        <!-- LEVEL 1: BPD & KEPALA DESA -->
         <div style="display: flex; justify-content: center; align-items: center; gap: clamp(12px, 3vw, 36px); position: relative; margin-bottom: 0;">
           
           <!-- NODE BPD -->
@@ -704,16 +720,16 @@
           </div>
 
           <!-- NODE KEPALA DESA -->
-          <div style="flex: 0 1 230px;" onclick="bukaPopupOrang('Kepala Desa', 'Sutrismi', '/images/perangkat/kepala desa.png')">
+          <div style="flex: 0 1 230px;" onclick="bukaPopupOrang('{{ addslashes($kades['jabatan']) }}', '{{ addslashes($kades['nama']) }}', '{{ addslashes($kades['foto']) }}', '{{ addslashes($kades['note']) }}')">
             <div style="background: var(--ink, #0B3B60); color: #fff; border: 2px solid var(--amber, #D4A017); border-radius: 8px; padding: 8px 12px; text-align: center; cursor: pointer; box-shadow: 0 4px 14px rgba(11,59,96,0.15);" class="org-subcard">
-              <div style="font-size: 9.5px; font-weight: 800; text-transform: uppercase; color: var(--amber); letter-spacing: 0.05em; margin-bottom: 2px;">Kepala Desa</div>
+              <div style="font-size: 9.5px; font-weight: 800; text-transform: uppercase; color: var(--amber); letter-spacing: 0.05em; margin-bottom: 2px;">{{ $kades['jabatan'] }}</div>
               <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
                 <div style="width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--amber); overflow: hidden; background: #fff; flex-shrink: 0;">
-                  <img src="/images/perangkat/kepala desa.png" alt="Sutrismi" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                  <img src="{{ $kades['foto'] }}" alt="{{ $kades['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
                 </div>
                 <div style="text-align: left;">
-                  <div style="font-size: 13.5px; font-weight: 800; color: #fff;">Sutrismi</div>
-                  <div style="font-size: 10.5px; color: rgba(255,255,255,0.85);">Kepala Desa</div>
+                  <div style="font-size: 13.5px; font-weight: 800; color: #fff;">{{ $kades['nama'] }}</div>
+                  <div style="font-size: 10.5px; color: rgba(255,255,255,0.85);">{{ $kades['jabatan'] }}</div>
                 </div>
               </div>
             </div>
@@ -724,20 +740,15 @@
         <!-- GARIS VERTIKAL UTAMA TURUN DARI KEPALA DESA -->
         <div style="width: 2px; height: 26px; background: #0B3B60; margin: 0 auto;"></div>
 
-        <!-- GARIS HORISONTAL PERCABANGAN PELAKSANA TEKNIS & SEKRETARIS DESA -->
+        <!-- GARIS HORISONTAL PERCABANGAN -->
         <div style="position: relative; width: 50%; margin: 0 auto; height: 26px;" class="bagan-top-bar">
-          <!-- Garis Horisontal -->
           <div style="height: 2px; background: #0B3B60; width: 100%;"></div>
-          <!-- Garis Turun Ke Pelaksana Teknis (Kiri) -->
           <div style="position: absolute; left: 0; top: 0; width: 2px; height: 26px; background: #0B3B60;"></div>
-          <!-- Garis Turun Ke Sekretaris Desa (Kanan) -->
           <div style="position: absolute; right: 0; top: 0; width: 2px; height: 26px; background: #0B3B60;"></div>
         </div>
 
-        <!-- LEVEL 2: NODE PELAKSANA TEKNIS (KIRI) & SEKRETARIS DESA (KANAN) -->
+        <!-- LEVEL 2: PELAKSANA TEKNIS & SEKRETARIS DESA -->
         <div style="display: flex; justify-content: space-between; gap: 12px; width: 100%; margin: 0 auto; position: relative; z-index: 2;" class="bagan-l2-wrap">
-          
-          <!-- GARIS VERTIKAL TENGAH PRESISI TANPA CELAH TERPOTONG (DESCENT TO KASUN) -->
           <div style="position: absolute; left: 50%; top: -26px; bottom: -40px; width: 2px; background: #0B3B60; transform: translateX(-50%); z-index: 1;" class="bagan-center-line"></div>
           
           <!-- BRANCH KIRI: PELAKSANA TEKNIS -->
@@ -746,10 +757,8 @@
               Pelaksana Teknis
             </div>
 
-            <!-- Vertical Stem down from Pelaksana Teknis -->
             <div style="width: 2px; height: 22px; background: #0B3B60; margin: 0 auto;"></div>
 
-            <!-- Horizontal Line for 3 Kasi -->
             <div style="position: relative; width: 66%; margin: 0 auto; height: 22px;">
               <div style="height: 2px; background: #0B3B60; width: 100%;"></div>
               <div style="position: absolute; left: 0; top: 0; width: 2px; height: 22px; background: #0B3B60;"></div>
@@ -760,30 +769,30 @@
             <!-- 3 KASI CARDS -->
             <div style="display: flex; justify-content: space-between; gap: 4px; width: 100%;" class="bagan-sub-grid">
               <!-- Kasi Kesra -->
-              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kasi Kesra', 'Rusdi', '/images/perangkat/rusdi.jpg')" class="org-subcard bagan-sub-card">
+              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('{{ addslashes($kasi_kesra['jabatan']) }}', '{{ addslashes($kasi_kesra['nama']) }}', '{{ addslashes($kasi_kesra['foto']) }}', '{{ addslashes($kasi_kesra['note']) }}')" class="org-subcard bagan-sub-card">
                 <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #1668A3; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
-                  <img src="/images/perangkat/rusdi.jpg" alt="Rusdi" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                  <img src="{{ $kasi_kesra['foto'] }}" alt="{{ $kasi_kesra['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
                 </div>
-                <div style="font-size: 10px; font-weight: 800; color: #1668A3; line-height: 1.2;">Kasi Kesra</div>
-                <div style="font-size: 10px; font-weight: 700; color: var(--ink);">Rusdi</div>
+                <div style="font-size: 10px; font-weight: 800; color: #1668A3; line-height: 1.2;">{{ $kasi_kesra['jabatan'] }}</div>
+                <div style="font-size: 10px; font-weight: 700; color: var(--ink);">{{ $kasi_kesra['nama'] }}</div>
               </div>
 
               <!-- Kasi Pelayanan -->
-              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kasi Pelayanan', 'Sugito', '/images/perangkat/sugito.jpg')" class="org-subcard bagan-sub-card">
+              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('{{ addslashes($kasi_pelayanan['jabatan']) }}', '{{ addslashes($kasi_pelayanan['nama']) }}', '{{ addslashes($kasi_pelayanan['foto']) }}', '{{ addslashes($kasi_pelayanan['note']) }}')" class="org-subcard bagan-sub-card">
                 <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #1668A3; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
-                  <img src="/images/perangkat/sugito.jpg" alt="Sugito" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                  <img src="{{ $kasi_pelayanan['foto'] }}" alt="{{ $kasi_pelayanan['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
                 </div>
-                <div style="font-size: 10px; font-weight: 800; color: #1668A3; line-height: 1.2;">Kasi Pelayanan</div>
-                <div style="font-size: 10px; font-weight: 700; color: var(--ink);">Sugito</div>
+                <div style="font-size: 10px; font-weight: 800; color: #1668A3; line-height: 1.2;">{{ $kasi_pelayanan['jabatan'] }}</div>
+                <div style="font-size: 10px; font-weight: 700; color: var(--ink);">{{ $kasi_pelayanan['nama'] }}</div>
               </div>
 
               <!-- Kasi Pemerintahan -->
-              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kasi Pemerintahan', 'Suyatemo', '/images/perangkat/suyatemo.jpg')" class="org-subcard bagan-sub-card">
+              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('{{ addslashes($kasi_pemerintahan['jabatan']) }}', '{{ addslashes($kasi_pemerintahan['nama']) }}', '{{ addslashes($kasi_pemerintahan['foto']) }}', '{{ addslashes($kasi_pemerintahan['note']) }}')" class="org-subcard bagan-sub-card">
                 <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #1668A3; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
-                  <img src="/images/perangkat/suyatemo.jpg" alt="Suyatemo" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                  <img src="{{ $kasi_pemerintahan['foto'] }}" alt="{{ $kasi_pemerintahan['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
                 </div>
-                <div style="font-size: 10px; font-weight: 800; color: #1668A3; line-height: 1.2;">Kasi Pemerintahan</div>
-                <div style="font-size: 10px; font-weight: 700; color: var(--ink);">Suyatemo</div>
+                <div style="font-size: 10px; font-weight: 800; color: #1668A3; line-height: 1.2;">{{ $kasi_pemerintahan['jabatan'] }}</div>
+                <div style="font-size: 10px; font-weight: 700; color: var(--ink);">{{ $kasi_pemerintahan['nama'] }}</div>
               </div>
             </div>
           </div>
@@ -791,22 +800,20 @@
           <!-- BRANCH KANAN: SEKRETARIS DESA -->
           <div style="flex: 1; text-align: center; min-width: 0;" class="bagan-l2-col">
             <!-- Sekdes Card -->
-            <div style="width: 100%; max-width: 200px; margin: 0 auto; background: #fff; border: 2px solid #0B3B60; border-radius: 6px; padding: 5px 8px; font-weight: 800; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.04);" onclick="bukaPopupOrang('Sekretaris Desa', 'Siswanto', '/images/perangkat/siswanto.jpg')" class="org-subcard bagan-sub-card">
+            <div style="width: 100%; max-width: 200px; margin: 0 auto; background: #fff; border: 2px solid #0B3B60; border-radius: 6px; padding: 5px 8px; font-weight: 800; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.04);" onclick="bukaPopupOrang('{{ addslashes($sekdes['jabatan']) }}', '{{ addslashes($sekdes['nama']) }}', '{{ addslashes($sekdes['foto']) }}', '{{ addslashes($sekdes['note']) }}')" class="org-subcard bagan-sub-card">
               <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
                 <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #1668A3; overflow: hidden; background: #F4F6F8; flex-shrink: 0;">
-                  <img src="/images/perangkat/siswanto.jpg" alt="Siswanto" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                  <img src="{{ $sekdes['foto'] }}" alt="{{ $sekdes['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
                 </div>
                 <div style="text-align: left;">
-                  <div style="font-size: 11px; font-weight: 800; color: var(--ink); line-height: 1.1;">Sekretaris Desa</div>
-                  <div style="font-size: 10px; color: #1668A3; font-weight: 700;">Siswanto</div>
+                  <div style="font-size: 11px; font-weight: 800; color: var(--ink); line-height: 1.1;">{{ $sekdes['jabatan'] }}</div>
+                  <div style="font-size: 10px; color: #1668A3; font-weight: 700;">{{ $sekdes['nama'] }}</div>
                 </div>
               </div>
             </div>
 
-            <!-- Vertical Stem down from Sekdes -->
             <div style="width: 2px; height: 22px; background: #0B3B60; margin: 0 auto;"></div>
 
-            <!-- Horizontal Line for 3 Kaur -->
             <div style="position: relative; width: 66%; margin: 0 auto; height: 22px;">
               <div style="height: 2px; background: #0B3B60; width: 100%;"></div>
               <div style="position: absolute; left: 0; top: 0; width: 2px; height: 22px; background: #0B3B60;"></div>
@@ -817,30 +824,30 @@
             <!-- 3 KAUR CARDS -->
             <div style="display: flex; justify-content: space-between; gap: 4px; width: 100%;" class="bagan-sub-grid">
               <!-- Kaur TU & Umum -->
-              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kaur TU &amp; Umum', 'Suntari', '/images/perangkat/suntari.jpg')" class="org-subcard bagan-sub-card">
+              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('{{ addslashes($kaur_tu['jabatan']) }}', '{{ addslashes($kaur_tu['nama']) }}', '{{ addslashes($kaur_tu['foto']) }}', '{{ addslashes($kaur_tu['note']) }}')" class="org-subcard bagan-sub-card">
                 <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #1668A3; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
-                  <img src="/images/perangkat/suntari.jpg" alt="Suntari" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                  <img src="{{ $kaur_tu['foto'] }}" alt="{{ $kaur_tu['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
                 </div>
-                <div style="font-size: 10px; font-weight: 800; color: var(--ink); line-height: 1.2;">Kaur TU &amp; Umum</div>
-                <div style="font-size: 10px; font-weight: 700; color: var(--ink-soft);">Suntari</div>
+                <div style="font-size: 10px; font-weight: 800; color: var(--ink); line-height: 1.2;">{{ $kaur_tu['jabatan'] }}</div>
+                <div style="font-size: 10px; font-weight: 700; color: var(--ink-soft);">{{ $kaur_tu['nama'] }}</div>
               </div>
 
               <!-- Kaur Keuangan -->
-              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kaur Keuangan', 'Agus Sukisno', '/images/perangkat/agus-sukisno.jpg')" class="org-subcard bagan-sub-card">
+              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('{{ addslashes($kaur_keuangan['jabatan']) }}', '{{ addslashes($kaur_keuangan['nama']) }}', '{{ addslashes($kaur_keuangan['foto']) }}', '{{ addslashes($kaur_keuangan['note']) }}')" class="org-subcard bagan-sub-card">
                 <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #1668A3; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
-                  <img src="/images/perangkat/agus-sukisno.jpg" alt="Agus Sukisno" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                  <img src="{{ $kaur_keuangan['foto'] }}" alt="{{ $kaur_keuangan['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
                 </div>
-                <div style="font-size: 10px; font-weight: 800; color: var(--ink); line-height: 1.2;">Kaur Keuangan</div>
-                <div style="font-size: 10px; font-weight: 700; color: var(--ink-soft);">Agus Sukisno</div>
+                <div style="font-size: 10px; font-weight: 800; color: var(--ink); line-height: 1.2;">{{ $kaur_keuangan['jabatan'] }}</div>
+                <div style="font-size: 10px; font-weight: 700; color: var(--ink-soft);">{{ $kaur_keuangan['nama'] }}</div>
               </div>
 
               <!-- Kaur Perencanaan -->
-              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kaur Perencanaan', 'Iskan', '/images/perangkat/iskan.jpg')" class="org-subcard bagan-sub-card">
+              <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('{{ addslashes($kaur_perencanaan['jabatan']) }}', '{{ addslashes($kaur_perencanaan['nama']) }}', '{{ addslashes($kaur_perencanaan['foto']) }}', '{{ addslashes($kaur_perencanaan['note']) }}')" class="org-subcard bagan-sub-card">
                 <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #1668A3; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
-                  <img src="/images/perangkat/iskan.jpg" alt="Iskan" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                  <img src="{{ $kaur_perencanaan['foto'] }}" alt="{{ $kaur_perencanaan['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
                 </div>
-                <div style="font-size: 10px; font-weight: 800; color: var(--ink); line-height: 1.2;">Kaur Perencanaan</div>
-                <div style="font-size: 10px; font-weight: 700; color: var(--ink-soft);">Iskan</div>
+                <div style="font-size: 10px; font-weight: 800; color: var(--ink); line-height: 1.2;">{{ $kaur_perencanaan['jabatan'] }}</div>
+                <div style="font-size: 10px; font-weight: 700; color: var(--ink-soft);">{{ $kaur_perencanaan['nama'] }}</div>
               </div>
             </div>
 
@@ -848,9 +855,8 @@
 
         </div>
 
-        <!-- LEVEL 3: KASUN (KEPALA DUSUN) NODES -->
+        <!-- LEVEL 3: KASUN NODES -->
         <div style="margin-top: 40px; position: relative;">
-          <!-- Horizontal Branch Line for 4 Kasun -->
           <div style="position: relative; width: 75%; margin: 0 auto; height: 22px;">
             <div style="height: 2px; background: #0B3B60; width: 100%;"></div>
             <div style="position: absolute; left: 0; top: 0; width: 2px; height: 22px; background: #0B3B60;"></div>
@@ -862,43 +868,43 @@
           <!-- 4 KASUN CARDS -->
           <div style="display: flex; justify-content: space-between; gap: 6px; width: 100%;" class="bagan-l3-wrap">
             <!-- Kasun 1 -->
-            <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kadus Munungkerep', 'Juni Hadi', '/images/perangkat/juni-hadi.jpg')" class="org-subcard bagan-sub-card">
+            <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('{{ addslashes($kasun_1['jabatan']) }}', '{{ addslashes($kasun_1['nama']) }}', '{{ addslashes($kasun_1['foto']) }}', '{{ addslashes($kasun_1['note']) }}')" class="org-subcard bagan-sub-card">
               <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #52633B; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
-                <img src="/images/perangkat/juni-hadi.jpg" alt="Juni Hadi" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                <img src="{{ $kasun_1['foto'] }}" alt="{{ $kasun_1['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
               </div>
               <div style="font-size: 10.5px; font-weight: 800; color: var(--ink);">KASUN</div>
-              <div style="font-size: 10px; color: var(--ink-soft); font-weight: 600;">Juni Hadi</div>
-              <div style="font-size: 9px; color: #52633B; font-weight: 700;">Dusun Munungkerep</div>
+              <div style="font-size: 10px; color: var(--ink-soft); font-weight: 600;">{{ $kasun_1['nama'] }}</div>
+              <div style="font-size: 9px; color: #52633B; font-weight: 700;">{{ str_replace('Kadus ', '', $kasun_1['jabatan']) }}</div>
             </div>
 
             <!-- Kasun 2 -->
-            <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kadus Karanggebang &amp; Slumbung', 'Heru Purnadi', '/images/perangkat/heru-purnadi.jpg')" class="org-subcard bagan-sub-card">
+            <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('{{ addslashes($kasun_2['jabatan']) }}', '{{ addslashes($kasun_2['nama']) }}', '{{ addslashes($kasun_2['foto']) }}', '{{ addslashes($kasun_2['note']) }}')" class="org-subcard bagan-sub-card">
               <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #52633B; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
-                <img src="/images/perangkat/heru-purnadi.jpg" alt="Heru Purnadi" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                <img src="{{ $kasun_2['foto'] }}" alt="{{ $kasun_2['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
               </div>
               <div style="font-size: 10.5px; font-weight: 800; color: var(--ink);">KASUN</div>
-              <div style="font-size: 10px; color: var(--ink-soft); font-weight: 600;">Heru Purnadi</div>
-              <div style="font-size: 9px; color: #52633B; font-weight: 700;">Karanggebang &amp; Slumbung</div>
+              <div style="font-size: 10px; color: var(--ink-soft); font-weight: 600;">{{ $kasun_2['nama'] }}</div>
+              <div style="font-size: 9px; color: #52633B; font-weight: 700;">{{ str_replace('Kadus ', '', $kasun_2['jabatan']) }}</div>
             </div>
 
             <!-- Kasun 3 -->
-            <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kadus Kadenan &amp; Jatirubuh', 'Wagimin', '/images/perangkat/wagimin.jpg')" class="org-subcard bagan-sub-card">
+            <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('{{ addslashes($kasun_3['jabatan']) }}', '{{ addslashes($kasun_3['nama']) }}', '{{ addslashes($kasun_3['foto']) }}', '{{ addslashes($kasun_3['note']) }}')" class="org-subcard bagan-sub-card">
               <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #52633B; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
-                <img src="/images/perangkat/wagimin.jpg" alt="Wagimin" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                <img src="{{ $kasun_3['foto'] }}" alt="{{ $kasun_3['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
               </div>
               <div style="font-size: 10.5px; font-weight: 800; color: var(--ink);">KASUN</div>
-              <div style="font-size: 10px; color: var(--ink-soft); font-weight: 600;">Wagimin</div>
-              <div style="font-size: 9px; color: #52633B; font-weight: 700;">Kadenan &amp; Jatirubuh</div>
+              <div style="font-size: 10px; color: var(--ink-soft); font-weight: 600;">{{ $kasun_3['nama'] }}</div>
+              <div style="font-size: 9px; color: #52633B; font-weight: 700;">{{ str_replace('Kadus ', '', $kasun_3['jabatan']) }}</div>
             </div>
 
             <!-- Kasun 4 -->
-            <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('Kadus Kalipang &amp; Duren', 'Hartatik', '/images/perangkat/hartatik.jpg')" class="org-subcard bagan-sub-card">
+            <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('{{ addslashes($kasun_4['jabatan']) }}', '{{ addslashes($kasun_4['nama']) }}', '{{ addslashes($kasun_4['foto']) }}', '{{ addslashes($kasun_4['note']) }}')" class="org-subcard bagan-sub-card">
               <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #52633B; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
-                <img src="/images/perangkat/hartatik.jpg" alt="Hartatik" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                <img src="{{ $kasun_4['foto'] }}" alt="{{ $kasun_4['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
               </div>
               <div style="font-size: 10.5px; font-weight: 800; color: var(--ink);">KASUN</div>
-              <div style="font-size: 10px; color: var(--ink-soft); font-weight: 600;">Hartatik</div>
-              <div style="font-size: 9px; color: #52633B; font-weight: 700;">Kalipang &amp; Duren</div>
+              <div style="font-size: 10px; color: var(--ink-soft); font-weight: 600;">{{ $kasun_4['nama'] }}</div>
+              <div style="font-size: 9px; color: #52633B; font-weight: 700;">{{ str_replace('Kadus ', '', $kasun_4['jabatan']) }}</div>
             </div>
           </div>
         </div>
@@ -968,9 +974,11 @@
     return false;
   }
 
-  function bukaPopupOrang(jabatan, nama, pathFoto){
+  function bukaPopupOrang(jabatan, nama, pathFoto, note){
     document.getElementById('popup-jabatan').textContent = jabatan;
     document.getElementById('popup-nama').textContent = nama;
+    const noteEl = document.querySelector('.popup-note');
+    if (noteEl) noteEl.textContent = note || '📝 Profil singkat belum diatur.';
 
     const avatar = document.getElementById('popup-avatar');
     const imgLama = avatar.querySelector('img');

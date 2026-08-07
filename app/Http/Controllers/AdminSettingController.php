@@ -104,7 +104,17 @@ class AdminSettingController extends Controller
             $data_potensi = json_decode($data_potensi_json, true);
         }
 
-        return view('admin.pengaturan', compact('slides', 'tentang', 'layanan_cards', 'data_potensi'));
+        // Ambil data perangkat desa (organogram) dengan auto-seeding default
+        $data_perangkat_json = Setting::get('data_perangkat');
+        if (!$data_perangkat_json) {
+            $defaultPerangkat = $this->getDefaultPerangkat();
+            Setting::set('data_perangkat', json_encode($defaultPerangkat));
+            $data_perangkat = $defaultPerangkat;
+        } else {
+            $data_perangkat = json_decode($data_perangkat_json, true);
+        }
+
+        return view('admin.pengaturan', compact('slides', 'tentang', 'layanan_cards', 'data_potensi', 'data_perangkat'));
     }
 
     // Perbarui seluruh konfigurasi beranda
@@ -151,7 +161,41 @@ class AdminSettingController extends Controller
         }
         Setting::set('layanan_cards', json_encode($cards));
 
-        // 4. Update Potensi Ekonomi Desa
+        // 4. Update Data Perangkat Desa (Organogram)
+        if ($request->has('perangkat_keys')) {
+            $existing_perangkat_json = Setting::get('data_perangkat');
+            $existing_perangkat = $existing_perangkat_json ? json_decode($existing_perangkat_json, true) : $this->getDefaultPerangkat();
+
+            $perangkat_keys = $request->input('perangkat_keys', []);
+            $perangkat_jabatan = $request->input('perangkat_jabatan', []);
+            $perangkat_nama = $request->input('perangkat_nama', []);
+            $perangkat_note = $request->input('perangkat_note', []);
+
+            $new_perangkat = [];
+
+            foreach ($perangkat_keys as $idx => $key) {
+                $foto_path = $existing_perangkat[$key]['foto'] ?? '/images/perangkat/avatar.png';
+                $fileFieldName = "perangkat_foto_" . $key;
+                if ($request->hasFile($fileFieldName)) {
+                    $file = $request->file($fileFieldName);
+                    $path = ImageHelper::uploadAndCompress($file, 'perangkat');
+                    if ($path) {
+                        $foto_path = asset('storage/' . $path);
+                    }
+                }
+
+                $new_perangkat[$key] = [
+                    'jabatan' => $perangkat_jabatan[$idx] ?? '',
+                    'nama' => $perangkat_nama[$idx] ?? '',
+                    'foto' => $foto_path,
+                    'note' => $perangkat_note[$idx] ?? ''
+                ];
+            }
+
+            Setting::set('data_perangkat', json_encode($new_perangkat));
+        }
+
+        // 5. Update Potensi Ekonomi Desa
         if ($request->has('potensi_keys')) {
             $existing_potensi_json = Setting::get('data_potensi');
             $existing_potensi = $existing_potensi_json ? json_decode($existing_potensi_json, true) : [];
@@ -206,7 +250,86 @@ class AdminSettingController extends Controller
             Setting::set('data_potensi', json_encode($new_potensi));
         }
 
-        return redirect('/admin/pengaturan')->with('success', 'Pengaturan Beranda berhasil disimpan!');
+        return redirect('/admin/pengaturan')->with('success', 'Pengaturan Beranda & Perangkat Desa berhasil disimpan!');
+    }
+
+    // Mendapatkan data default 12 posisi Perangkat Desa (Organogram)
+    private function getDefaultPerangkat()
+    {
+        return [
+            'kades' => [
+                'jabatan' => 'Kepala Desa',
+                'nama' => 'Sutrismi',
+                'foto' => '/images/perangkat/kepala desa.png',
+                'note' => 'Kepala Desa Munungkerep yang memimpin dan bertanggung jawab atas seluruh penyelenggaraan pemerintahan desa.'
+            ],
+            'sekdes' => [
+                'jabatan' => 'Sekretaris Desa',
+                'nama' => 'Siswanto',
+                'foto' => '/images/perangkat/siswanto.jpg',
+                'note' => 'Sekretaris Desa Munungkerep memimpin Sekretariat Desa dan membantu Kepala Desa dalam bidang administrasi dan pelayanan.'
+            ],
+            'kasi_kesra' => [
+                'jabatan' => 'Kasi Kesra',
+                'nama' => 'Rusdi',
+                'foto' => '/images/perangkat/rusdi.jpg',
+                'note' => 'Kepala Seksi Kesejahteraan Rakyat memimpin kegiatan pembangunan keagamaan, sosial, dan kesejahteraan warga desa.'
+            ],
+            'kasi_pelayanan' => [
+                'jabatan' => 'Kasi Pelayanan',
+                'nama' => 'Sugito',
+                'foto' => '/images/perangkat/sugito.jpg',
+                'note' => 'Kepala Seksi Pelayanan mengelola dan melayani permohonan surat-menyurat serta administrasi kependudukan warga.'
+            ],
+            'kasi_pemerintahan' => [
+                'jabatan' => 'Kasi Pemerintahan',
+                'nama' => 'Suyatemo',
+                'foto' => '/images/perangkat/suyatemo.jpg',
+                'note' => 'Kepala Seksi Pemerintahan mengelola administrasi pertanahan, ketentraman, ketertiban umum, dan tata pamong desa.'
+            ],
+            'kaur_tu' => [
+                'jabatan' => 'Kaur TU & Umum',
+                'nama' => 'Suntari',
+                'foto' => '/images/perangkat/suntari.jpg',
+                'note' => 'Kepala Urusan Tata Usaha & Umum mengelola urusan persuratan, inventaris kekayaan desa, dan operasional balai desa.'
+            ],
+            'kaur_keuangan' => [
+                'jabatan' => 'Kaur Keuangan',
+                'nama' => 'Agus Sukisno',
+                'foto' => '/images/perangkat/agus-sukisno.jpg',
+                'note' => 'Kepala Urusan Keuangan mengelola administrasi pembukuan, penerimaan, dan pengeluaran APBDes Munungkerep.'
+            ],
+            'kaur_perencanaan' => [
+                'jabatan' => 'Kaur Perencanaan',
+                'nama' => 'Iskan',
+                'foto' => '/images/perangkat/iskan.jpg',
+                'note' => 'Kepala Urusan Perencanaan mengelola penyusunan RKPDes, evaluasi pelaksanaan pembangunan, dan pelaporan berkala.'
+            ],
+            'kasun_1' => [
+                'jabatan' => 'Kadus Munungkerep',
+                'nama' => 'Juni Hadi',
+                'foto' => '/images/perangkat/juni-hadi.jpg',
+                'note' => 'Kepala Dusun Munungkerep membina ketentraman dan membantu pelayanan warga di wilayah Dusun Munungkerep.'
+            ],
+            'kasun_2' => [
+                'jabatan' => 'Kadus Karanggebang & Slumbung',
+                'nama' => 'Heru Purnadi',
+                'foto' => '/images/perangkat/heru-purnadi.jpg',
+                'note' => 'Kepala Dusun Karanggebang & Slumbung membina ketentraman dan pelayanan warga di Dusun Karanggebang & Slumbung.'
+            ],
+            'kasun_3' => [
+                'jabatan' => 'Kadus Kadenan & Jatirubuh',
+                'nama' => 'Wagimin',
+                'foto' => '/images/perangkat/wagimin.jpg',
+                'note' => 'Kepala Dusun Kadenan & Jatirubuh membina ketentraman dan pelayanan warga di Dusun Kadenan & Jatirubuh.'
+            ],
+            'kasun_4' => [
+                'jabatan' => 'Kadus Kalipang & Duren',
+                'nama' => 'Hartatik',
+                'foto' => '/images/perangkat/hartatik.jpg',
+                'note' => 'Kepala Dusun Kalipang & Duren membina ketentraman dan pelayanan warga di wilayah Dusun Kalipang & Duren.'
+            ]
+        ];
     }
 
     // Mendapatkan data default untuk 6 kartu portal
@@ -222,7 +345,7 @@ class AdminSettingController extends Controller
             [
                 'icon' => '<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V7l8-4 8 4v14"/><path d="M9 21v-6h6v6M4 21h16"/></svg>',
                 'title' => 'Informasi Publik',
-                'desc' => 'Struktur organisasi pemerintah desa, anggaran APBDes, kondisi geografis, data demografis, hingga visi & misi.',
+                'desc' => 'Transparansi APBDes dan rincian anggaran.',
                 'link' => '#modal-informasi'
             ],
             [
@@ -232,16 +355,16 @@ class AdminSettingController extends Controller
                 'link' => '/profil-desa#pemerintahan'
             ],
             [
-                'icon' => '<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
-                'title' => 'Anggaran Desa',
-                'desc' => 'Lihat rincian APBDes — realisasi tahun berjalan dan rencana anggaran tahun berikutnya, terbuka untuk warga.',
-                'link' => '#modal-informasi'
+                'icon' => '<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+                'title' => 'Kelembagaan Desa',
+                'desc' => 'Organisasi aktif kemasyarakatan — BPD, PKK Dharma Wanita, Karang Taruna, Remaja Masjid, hingga Posyandu.',
+                'link' => '#modal-kelembagaan'
             ],
             [
                 'icon' => '<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3.2"/><path d="M2.5 20c0-3.6 2.5-6.5 5.5-6.5s5.5 2.9 5.5 6.5"/><path d="M16 21c0-3 2-5.5 4.5-5.5"/><circle cx="18.5" cy="9" r="2.3"/></svg>',
                 'title' => 'Data Kependudukan',
                 'desc' => 'Statistik jumlah penduduk, KK, usia, dan sarana-prasarana desa berdasarkan data monografi.',
-                'link' => '/profil-desa#demografis'
+                'link' => '#modal-demografi'
             ],
             [
                 'icon' => '<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
