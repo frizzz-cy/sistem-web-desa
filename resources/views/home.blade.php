@@ -768,8 +768,19 @@
     track.offsetHeight;
     track.classList.remove('no-transition');
 
+    function checkBounds() {
+      if (currentIndex >= totalOri * 2) {
+        goTo(currentIndex - totalOri, false);
+        track.offsetHeight; // Force reflow
+      } else if (currentIndex < totalOri) {
+        goTo(currentIndex + totalOri, false);
+        track.offsetHeight; // Force reflow
+      }
+    }
+
     function nextSlide() {
       if (userInteracting) return;
+      checkBounds();
       goTo(currentIndex + 1, true);
     }
 
@@ -783,6 +794,30 @@
     }
 
     startAutoPlay();
+
+    // Pencegah Bug Slider Putih Saat Ditinggal Tab Lain
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        stopAutoPlay();
+      } else {
+        checkBounds();
+        startAutoPlay();
+      }
+    });
+
+    window.addEventListener('focus', () => {
+      checkBounds();
+      startAutoPlay();
+    });
+
+    window.addEventListener('blur', () => {
+      stopAutoPlay();
+    });
+
+    window.addEventListener('resize', () => {
+      checkBounds();
+      goTo(currentIndex, false);
+    });
 
     // Tombol panah
     document.getElementById('panah-kiri').addEventListener('click', () => {
