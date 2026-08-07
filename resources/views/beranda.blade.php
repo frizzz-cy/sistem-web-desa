@@ -365,26 +365,8 @@
 <div class="modal-informasi-overlay" id="modal-informasi-overlay" onclick="tutupModalInformasi(event)">
   <div class="modal-informasi-box">
     <button class="modal-informasi-close" onclick="tutupModalInformasi()">✕</button>
-    <h3>Informasi Publik &amp; Transparansi Desa</h3>
-    <div class="sub">Portal Resmi Keterbukaan Informasi &amp; Transparansi APBDes Desa Munungkerep</div>
-
-    <!-- PROFIL RINGKAS WILAYAH DESA -->
-    <div class="apbdes-section" style="border-color: #1668A3; margin-bottom: 18px;">
-      <div class="apbdes-head" style="background: #1668A3;">
-        <span><i class="fas fa-info-circle" style="margin-right:6px;"></i> PROFIL RINGKAS DESA MUNUNGKEREP</span>
-        <span class="total" style="background: rgba(255,255,255,0.25);">Kec. Kabuh, Kab. Jombang</span>
-      </div>
-      <div class="apbdes-body" style="background: #F8FAFC; padding: 14px 16px;">
-        <div style="font-size: 13px; line-height: 1.6; color: var(--teks); margin-bottom: 10px;">
-          Desa Munungkerep terletak di dataran tinggi Kecamatan Kabuh, Kabupaten Jombang, Jawa Timur. Terdiri dari <strong>7 Dusun</strong>: Munungkerep, Karanggebang, Duren, Slumbung, Kalipang, Kadenan, dan Jatirubuh.
-        </div>
-        <div style="display: flex; flex-wrap: wrap; gap: 8px; font-size: 12px;">
-          <span style="background: #E0F2FE; color: #0369A1; padding: 4px 10px; border-radius: 6px; font-weight: 700;">🌾 Komoditas Utama: Tembakau &amp; Pandan</span>
-          <span style="background: #DCFCE7; color: #15803D; padding: 4px 10px; border-radius: 6px; font-weight: 700;">🏡 Total 7 Dusun Wilayah</span>
-          <span style="background: #FEF3C7; color: #B45309; padding: 4px 10px; border-radius: 6px; font-weight: 700;">📍 Balai Desa Munungkerep</span>
-        </div>
-      </div>
-    </div>
+    <h3>Informasi Publik &amp; Transparansi APBDes</h3>
+    <div class="sub">Rincian Anggaran Pendapatan dan Belanja Desa (APBDes) Desa Munungkerep</div>
 
     <!-- 1. PENDAPATAN DESA -->
     <div class="apbdes-section">
@@ -427,15 +409,6 @@
         <div class="apbdes-row"><span class="label">Penerimaan Pembiayaan</span><span class="val">Rp 13.265.324,92</span></div>
         <div class="apbdes-row"><span class="label">Pengeluaran Pembiayaan</span><span class="val">Rp 0,00</span></div>
       </div>
-    </div>
-
-    <!-- LAYANAN KANTOR DESA -->
-    <div style="background: #F1F5F9; border-radius: 8px; padding: 12px 14px; margin-top: 14px; font-size: 12.5px; color: var(--teks-muted); line-height: 1.5; display: flex; align-items: center; justify-content: space-between;">
-      <div>
-        <strong style="color: var(--biru-tua);">📍 Layanan Publik Balai Desa:</strong><br>
-        Senin – Jumat (08.00 – 15.00 WIB) di Balai Desa Munungkerep
-      </div>
-      <a href="/profil-desa" onclick="return pindahHalus(event, '/profil-desa')" style="background: var(--biru-tua); color: #fff; text-decoration: none; padding: 6px 12px; border-radius: 6px; font-weight: 700; font-size: 11.5px; white-space: nowrap;">Profil Lengkap →</a>
     </div>
   </div>
 </div>
