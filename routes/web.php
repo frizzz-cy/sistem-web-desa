@@ -38,6 +38,9 @@ Route::get('/', function () {
             if (isset($card['title']) && ($card['title'] === 'Informasi Publik' || $card['link'] === '#modal-informasi')) {
                 $card['desc'] = 'Transparansi APBDes dan rincian anggaran.';
             }
+            if (isset($card['title']) && $card['title'] === 'Data Kependudukan') {
+                $card['link'] = '#modal-demografi';
+            }
         }
     }
 
