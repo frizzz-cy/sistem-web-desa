@@ -33,6 +33,13 @@ Route::get('/', function () {
 
     $layanan_cards_json = Setting::get('layanan_cards');
     $layanan_cards = $layanan_cards_json ? json_decode($layanan_cards_json, true) : [];
+    if (!empty($layanan_cards)) {
+        foreach ($layanan_cards as &$card) {
+            if (isset($card['title']) && ($card['title'] === 'Informasi Publik' || $card['link'] === '#modal-informasi')) {
+                $card['desc'] = 'Rincian Anggaran Pendapatan dan Belanja Desa (APBDes) Desa Munungkerep secara terbuka dan transparan.';
+            }
+        }
+    }
 
     return view('beranda', compact('beritas', 'hero_slides', 'tentang', 'layanan_cards')); 
 });
