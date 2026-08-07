@@ -29,7 +29,7 @@ class SettingSeeder extends Seeder
                 [
                     'icon' => '<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V7l8-4 8 4v14"/><path d="M9 21v-6h6v6M4 21h16"/></svg>',
                     'title' => 'Informasi Publik',
-                    'desc' => 'Rincian Anggaran Pendapatan dan Belanja Desa (APBDes) Desa Munungkerep secara terbuka dan transparan.',
+                    'desc' => 'Transparansi APBDes dan rincian anggaran.',
                     'link' => '#modal-informasi'
                 ],
                 [

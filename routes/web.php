@@ -36,7 +36,7 @@ Route::get('/', function () {
     if (!empty($layanan_cards)) {
         foreach ($layanan_cards as &$card) {
             if (isset($card['title']) && ($card['title'] === 'Informasi Publik' || $card['link'] === '#modal-informasi')) {
-                $card['desc'] = 'Rincian Anggaran Pendapatan dan Belanja Desa (APBDes) Desa Munungkerep secara terbuka dan transparan.';
+                $card['desc'] = 'Transparansi APBDes dan rincian anggaran.';
             }
         }
     }
