@@ -196,7 +196,15 @@
   .surat-item li{font-size:13px; color:var(--teks-muted); line-height:1.7;}
   .surat-item .ket{ font-size:12.5px; color:var(--biru-tua); background:var(--biru-muda); padding:8px 12px; border-radius:6px; font-weight:600; }
 
-  /* Style khusus APBDes di Modal Informasi */
+  /* Style khusus APBDes & Tab di Modal Informasi */
+  .info-tab-btn {
+    background: #F1F5F9; border: 1px solid #CBD5E1; color: #475569;
+    padding: 7px 14px; border-radius: 20px; font-size: 12px; font-weight: 700;
+    cursor: pointer; white-space: nowrap; transition: all 0.2s ease;
+  }
+  .info-tab-btn:hover { background: #E2E8F0; color: #0F172A; }
+  .info-tab-btn.active { background: #0B3B60; color: #fff; border-color: #0B3B60; box-shadow: 0 4px 10px rgba(11,59,96,0.2); }
+
   .apbdes-section { border: 1px solid var(--border); border-radius: 10px; margin-bottom: 16px; overflow: hidden; }
   .apbdes-head { padding: 12px 16px; background: var(--biru-tua); color: #fff; display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 13.5px; }
   .apbdes-head.belanja { background: var(--merah); }
@@ -365,51 +373,208 @@
 <div class="modal-informasi-overlay" id="modal-informasi-overlay" onclick="tutupModalInformasi(event)">
   <div class="modal-informasi-box">
     <button class="modal-informasi-close" onclick="tutupModalInformasi()">✕</button>
-    <h3>Informasi Publik &amp; Transparansi APBDes</h3>
-    <div class="sub">Rincian Anggaran Pendapatan dan Belanja Desa (APBDes) Desa Munungkerep</div>
+    <h3>Informasi Publik &amp; Transparansi Desa</h3>
+    <div class="sub">Portal Resmi Keterbukaan Informasi Publik Desa Munungkerep</div>
 
-    <!-- 1. PENDAPATAN DESA -->
-    <div class="apbdes-section">
-      <div class="apbdes-head">
-        <span><i class="fas fa-wallet" style="margin-right:6px;"></i> PENDAPATAN DESA</span>
-        <span class="total">Rp 1.663.629.803,00</span>
+    <!-- TAB NAVIGASI -->
+    <div class="info-tab-btns" style="display:flex; gap:6px; margin-bottom:18px; overflow-x:auto; padding-bottom:4px;">
+      <button class="info-tab-btn active" onclick="switchInfoTab('apbdes', this)">💰 APBDes</button>
+      <button class="info-tab-btn" onclick="switchInfoTab('geografi', this)">🗺️ Geografi &amp; Wilayah</button>
+      <button class="info-tab-btn" onclick="switchInfoTab('demografi', this)">👥 Demografi</button>
+      <button class="info-tab-btn" onclick="switchInfoTab('fasilitas', this)">🏥 Sarana &amp; Prasarana</button>
+      <button class="info-tab-btn" onclick="switchInfoTab('kelembagaan', this)">🤝 Kelembagaan</button>
+    </div>
+
+    <!-- TAB 1: APBDES -->
+    <div class="info-tab-content" id="infotab-apbdes">
+      <!-- 1. PENDAPATAN DESA -->
+      <div class="apbdes-section">
+        <div class="apbdes-head">
+          <span><i class="fas fa-wallet" style="margin-right:6px;"></i> PENDAPATAN DESA</span>
+          <span class="total">Rp 1.663.629.803,00</span>
+        </div>
+        <div class="apbdes-body">
+          <div class="apbdes-row"><span class="label">Pendapatan Asli Desa (PAD)</span><span class="val">Rp 230.760.000,00</span></div>
+          <div class="apbdes-row"><span class="label">Dana Desa (DD)</span><span class="val">Rp 303.093.000,00</span></div>
+          <div class="apbdes-row"><span class="label">Alokasi Dana Desa (ADD)</span><span class="val">Rp 376.615.000,00</span></div>
+          <div class="apbdes-row"><span class="label">Bagi Hasil Pajak &amp; Retribusi (PDRD)</span><span class="val">Rp 85.805.300,00</span></div>
+          <div class="apbdes-row"><span class="label">Bantuan Keuangan (BK)</span><span class="val">Rp 539.600.603,00</span></div>
+          <div class="apbdes-row"><span class="label">Lain-Lain Pendapatan Sah (DLL)</span><span class="val">Rp 127.755.900,00</span></div>
+        </div>
       </div>
-      <div class="apbdes-body">
-        <div class="apbdes-row"><span class="label">Pendapatan Asli Desa (PAD)</span><span class="val">Rp 230.760.000,00</span></div>
-        <div class="apbdes-row"><span class="label">Dana Desa (DD)</span><span class="val">Rp 303.093.000,00</span></div>
-        <div class="apbdes-row"><span class="label">Alokasi Dana Desa (ADD)</span><span class="val">Rp 376.615.000,00</span></div>
-        <div class="apbdes-row"><span class="label">Bagi Hasil Pajak &amp; Retribusi (PDRD)</span><span class="val">Rp 85.805.300,00</span></div>
-        <div class="apbdes-row"><span class="label">Bantuan Keuangan (BK)</span><span class="val">Rp 539.600.603,00</span></div>
-        <div class="apbdes-row"><span class="label">Lain-Lain Pendapatan Sah (DLL)</span><span class="val">Rp 127.755.900,00</span></div>
+
+      <!-- 2. BELANJA DESA -->
+      <div class="apbdes-section">
+        <div class="apbdes-head belanja">
+          <span><i class="fas fa-shopping-bag" style="margin-right:6px;"></i> BELANJA DESA</span>
+          <span class="total">Rp 1.676.895.127,92</span>
+        </div>
+        <div class="apbdes-body">
+          <div class="apbdes-row"><span class="label">Penyelenggaraan Pemerintahan Desa</span><span class="val">Rp 866.594.524,92</span></div>
+          <div class="apbdes-row"><span class="label">Pelaksanaan Pembangunan Desa</span><span class="val">Rp 582.090.603,00</span></div>
+          <div class="apbdes-row"><span class="label">Pembinaan Kemasyarakatan</span><span class="val">Rp 42.450.000,00</span></div>
+          <div class="apbdes-row"><span class="label">Pemberdayaan Masyarakat</span><span class="val">Rp 158.000.000,00</span></div>
+          <div class="apbdes-row"><span class="label">Penanggulangan Bencana &amp; Keadaan Darurat</span><span class="val">Rp 27.760.000,00</span></div>
+        </div>
+      </div>
+
+      <!-- 3. PEMBIAYAAN DESA -->
+      <div class="apbdes-section">
+        <div class="apbdes-head pembiayaan">
+          <span><i class="fas fa-coins" style="margin-right:6px;"></i> PEMBIAYAAN DESA (NETTO)</span>
+          <span class="total">Rp 13.265.324,92</span>
+        </div>
+        <div class="apbdes-body">
+          <div class="apbdes-row"><span class="label">Penerimaan Pembiayaan</span><span class="val">Rp 13.265.324,92</span></div>
+          <div class="apbdes-row"><span class="label">Pengeluaran Pembiayaan</span><span class="val">Rp 0,00</span></div>
+        </div>
       </div>
     </div>
 
-    <!-- 2. BELANJA DESA -->
-    <div class="apbdes-section">
-      <div class="apbdes-head belanja">
-        <span><i class="fas fa-shopping-bag" style="margin-right:6px;"></i> BELANJA DESA</span>
-        <span class="total">Rp 1.676.895.127,92</span>
+    <!-- TAB 2: GEOGRAFI & WILAYAH -->
+    <div class="info-tab-content" id="infotab-geografi" style="display:none;">
+      <div class="apbdes-section">
+        <div class="apbdes-head" style="background:#1668A3;">
+          <span><i class="fas fa-map-marked-alt" style="margin-right:6px;"></i> GEOGRAFI &amp; BATAS WILAYAH</span>
+          <span class="total">209,909 Ha</span>
+        </div>
+        <div class="apbdes-body">
+          <div class="apbdes-row"><span class="label">Nama Desa / Kecamatan / Kab.</span><span class="val">Munungkerep / Kabuh / Jombang</span></div>
+          <div class="apbdes-row"><span class="label">Luas Total Wilayah</span><span class="val">209,909 Hektar</span></div>
+          <div class="apbdes-row"><span class="label">Iklim Dominan</span><span class="val">Kemarau &amp; Penghujan</span></div>
+          <div class="apbdes-row"><span class="label">Batas Wilayah Utara</span><span class="val">Hutan</span></div>
+          <div class="apbdes-row"><span class="label">Batas Wilayah Selatan</span><span class="val">Desa Kauman</span></div>
+          <div class="apbdes-row"><span class="label">Batas Wilayah Timur</span><span class="val">Desa Katemas, Kec. Kudu</span></div>
+          <div class="apbdes-row"><span class="label">Batas Wilayah Barat</span><span class="val">Desa Genengan Jasem</span></div>
+        </div>
       </div>
-      <div class="apbdes-body">
-        <div class="apbdes-row"><span class="label">Penyelenggaraan Pemerintahan Desa</span><span class="val">Rp 866.594.524,92</span></div>
-        <div class="apbdes-row"><span class="label">Pelaksanaan Pembangunan Desa</span><span class="val">Rp 582.090.603,00</span></div>
-        <div class="apbdes-row"><span class="label">Pembinaan Kemasyarakatan</span><span class="val">Rp 42.450.000,00</span></div>
-        <div class="apbdes-row"><span class="label">Pemberdayaan Masyarakat</span><span class="val">Rp 158.000.000,00</span></div>
-        <div class="apbdes-row"><span class="label">Penanggulangan Bencana &amp; Keadaan Darurat</span><span class="val">Rp 27.760.000,00</span></div>
+
+      <div class="apbdes-section">
+        <div class="apbdes-head" style="background:#0F6B58;">
+          <span><i class="fas fa-home" style="margin-right:6px;"></i> PEMBAGIAN WILAYAH DUSUN (7 DUSUN)</span>
+          <span class="total">7 RW / 15 RT</span>
+        </div>
+        <div class="apbdes-body">
+          <div style="font-size: 13px; color: var(--teks); line-height: 1.6;">
+            Wilayah administratif Desa Munungkerep terbagi menjadi <strong>7 Dusun</strong>:
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px;">
+            <span style="background:#E0F2FE; color:#0369A1; padding:5px 10px; border-radius:6px; font-weight:700; font-size:12px;">🏡 Dusun Munungkerep</span>
+            <span style="background:#E0F2FE; color:#0369A1; padding:5px 10px; border-radius:6px; font-weight:700; font-size:12px;">🏡 Dusun Karanggebang</span>
+            <span style="background:#E0F2FE; color:#0369A1; padding:5px 10px; border-radius:6px; font-weight:700; font-size:12px;">🏡 Dusun Slumbung</span>
+            <span style="background:#E0F2FE; color:#0369A1; padding:5px 10px; border-radius:6px; font-weight:700; font-size:12px;">🏡 Dusun Kalipang</span>
+            <span style="background:#E0F2FE; color:#0369A1; padding:5px 10px; border-radius:6px; font-weight:700; font-size:12px;">🏡 Dusun Duren</span>
+            <span style="background:#E0F2FE; color:#0369A1; padding:5px 10px; border-radius:6px; font-weight:700; font-size:12px;">🏡 Dusun Kadenan</span>
+            <span style="background:#E0F2FE; color:#0369A1; padding:5px 10px; border-radius:6px; font-weight:700; font-size:12px;">🏡 Dusun Jatirubuh</span>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- 3. PEMBIAYAAN DESA -->
-    <div class="apbdes-section">
-      <div class="apbdes-head pembiayaan">
-        <span><i class="fas fa-coins" style="margin-right:6px;"></i> PEMBIAYAAN DESA (NETTO)</span>
-        <span class="total">Rp 13.265.324,92</span>
+    <!-- TAB 3: DEMOGRAFI -->
+    <div class="info-tab-content" id="infotab-demografi" style="display:none;">
+      <div class="apbdes-section">
+        <div class="apbdes-head" style="background:#1668A3;">
+          <span><i class="fas fa-users" style="margin-right:6px;"></i> DATA DEMOGRAFI &amp; KEPENDUDUKAN</span>
+          <span class="total">2.113 Jiwa</span>
+        </div>
+        <div class="apbdes-body">
+          <div class="apbdes-row"><span class="label">Total Penduduk</span><span class="val">2.113 Orang</span></div>
+          <div class="apbdes-row"><span class="label">Penduduk Laki-Laki</span><span class="val">1.042 Orang</span></div>
+          <div class="apbdes-row"><span class="label">Penduduk Perempuan</span><span class="val">1.071 Orang</span></div>
+          <div class="apbdes-row"><span class="label">Total Kepala Keluarga (KK)</span><span class="val">761 KK</span></div>
+          <div class="apbdes-row"><span class="label">Agama Mayoritas</span><span class="val">Islam (100%)</span></div>
+        </div>
       </div>
-      <div class="apbdes-body">
-        <div class="apbdes-row"><span class="label">Penerimaan Pembiayaan</span><span class="val">Rp 13.265.324,92</span></div>
-        <div class="apbdes-row"><span class="label">Pengeluaran Pembiayaan</span><span class="val">Rp 0,00</span></div>
+
+      <div class="apbdes-section">
+        <div class="apbdes-head" style="background:#D4A017;">
+          <span><i class="fas fa-briefcase" style="margin-right:6px;"></i> MATA PENCAHARIAN &amp; KESEJAHTERAAN</span>
+          <span class="total">Mayoritas Tani</span>
+        </div>
+        <div class="apbdes-body">
+          <div class="apbdes-row"><span class="label">Petani Utama / Pemilik Lahan</span><span class="val">986 Orang</span></div>
+          <div class="apbdes-row"><span class="label">Buruh Tani</span><span class="val">457 Orang</span></div>
+          <div class="apbdes-row"><span class="label">Total Angkatan Kerja (15-55 Thn)</span><span class="val">1.169 Orang</span></div>
+          <div class="apbdes-row"><span class="label">Tingkat Kesejahteraan Miskin</span><span class="val">450 KK</span></div>
+          <div class="apbdes-row"><span class="label">Tingkat Kesejahteraan Sedang</span><span class="val">300 KK</span></div>
+          <div class="apbdes-row"><span class="label">Tingkat Kesejahteraan Kaya</span><span class="val">11 KK</span></div>
+        </div>
+      </div>
+
+      <div class="apbdes-section">
+        <div class="apbdes-head" style="background:#0F6B58;">
+          <span><i class="fas fa-book" style="margin-right:6px;"></i> ASAL USUL NAMA MUNUNGKEREP</span>
+        </div>
+        <div class="apbdes-body" style="font-size:13px; color:var(--teks); line-height:1.6;">
+          Nama Desa Munungkerep berasal dari kata <strong>"Munung"</strong> (pohon Sriwikutil) dan <strong>"Kerep"</strong> (rapat/banyak). Tokoh perintis sejarah desa dipelopori oleh <strong>Ki Suroyudo, Ki Godek, dan Mbah Jenggot Surowijoyo</strong>. Kepala Desa saat ini dipimpin oleh <strong>Ibu Sutrismi</strong>.
+        </div>
       </div>
     </div>
+
+    <!-- TAB 4: SARANA & PRASARANA -->
+    <div class="info-tab-content" id="infotab-fasilitas" style="display:none;">
+      <div class="apbdes-section">
+        <div class="apbdes-head" style="background:#1668A3;">
+          <span><i class="fas fa-building" style="margin-right:6px;"></i> SARANA PENDIDIKAN &amp; KESEHATAN</span>
+        </div>
+        <div class="apbdes-body">
+          <div class="apbdes-row"><span class="label">Gedung TK</span><span class="val">1 Unit</span></div>
+          <div class="apbdes-row"><span class="label">Gedung SD</span><span class="val">2 Unit</span></div>
+          <div class="apbdes-row"><span class="label">TPA / TPQ</span><span class="val">7 Unit</span></div>
+          <div class="apbdes-row"><span class="label">Posyandu Balita</span><span class="val">7 Unit</span></div>
+          <div class="apbdes-row"><span class="label">Posyandu Lansia</span><span class="val">7 Unit</span></div>
+          <div class="apbdes-row"><span class="label">Polindes / Jubastik</span><span class="val">1 Unit / 1 Unit</span></div>
+          <div class="apbdes-row"><span class="label">Tenaga Bidan Desa</span><span class="val">1 Orang</span></div>
+        </div>
+      </div>
+
+      <div class="apbdes-section">
+        <div class="apbdes-head" style="background:#0F6B58;">
+          <span><i class="fas fa-futbol" style="margin-right:6px;"></i> FASILITAS UMUM &amp; PETERNAKAN</span>
+        </div>
+        <div class="apbdes-body">
+          <div class="apbdes-row"><span class="label">Tempat Ibadah (Masjid/Musholla)</span><span class="val">10 Unit</span></div>
+          <div class="apbdes-row"><span class="label">Lapangan Olahraga</span><span class="val">1 Unit</span></div>
+          <div class="apbdes-row"><span class="label">Populasi Ternak Ayam / Itik</span><span class="val">450 Ekor</span></div>
+          <div class="apbdes-row"><span class="label">Populasi Ternak Kambing</span><span class="val">170 Ekor</span></div>
+          <div class="apbdes-row"><span class="label">Populasi Ternak Sapi</span><span class="val">76 Ekor</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: KELEMBAGAAN DESA -->
+    <div class="info-tab-content" id="infotab-kelembagaan" style="display:none;">
+      <div class="apbdes-section">
+        <div class="apbdes-head" style="background:#1668A3;">
+          <span><i class="fas fa-hands-helping" style="margin-right:6px;"></i> KELEMBAGAAN &amp; ORGANISASI DESA</span>
+        </div>
+        <div class="apbdes-body">
+          <div style="font-size: 13px; color: var(--teks); line-height: 1.6; margin-bottom: 12px;">
+            Desa Munungkerep memiliki berbagai kelembagaan dan organisasi kemasyarakatan yang aktif:
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; padding:8px 12px; border-radius:6px; font-size:12.5px;">
+              <strong>🏛️ BPD (Badan Permusyawaratan Desa)</strong><br>
+              <span style="color:var(--teks-muted);">Perwujudan demokrasi desa untuk menetapkan Perdes dan menampung aspirasi warga.</span>
+            </div>
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; padding:8px 12px; border-radius:6px; font-size:12.5px;">
+              <strong>🌺 PKK &amp; Dharma Wanita</strong><br>
+              <span style="color:var(--teks-muted);">Pemberdayaan kesejahteraan keluarga dan kegiatan kemasyarakatan wanita desa.</span>
+            </div>
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; padding:8px 12px; border-radius:6px; font-size:12.5px;">
+              <strong>⚡ Karang Taruna &amp; Remaja Masjid</strong><br>
+              <span style="color:var(--teks-muted);">Wadah pembinaan dan kegiatan kepemudaan, sosial, serta keagamaan.</span>
+            </div>
+            <div style="background:#F8FAFC; border:1px solid #E2E8F0; padding:8px 12px; border-radius:6px; font-size:12.5px;">
+              <strong>📖 Jamiyah Yasin, Tahlil &amp; Kelompok Arisan</strong><br>
+              <span style="color:var(--teks-muted);">Kegiatan rutin keagamaan dan kebersamaan warga di 7 dusun.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -514,6 +679,15 @@
   }
 
   // ================= MODAL INFORMASI PUBLIK & APBDES =================
+  function switchInfoTab(tabId, btn) {
+    document.querySelectorAll('.info-tab-content').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.info-tab-btn').forEach(b => b.classList.remove('active'));
+    
+    const target = document.getElementById('infotab-' + tabId);
+    if (target) target.style.display = 'block';
+    if (btn) btn.classList.add('active');
+  }
+
   function bukaModalInformasi(){
     document.getElementById('modal-informasi-overlay').classList.add('show');
   }
