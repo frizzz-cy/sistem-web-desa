@@ -16,7 +16,7 @@ use App\Models\Setting;
 
 // Halaman Publik
 Route::get('/', function () { 
-    $beritas = Berita::latest()->take(3)->get();
+    $beritas = Berita::latest()->get();
     
     $hero_slides = [
         Setting::get('hero_slide_1', '/images/slider/sdn2.jpeg'),
