@@ -306,8 +306,13 @@
 
   <!-- ==================== TEMPLATE KARTU BERITA ==================== -->
   <div class="berita-section reveal">
-    <div class="berita-head">
-      <h2>Berita Desa Terkini</h2>
+    <div class="berita-head" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:20px;">
+      <h2 style="margin:0;">Berita Desa Terkini</h2>
+      @if(count($beritas) > 0)
+        <button class="btn-semua-berita" onclick="bukaModalSemuaBerita()" style="background:#0B3B60; color:#fff; border:none; padding:8px 18px; border-radius:20px; font-weight:700; font-size:13px; cursor:pointer; display:inline-flex; align-items:center; gap:6px; box-shadow:0 4px 12px rgba(11,59,96,0.18); transition:all 0.2s ease;">
+          📰 Lihat Semua Berita ({{ count($beritas) }}) <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      @endif
     </div>
     
     <div class="berita-grid">
@@ -751,6 +756,51 @@
   </div>
 </div>
 
+<!-- Modal Semua Berita Desa -->
+<div class="modal-informasi-overlay" id="modal-semua-berita-overlay" onclick="tutupModalSemuaBerita(event)">
+  <div class="modal-informasi-box" style="max-width:860px; padding:28px 24px;">
+    <button class="modal-informasi-close" onclick="tutupModalSemuaBerita()">✕</button>
+    <h3>📰 Arsip Lengkap Berita Desa</h3>
+    <div class="sub">Daftar Seluruh Berita &amp; Informasi Resmi Desa Munungkerep</div>
+
+    <!-- Input Cari Berita -->
+    <div style="margin-bottom:20px;">
+      <input type="text" id="cari-berita-input" onkeyup="filterModalBerita()" placeholder="🔍 Cari berita berdasarkan judul atau kategori..." style="width:100%; padding:10px 16px; border-radius:20px; border:1.5px solid #CBD5E1; font-size:13px; font-family:'Plus Jakarta Sans',sans-serif; outline:none; box-sizing:border-box;">
+    </div>
+
+    <!-- Grid Daftar Berita di Modal -->
+    <div class="modal-berita-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:16px; max-height:60vh; overflow-y:auto; padding-right:4px;" id="modal-berita-container">
+      @foreach($beritas as $item)
+        <div class="berita-card item-modal-berita" data-judul="{{ strtolower($item->judul) }}" data-kategori="{{ strtolower($item->kategori) }}" style="margin:0; box-shadow:0 2px 10px rgba(0,0,0,0.05); border:1px solid #E2E8F0;">
+          <img src="{{ $item->foto ? asset('storage/'.$item->foto) : 'https://placehold.co/600x400/e2e8f0/94a3b8?text=Gambar+Berita' }}" alt="{{ $item->judul }}" class="berita-img" style="height:150px;" loading="lazy">
+          <div class="berita-content" style="padding:14px;">
+            <span class="berita-badge" style="font-size:10px; padding:3px 10px;">{{ $item->kategori }}</span>
+            <h3 class="berita-title" style="font-size:14px; margin:6px 0; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">{{ $item->judul }}</h3>
+            <div class="berita-date" style="font-size:11px; color:#888; margin-bottom:8px;">{{ date('d M Y', strtotime($item->tanggal)) }}</div>
+            @php
+              $excerptCleanModal = preg_replace('/!\[.*?\]\((https?:\/\/.*?)\)/i', '', $item->isi);
+              $excerptCleanModal = preg_replace('/https?:\/\/\S+\.(?:jpg|jpeg|png|gif|webp|svg)\b/i', '', $excerptCleanModal);
+              $excerptCleanModal = trim(strip_tags($excerptCleanModal));
+            @endphp
+            <p class="berita-excerpt" style="font-size:12px; line-height:1.5; margin-bottom:10px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">{{ Str::limit($excerptCleanModal, 90) }}</p>
+            <a class="berita-link" onclick="bukaBerita(this)" 
+               data-id="{{ $item->id }}"
+               data-judul="{{ $item->judul }}"
+               data-kategori="{{ $item->kategori }}"
+               data-tanggal="{{ date('d M Y', strtotime($item->tanggal)) }}"
+               data-foto="{{ $item->foto ? asset('storage/'.$item->foto) : 'https://placehold.co/600x400/e2e8f0/94a3b8?text=Gambar+Berita' }}"
+               data-views="{{ $item->views }}" style="font-size:12px; cursor:pointer;">
+              Baca Selengkapnya 
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+              <span class="berita-isi-full" style="display:none;">{{ $item->isi }}</span>
+            </a>
+          </div>
+        </div>
+      @endforeach
+    </div>
+  </div>
+</div>
+
 @include('partials.footer')
 
 <script>
@@ -797,6 +847,10 @@
         .catch(err => console.error('Gagal memperbarui jumlah tayangan:', err));
     }
     
+    // Tutup modal semua berita jika sedang terbuka
+    const modalSemua = document.getElementById('modal-semua-berita-overlay');
+    if (modalSemua) modalSemua.classList.remove('show');
+
     // Sembunyikan Halaman Utama (Hero + Main Konten)
     document.getElementById('hero-header').style.display = 'none';
     document.getElementById('main-content').style.display = 'none';
@@ -888,6 +942,30 @@
   function tutupModalKelembagaan(event){
     if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-informasi-close')) return;
     document.getElementById('modal-kelembagaan-overlay').classList.remove('show');
+  }
+
+  // ================= MODAL ARSIP SEMUA BERITA DESA =================
+  function bukaModalSemuaBerita(){
+    document.getElementById('modal-semua-berita-overlay').classList.add('show');
+  }
+
+  function tutupModalSemuaBerita(event){
+    if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-informasi-close')) return;
+    document.getElementById('modal-semua-berita-overlay').classList.remove('show');
+  }
+
+  function filterModalBerita(){
+    const input = document.getElementById('cari-berita-input').value.toLowerCase();
+    const items = document.querySelectorAll('.item-modal-berita');
+    items.forEach(item => {
+      const judul = item.getAttribute('data-judul') || '';
+      const kategori = item.getAttribute('data-kategori') || '';
+      if (judul.includes(input) || kategori.includes(input)){
+        item.style.display = 'block';
+      } else {
+        item.style.display = 'none';
+      }
+    });
   }
 
   // ================= SLIDER & ANIMASI (TETAP SAMA) =================
