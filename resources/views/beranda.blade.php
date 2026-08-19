@@ -264,7 +264,7 @@
           <p>{{ $card['desc'] }}</p>
           <div class="p-link">Lihat Persyaratan <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         </button>
-      @elseif($card['link'] === '#modal-informasi' || $card['link'] === '#modal-apbdes')
+      @elseif(str_contains($card['link'], 'informasi') || str_contains($card['link'], 'apbdes') || str_contains(strtolower($card['title']), 'informasi') || str_contains(strtolower($card['title']), 'anggaran'))
         <button class="portal-card" onclick="bukaModalInformasi()">
           <div class="p-badge">
             {!! $card['icon'] !!}
@@ -273,7 +273,7 @@
           <p>{{ $card['desc'] }}</p>
           <div class="p-link">Lihat Rincian <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         </button>
-      @elseif($card['link'] === '#modal-demografi' || $card['title'] === 'Data Kependudukan')
+      @elseif(str_contains($card['link'], 'demografi') || str_contains(strtolower($card['title']), 'kependudukan') || str_contains(strtolower($card['title']), 'demografi'))
         <button class="portal-card" onclick="bukaModalDemografi()">
           <div class="p-badge">
             {!! $card['icon'] !!}
@@ -282,7 +282,7 @@
           <p>{{ $card['desc'] }}</p>
           <div class="p-link">Lihat Data <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         </button>
-      @elseif($card['link'] === '#modal-kelembagaan' || $card['title'] === 'Kelembagaan Desa')
+      @elseif(str_contains($card['link'], 'kelembagaan') || str_contains(strtolower($card['title']), 'kelembagaan'))
         <button class="portal-card" onclick="bukaModalKelembagaan()">
           <div class="p-badge">
             {!! $card['icon'] !!}
@@ -292,7 +292,12 @@
           <div class="p-link">Lihat Detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         </button>
       @else
-        <a href="{{ $card['link'] }}" class="portal-card" @if(str_contains($card['link'], '/kegiatan')) onclick="return pindahHalus(event, '/kegiatan')" @endif>
+        <a href="{{ $card['link'] }}" class="portal-card" 
+           @if(str_contains($card['link'], '#modal-demografi')) onclick="bukaModalDemografi(); return false;"
+           @elseif(str_contains($card['link'], '#modal-informasi')) onclick="bukaModalInformasi(); return false;"
+           @elseif(str_contains($card['link'], '#modal-layanan')) onclick="bukaModalLayanan(); return false;"
+           @elseif(str_contains($card['link'], '#modal-kelembagaan')) onclick="bukaModalKelembagaan(); return false;"
+           @elseif(str_contains($card['link'], '/kegiatan')) onclick="return pindahHalus(event, '/kegiatan')" @endif>
           <div class="p-badge">
             {!! $card['icon'] !!}
           </div>
@@ -524,6 +529,18 @@
           <div class="apbdes-row"><span class="label">Penduduk Perempuan</span><span class="val">{{ $demo['perempuan'] ?? '1.071' }} Orang</span></div>
           <div class="apbdes-row"><span class="label">Total Kepala Keluarga (KK)</span><span class="val">{{ $demo['total_kk'] ?? '761' }} KK</span></div>
           <div class="apbdes-row"><span class="label">Agama Mayoritas</span><span class="val">Islam (100%)</span></div>
+        </div>
+      <div class="apbdes-section">
+        <div class="apbdes-head" style="background:#0B3B60;">
+          <span><i class="fas fa-child" style="margin-right:6px;"></i> KOMPOSISI KELOMPOK USIA PENDUDUK</span>
+          <span class="total">Demografi Usia</span>
+        </div>
+        <div class="apbdes-body">
+          <div class="apbdes-row"><span class="label">Usia Balita (0 – 4 Tahun)</span><span class="val">{{ $demo['usia_balita'] ?? '145' }} Orang</span></div>
+          <div class="apbdes-row"><span class="label">Usia Anak-Anak (5 – 14 Tahun)</span><span class="val">{{ $demo['usia_anak'] ?? '312' }} Orang</span></div>
+          <div class="apbdes-row"><span class="label">Usia Produktif / Angkatan Kerja (15 – 55 Tahun)</span><span class="val">{{ $demo['usia_produktif'] ?? '1.169' }} Orang</span></div>
+          <div class="apbdes-row"><span class="label">Usia Dewasa / Pra-Lansia (56 – 64 Tahun)</span><span class="val">{{ $demo['usia_pralansia'] ?? '280' }} Orang</span></div>
+          <div class="apbdes-row"><span class="label">Usia Lansia (65+ Tahun)</span><span class="val">{{ $demo['usia_lansia'] ?? '207' }} Orang</span></div>
         </div>
       </div>
 
