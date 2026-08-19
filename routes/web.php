@@ -31,12 +31,17 @@ Route::get('/', function () {
 
     $beritas = Berita::latest()->get();
     
-    $hero_slides = [
-        Setting::get('hero_slide_1', '/images/slider/sdn2.jpeg'),
-        Setting::get('hero_slide_2', '/images/slider/tknusa.jpeg'),
-        Setting::get('hero_slide_3', '/images/slider/sentra.jpg'),
-        Setting::get('hero_slide_4', '/images/carousel/slide-4.jpg'),
-    ];
+    $hero_slides_json = Setting::get('hero_slides');
+    if ($hero_slides_json) {
+        $hero_slides = json_decode($hero_slides_json, true);
+    } else {
+        $hero_slides = [
+            Setting::get('hero_slide_1', '/images/slider/sdn2.jpeg'),
+            Setting::get('hero_slide_2', '/images/slider/tknusa.jpeg'),
+            Setting::get('hero_slide_3', '/images/slider/sentra.jpg'),
+            Setting::get('hero_slide_4', '/images/carousel/slide-4.jpg'),
+        ];
+    }
 
     $tentang = [
         Setting::get('tentang_p1', 'Desa Munungkerep merupakan salah satu desa di Kecamatan Kabuh, Kabupaten Jombang, Jawa Timur, yang berada di kawasan dataran tinggi dengan kondisi tanah kering pada musim kemarau.'),
@@ -329,6 +334,20 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::post('media', [AdminMediaController::class, 'store']);
     Route::delete('media', [AdminMediaController::class, 'destroy']);
 
+    // Modular Pengaturan Routes
     Route::get('pengaturan', [AdminSettingController::class, 'index']);
-    Route::post('pengaturan', [AdminSettingController::class, 'update']);
+    Route::get('pengaturan/beranda', [AdminSettingController::class, 'beranda'])->name('admin.pengaturan.beranda');
+    Route::post('pengaturan/beranda', [AdminSettingController::class, 'updateBeranda']);
+
+    Route::get('pengaturan/apbdes', [AdminSettingController::class, 'apbdes'])->name('admin.pengaturan.apbdes');
+    Route::post('pengaturan/apbdes', [AdminSettingController::class, 'updateApbdes']);
+
+    Route::get('pengaturan/demografi', [AdminSettingController::class, 'demografi'])->name('admin.pengaturan.demografi');
+    Route::post('pengaturan/demografi', [AdminSettingController::class, 'updateDemografi']);
+
+    Route::get('pengaturan/potensi', [AdminSettingController::class, 'potensi'])->name('admin.pengaturan.potensi');
+    Route::post('pengaturan/potensi', [AdminSettingController::class, 'updatePotensi']);
+
+    Route::get('pengaturan/perangkat', [AdminSettingController::class, 'perangkat'])->name('admin.pengaturan.perangkat');
+    Route::post('pengaturan/perangkat', [AdminSettingController::class, 'updatePerangkat']);
 });

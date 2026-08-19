@@ -8,15 +8,28 @@ use Illuminate\Http\Request;
 
 class AdminSettingController extends Controller
 {
-    // Tampilkan form pengaturan beranda
+    // Redirect rute lama ke sub-modul beranda
     public function index()
     {
-        $slides = [
-            'hero_slide_1' => Setting::get('hero_slide_1', '/images/slider/sdn2.jpeg'),
-            'hero_slide_2' => Setting::get('hero_slide_2', '/images/slider/tknusa.jpeg'),
-            'hero_slide_3' => Setting::get('hero_slide_3', '/images/slider/sentra.jpg'),
-            'hero_slide_4' => Setting::get('hero_slide_4', '/images/carousel/slide-4.jpg'),
-        ];
+        return redirect('/admin/pengaturan/beranda');
+    }
+
+    // =========================================================================
+    // 1. MODUL PENGATURAN BERANDA (Hero Slides, Tentang Desa, 6 Kartu Portal)
+    // =========================================================================
+    public function beranda()
+    {
+        $hero_slides_json = Setting::get('hero_slides');
+        if ($hero_slides_json) {
+            $slides = json_decode($hero_slides_json, true);
+        } else {
+            $slides = [
+                Setting::get('hero_slide_1', '/images/slider/sdn2.jpeg'),
+                Setting::get('hero_slide_2', '/images/slider/tknusa.jpeg'),
+                Setting::get('hero_slide_3', '/images/slider/sentra.jpg'),
+                Setting::get('hero_slide_4', '/images/carousel/slide-4.jpg'),
+            ];
+        }
 
         $tentang = [
             'tentang_p1' => Setting::get('tentang_p1'),
@@ -25,200 +38,17 @@ class AdminSettingController extends Controller
         ];
 
         $layanan_cards_json = Setting::get('layanan_cards');
-        $layanan_cards = $layanan_cards_json ? json_decode($layanan_cards_json, true) : [];
+        $layanan_cards = $layanan_cards_json ? json_decode($layanan_cards_json, true) : $this->getDefaultCards();
 
-        // Ambil data potensi ekonomi dengan auto-seeding default jika kosong
-        $data_potensi_json = Setting::get('data_potensi');
-        if (!$data_potensi_json) {
-            $defaultPotensi = [
-                'tembakau' => [
-                    'tag' => 'Komoditas Utama',
-                    'judul' => 'Tembakau',
-                    'foto' => ['/images/tembakau.jpg'],
-                    'isi' => 'Komoditas unggulan Desa Munungkerep, ditanam di lahan tegalan/kering pada musim kemarau karena tidak membutuhkan banyak air dibanding tanaman lain, sehingga cocok dengan kondisi tanah desa yang berada di dataran tinggi Kecamatan Kabuh. Masa panen berlangsung antara bulan Juli hingga November.',
-                    'manfaat' => [
-                        'Diolah menjadi tembakau rajangan sebagai bahan baku rokok kretek — produk utama yang dijual ke pengepul',
-                        'Bisa diolah lebih lanjut jadi cerutu atau tembakau lintingan, produk olahan bernilai jual lebih tinggi',
-                        'Sisa/ampas tembakau dimanfaatkan sebagai pestisida alami — kandungan nikotinnya efektif mengusir hama tanaman',
-                        'Batang dan daun sisa panen bisa diolah jadi pupuk kompos organik',
-                        'Jadi sumber penghasilan utama petani saat musim kemarau, ketika tanaman lain sulit tumbuh di lahan kering'
-                    ],
-                    'catatan' => '📝 Masih perlu: luas lahan, jumlah petani/dusun penghasil, titik lokasi lahan',
-                    'produk' => ['Rajangan', 'Cerutu', 'Lintingan', 'Pestisida Alami', 'Pupuk Kompos'],
-                    'cara' => [
-                        'Daun dipetik saat sudah matang, biasanya pagi hari setelah embun mengering',
-                        'Daun diperam (curing) dulu sampai warnanya berubah dan agak lentur, tidak mudah hancur',
-                        'Dirajang tipis-tipis pakai pisau tajam atau alat rajang tradisional',
-                        'Hasil rajangan dijemur langsung di bawah matahari selama beberapa hari sampai kering merata',
-                        'Setelah kering, difermentasi agar aroma dan rasanya lebih matang sebelum dikemas dan dijual'
-                    ]
-                ],
-                'pandan' => [
-                    'tag' => 'Komoditas Pendukung',
-                    'judul' => 'Pandan',
-                    'foto' => ['/images/pandan.jpeg'],
-                    'isi' => 'Komoditas pendukung yang ditanam merata di seluruh wilayah Desa Munungkerep, bukan terpusat di dusun tertentu. Pembuatan anyaman tikar pandan dilakukan sebagai usaha sampingan warga.',
-                    'manfaat' => [
-                        'Bahan pewangi & pewarna hijau alami untuk masakan dan kue tradisional',
-                        'Bahan baku anyaman — tikar, tas, dan kerajinan tangan warga',
-                        'Pembungkus alami untuk makanan tradisional',
-                        'Diolah menjadi dupa atau pengharum ruangan alami',
-                        'Akarnya kadang dimanfaatkan warga dalam ramuan tradisional rumahan',
-                        'Ditanam di lahan miring juga membantu menahan erosi tanah, selain nilai ekonominya'
-                    ],
-                    'catatan' => '📝 Masih perlu: dijual ke mana/pembeli utama, titik lokasi lahan (kalau ada yang representatif)',
-                    'produk' => ['Dupa', 'Pewarna Masakan', 'Pembungkus Makanan', 'Ramuan Tradisional'],
-                    'cara' => [
-                        'Daun pandan dipetik, lalu duri di tepinya dibersihkan pakai pisau atau senar',
-                        'Daun dipotong/dibelah jadi ukuran seragam, biasanya sekitar 0,5–0,7 cm lebar',
-                        'Direbus sebentar untuk menghilangkan getah dan melunakkan seratnya',
-                        'Dijemur sampai benar-benar kering, lalu diluruskan dan dihaluskan',
-                        'Setelah siap, baru dianyam sesuai motif dan bentuk yang diinginkan — tikar, tas, dompet, dan lainnya'
-                    ]
-                ],
-                'padi' => [
-                    'tag' => 'Produk Olahan',
-                    'judul' => 'Padi',
-                    'foto' => ['/images/padi.jpg'],
-                    'isi' => 'Padi merupakan salah satu hasil pertanian utama di Desa Munungkerep yang ditanam oleh warga pada musim hujan di lahan basah/sawah. Hasil panen padi menjadi komoditas pangan pokok warga desa dan sebagian dipasarkan ke luar daerah.',
-                    'manfaat' => [
-                        'Sumber makanan pokok utama bagi warga Desa Munungkerep',
-                        'Diolah menjadi beras konsumsi dan dipasarkan untuk meningkatkan ekonomi keluarga petani',
-                        'Jerami sisa panen diolah menjadi pakan ternak sapi atau kambing',
-                        'Sisa sekam padi digunakan sebagai bahan bakar pembuatan batu bata atau media tanam'
-                    ],
-                    'catatan' => '📝 Masih perlu: produktivitas panen per hektar dan data pemasaran beras',
-                    'produk' => ['Beras', 'Tepung Beras', 'Pakan Ternak', 'Sekam Bakar'],
-                    'cara' => [
-                        'Pembibitan dan penanaman padi di sawah tadah hujan pada awal musim penghujan',
-                        'Perawatan berkala meliputi pemupukan, pengairan yang cukup, dan penyiangan gulma',
-                        'Pemanenan padi menggunakan sabit atau mesin combine harvester saat bulir padi menguning',
-                        'Perontokan bulir padi dan penjemuran gabah hingga kadar air cukup rendah',
-                        'Penggilingan gabah menjadi beras siap konsumsi'
-                    ]
-                ]
-            ];
-            Setting::set('data_potensi', json_encode($defaultPotensi));
-            $data_potensi = $defaultPotensi;
-        } else {
-            $data_potensi = json_decode($data_potensi_json, true);
-        }
-
-        // Ambil data perangkat desa dinamis dengan auto-seeding default jika kosong
-        $data_perangkat_json = Setting::get('data_perangkat');
-        if (!$data_perangkat_json) {
-            $defaultPerangkat = $this->getDefaultPerangkat();
-            Setting::set('data_perangkat', json_encode($defaultPerangkat));
-            $data_perangkat = $defaultPerangkat;
-        } else {
-            $data_perangkat = json_decode($data_perangkat_json, true);
-        }
-
-        // Ambil data APBDes dinamis (Multi-Tahun & Dynamic Items) dengan auto-seeding default jika kosong
-        $data_apbdes_raw = Setting::get('data_apbdes');
-        if (!$data_apbdes_raw) {
-            $defaultApbdes = $this->getDefaultApbdes();
-            Setting::set('data_apbdes', json_encode($defaultApbdes));
-            $data_apbdes = $defaultApbdes;
-        } else {
-            $decoded = json_decode($data_apbdes_raw, true);
-            if (isset($decoded['pendapatan_total'])) {
-                // Konversi data single-year lama ke multi-year
-                $data_apbdes = [
-                    '2026' => array_merge(['tahun' => '2026', 'status' => 'Murni (Berjalan)'], $decoded)
-                ];
-            } else {
-                $data_apbdes = $decoded;
-            }
-
-            // Normalisasi dynamic items jika belum ada
-            foreach ($data_apbdes as $yKey => &$yVal) {
-                if (!isset($yVal['pendapatan_items'])) {
-                    $yVal['pendapatan_items'] = [
-                        ['label' => 'Pendapatan Asli Desa (PAD)', 'nilai' => $yVal['pad'] ?? 'Rp 230.760.000,00'],
-                        ['label' => 'Dana Desa (DD - APBN Pusat)', 'nilai' => $yVal['dd'] ?? 'Rp 303.093.000,00'],
-                        ['label' => 'Alokasi Dana Desa (ADD - APBD Jombang)', 'nilai' => $yVal['add'] ?? 'Rp 376.615.000,00'],
-                        ['label' => 'Bagi Hasil Pajak & Retribusi (PDRD)', 'nilai' => $yVal['pdrd'] ?? 'Rp 85.805.300,00'],
-                        ['label' => 'Bantuan Keuangan (BK Provinsi/Kabupaten)', 'nilai' => $yVal['bk'] ?? 'Rp 539.600.603,00'],
-                        ['label' => 'Lain-Lain Pendapatan Desa Sah (DLL)', 'nilai' => $yVal['dll'] ?? 'Rp 127.755.900,00']
-                    ];
-                }
-                if (!isset($yVal['belanja_items'])) {
-                    $yVal['belanja_items'] = [
-                        ['label' => 'Penyelenggaraan Pemerintahan Desa', 'nilai' => $yVal['belanja_pemerintahan'] ?? 'Rp 866.594.524,92'],
-                        ['label' => 'Pelaksanaan Pembangunan Desa', 'nilai' => $yVal['belanja_pembangunan'] ?? 'Rp 582.090.603,00'],
-                        ['label' => 'Pembinaan Kemasyarakatan', 'nilai' => $yVal['belanja_pembinaan'] ?? 'Rp 42.450.000,00'],
-                        ['label' => 'Pemberdayaan Masyarakat', 'nilai' => $yVal['belanja_pemberdayaan'] ?? 'Rp 158.000.000,00'],
-                        ['label' => 'Penanggulangan Bencana & Keadaan Darurat', 'nilai' => $yVal['belanja_bencana'] ?? 'Rp 27.760.000,00']
-                    ];
-                }
-                if (!isset($yVal['pembiayaan_items'])) {
-                    $yVal['pembiayaan_items'] = [
-                        ['label' => 'Penerimaan Pembiayaan (SiLPA)', 'nilai' => $yVal['penerimaan_pembiayaan'] ?? 'Rp 13.265.324,92'],
-                        ['label' => 'Pengeluaran Pembiayaan', 'nilai' => $yVal['pengeluaran_pembiayaan'] ?? 'Rp 0,00']
-                    ];
-                }
-            }
-        }
-
-        // Ambil data Demografi dinamis dengan auto-seeding default jika kosong
-        $data_demografi_json = Setting::get('data_demografi');
-        if (!$data_demografi_json) {
-            $defaultDemografi = $this->getDefaultDemografi();
-            Setting::set('data_demografi', json_encode($defaultDemografi));
-            $data_demografi = $defaultDemografi;
-        } else {
-            $data_demografi = json_decode($data_demografi_json, true);
-            // Normalisasi jika masih format lama
-            if (isset($data_demografi['total_penduduk'])) {
-                $data_demografi = [
-                    'pokok' => [
-                        ['label' => 'Total Penduduk (Jiwa)', 'nilai' => $data_demografi['total_penduduk'] ?? '2.113'],
-                        ['label' => 'Total Kepala Keluarga (KK)', 'nilai' => $data_demografi['total_kk'] ?? '761'],
-                        ['label' => 'Penduduk Laki-Laki (Jiwa)', 'nilai' => $data_demografi['laki_laki'] ?? '1.042'],
-                        ['label' => 'Penduduk Perempuan (Jiwa)', 'nilai' => $data_demografi['perempuan'] ?? '1.071']
-                    ],
-                    'usia' => [
-                        ['label' => 'Usia Balita (0 – 4 Tahun)', 'nilai' => ($data_demografi['usia_balita'] ?? '145') . ' Orang'],
-                        ['label' => 'Usia Anak-Anak (5 – 14 Tahun)', 'nilai' => ($data_demografi['usia_anak'] ?? '312') . ' Orang'],
-                        ['label' => 'Usia Produktif / Angkatan Kerja (15 – 55 Tahun)', 'nilai' => ($data_demografi['usia_produktif'] ?? '1.169') . ' Orang'],
-                        ['label' => 'Usia Dewasa / Pra-Lansia (56 – 64 Tahun)', 'nilai' => ($data_demografi['usia_pralansia'] ?? '280') . ' Orang'],
-                        ['label' => 'Usia Lansia (65+ Tahun)', 'nilai' => ($data_demografi['usia_lansia'] ?? '207') . ' Orang']
-                    ],
-                    'pekerjaan' => [
-                        ['label' => 'Petani Pemilik Lahan Utama', 'nilai' => ($data_demografi['petani_utama'] ?? '986') . ' Orang'],
-                        ['label' => 'Buruh Tani', 'nilai' => ($data_demografi['buruh_tani'] ?? '457') . ' Orang'],
-                        ['label' => 'Total Angkatan Kerja Aktif (Usia 15-55 Thn)', 'nilai' => ($data_demografi['angkatan_kerja'] ?? '1.169') . ' Orang'],
-                        ['label' => 'Belum / Dalam Pencarian Kerja', 'nilai' => ($data_demografi['belum_kerja'] ?? '55') . ' Orang']
-                    ],
-                    'kesejahteraan' => [
-                        ['label' => 'KK Prasejahtera (Miskin)', 'nilai' => ($data_demografi['kk_miskin'] ?? '450') . ' KK'],
-                        ['label' => 'KK Ekonomi Menengah (Sedang)', 'nilai' => ($data_demografi['kk_sedang'] ?? '300') . ' KK'],
-                        ['label' => 'KK Ekonomi Sejahtera (Kaya)', 'nilai' => ($data_demografi['kk_kaya'] ?? '11') . ' KK']
-                    ],
-                    'pendidikan_ternak' => [
-                        ['label' => 'Jumlah Agama Islam (Orang)', 'nilai' => ($data_demografi['agama_islam'] ?? '2.113') . ' Orang'],
-                        ['label' => 'Belum / Tidak Tamat SD (Orang)', 'nilai' => ($data_demografi['pendidikan_sd'] ?? '542') . ' Orang'],
-                        ['label' => 'Lulusan Sarjana S-1 (Orang)', 'nilai' => ($data_demografi['pendidikan_s1'] ?? '40') . ' Orang'],
-                        ['label' => 'Populasi Ternak Ayam & Itik (Ekor)', 'nilai' => ($data_demografi['ternak_ayam'] ?? '450') . ' Ekor'],
-                        ['label' => 'Populasi Ternak Kambing (Ekor)', 'nilai' => ($data_demografi['ternak_kambing'] ?? '170') . ' Ekor'],
-                        ['label' => 'Populasi Ternak Sapi (Ekor)', 'nilai' => ($data_demografi['ternak_sapi'] ?? '76') . ' Ekor']
-                    ]
-                ];
-                Setting::set('data_demografi', json_encode($data_demografi));
-            }
-        }
-
-        return view('admin.pengaturan', compact('slides', 'tentang', 'layanan_cards', 'data_potensi', 'data_perangkat', 'data_apbdes', 'data_demografi'));
+        return view('admin.pengaturan.beranda', compact('slides', 'tentang', 'layanan_cards'));
     }
 
-    // Perbarui seluruh konfigurasi beranda
-    public function update(Request $request)
+    public function updateBeranda(Request $request)
     {
         // Fitur Reset Kartu Layanan ke Default
         if ($request->input('action') === 'reset_cards') {
             Setting::set('layanan_cards', json_encode($this->getDefaultCards()));
-            return redirect('/admin/pengaturan')->with('success', '6 Kartu layanan berhasil direset ke pengaturan bawaan (default)!');
+            return redirect('/admin/pengaturan/beranda')->with('success', '6 Kartu layanan berhasil dikembalikan ke pengaturan bawaan!');
         }
 
         // 1. Update Tentang Desa
@@ -226,18 +56,34 @@ class AdminSettingController extends Controller
         Setting::set('tentang_p2', $request->input('tentang_p2'));
         Setting::set('tentang_p3', $request->input('tentang_p3'));
 
-        // 2. Update Slides (Upload Baru & Kompresi jika ada)
-        for ($i = 1; $i <= 4; $i++) {
-            $fieldName = "hero_slide_" . $i;
-            if ($request->hasFile($fieldName)) {
-                $file = $request->file($fieldName);
-                // Gunakan Helper untuk mengompresi gambar ke WebP 80%
+        // 2. Update Dynamic Slides (Tambah, Hapus, Upload Baru & Kompresi)
+        $existing_slides = $request->input('slide_existing', []);
+        $slide_keys = $request->input('slide_keys', []);
+        $new_slides = [];
+
+        foreach ($slide_keys as $idx => $key) {
+            $current_url = $existing_slides[$idx] ?? '';
+            $file_input_name = "slide_file_" . $key;
+
+            if ($request->hasFile($file_input_name)) {
+                $file = $request->file($file_input_name);
                 $path = ImageHelper::uploadAndCompress($file, 'slider');
                 if ($path) {
-                    Setting::set($fieldName, asset('storage/' . $path));
+                    $current_url = asset('storage/' . $path);
                 }
             }
+
+            if (!empty($current_url)) {
+                $new_slides[] = $current_url;
+            }
         }
+
+        // Jika user menghapus semua slide sampai kosong, pasang setidaknya 1 fallback
+        if (empty($new_slides)) {
+            $new_slides = ['/images/slider/sdn2.jpeg'];
+        }
+
+        Setting::set('hero_slides', json_encode(array_values($new_slides)));
 
         // 3. Update Layanan & Informasi Cards
         $cards = [];
@@ -256,96 +102,64 @@ class AdminSettingController extends Controller
         }
         Setting::set('layanan_cards', json_encode($cards));
 
-        // 4. Update Data Perangkat Desa (Organogram)
-        if ($request->has('perangkat_keys')) {
-            $existing_perangkat_json = Setting::get('data_perangkat');
-            $existing_perangkat = $existing_perangkat_json ? json_decode($existing_perangkat_json, true) : $this->getDefaultPerangkat();
+        return redirect('/admin/pengaturan/beranda')->with('success', 'Pengaturan Beranda (Hero Slides dinamis, Tentang Desa, dan 6 Kartu Portal) berhasil disimpan!');
+    }
 
-            $perangkat_keys = $request->input('perangkat_keys', []);
-            $perangkat_jabatan = $request->input('perangkat_jabatan', []);
-            $perangkat_nama = $request->input('perangkat_nama', []);
-            $perangkat_note = $request->input('perangkat_note', []);
-
-            $new_perangkat = [];
-
-            foreach ($perangkat_keys as $idx => $key) {
-                $foto_path = $existing_perangkat[$key]['foto'] ?? '/images/perangkat/avatar.png';
-                $fileFieldName = "perangkat_foto_" . $key;
-                if ($request->hasFile($fileFieldName)) {
-                    $file = $request->file($fileFieldName);
-                    $path = ImageHelper::uploadAndCompress($file, 'perangkat');
-                    if ($path) {
-                        $foto_path = asset('storage/' . $path);
-                    }
-                }
-
-                $new_perangkat[$key] = [
-                    'jabatan' => $perangkat_jabatan[$idx] ?? '',
-                    'nama' => $perangkat_nama[$idx] ?? '',
-                    'foto' => $foto_path,
-                    'note' => $perangkat_note[$idx] ?? ''
+    // =========================================================================
+    // 2. MODUL TRANSPARANSI APBDES (Multi-Tahun & Dynamic Item Boxes)
+    // =========================================================================
+    public function apbdes()
+    {
+        $data_apbdes_raw = Setting::get('data_apbdes');
+        if (!$data_apbdes_raw) {
+            $defaultApbdes = $this->getDefaultApbdes();
+            Setting::set('data_apbdes', json_encode($defaultApbdes));
+            $data_apbdes = $defaultApbdes;
+        } else {
+            $decoded = json_decode($data_apbdes_raw, true);
+            if (isset($decoded['pendapatan_total'])) {
+                $data_apbdes = [
+                    '2026' => array_merge(['tahun' => '2026', 'status' => 'Murni (Berjalan)'], $decoded)
                 ];
+            } else {
+                $data_apbdes = $decoded;
             }
 
-            Setting::set('data_perangkat', json_encode($new_perangkat));
-        }
-
-        // 5. Update Potensi Ekonomi Desa
-        if ($request->has('potensi_keys')) {
-            $existing_potensi_json = Setting::get('data_potensi');
-            $existing_potensi = $existing_potensi_json ? json_decode($existing_potensi_json, true) : [];
-
-            $potensi_keys = $request->input('potensi_keys', []);
-            $potensi_judul = $request->input('potensi_judul', []);
-            $potensi_tag = $request->input('potensi_tag', []);
-            $potensi_catatan = $request->input('potensi_catatan', []);
-            $potensi_isi = $request->input('potensi_isi', []);
-            $potensi_manfaat = $request->input('potensi_manfaat', []);
-            $potensi_cara = $request->input('potensi_cara', []);
-            $potensi_produk = $request->input('potensi_produk', []);
-
-            $new_potensi = [];
-
-            foreach ($potensi_keys as $idx => $key) {
-                // Manfaat split per baris
-                $manfaat_lines = explode("\n", $potensi_manfaat[$idx] ?? '');
-                $manfaat_arr = array_filter(array_map('trim', $manfaat_lines));
-
-                // Cara split per baris
-                $cara_lines = explode("\n", $potensi_cara[$idx] ?? '');
-                $cara_arr = array_filter(array_map('trim', $cara_lines));
-
-                // Produk olahan split koma
-                $produk_parts = explode(",", $potensi_produk[$idx] ?? '');
-                $produk_arr = array_filter(array_map('trim', $produk_parts));
-
-                // Kelola foto
-                $foto_arr = $existing_potensi[$key]['foto'] ?? [];
-                $fileFieldName = "potensi_foto_" . $key;
-                if ($request->hasFile($fileFieldName)) {
-                    $file = $request->file($fileFieldName);
-                    $path = ImageHelper::uploadAndCompress($file, 'potensi');
-                    if ($path) {
-                        $foto_arr[0] = asset('storage/' . $path);
-                    }
+            // Normalisasi dynamic items jika belum ada
+            foreach ($data_apbdes as $yKey => &$yVal) {
+                if (!isset($yVal['pendapatan_items'])) {
+                    $yVal['pendapatan_items'] = [
+                        ['label' => 'Pendapatan Asli Desa (PAD)', 'sub' => 'Hasil Usaha Desa & Tanah Kas', 'nilai' => $yVal['pad'] ?? 'Rp 230.760.000,00'],
+                        ['label' => 'Dana Desa (DD - APBN Pusat)', 'sub' => 'Transfer APBN Pusat', 'nilai' => $yVal['dd'] ?? 'Rp 303.093.000,00'],
+                        ['label' => 'Alokasi Dana Desa (ADD - APBD Jombang)', 'sub' => 'Alokasi APBD Kabupaten', 'nilai' => $yVal['add'] ?? 'Rp 376.615.000,00'],
+                        ['label' => 'Bagi Hasil Pajak & Retribusi (PDRD)', 'sub' => 'Bagi Hasil Pajak Daerah', 'nilai' => $yVal['pdrd'] ?? 'Rp 85.805.300,00'],
+                        ['label' => 'Bantuan Keuangan (BK Provinsi/Kabupaten)', 'sub' => 'Bantuan Khusus Pemda', 'nilai' => $yVal['bk'] ?? 'Rp 539.600.603,00'],
+                        ['label' => 'Lain-Lain Pendapatan Desa Sah (DLL)', 'sub' => 'Penerimaan Lain yang Sah', 'nilai' => $yVal['dll'] ?? 'Rp 127.755.900,00']
+                    ];
                 }
-
-                $new_potensi[$key] = [
-                    'tag' => $potensi_tag[$idx] ?? '',
-                    'judul' => $potensi_judul[$idx] ?? '',
-                    'foto' => $foto_arr,
-                    'isi' => $potensi_isi[$idx] ?? '',
-                    'manfaat' => array_values($manfaat_arr),
-                    'catatan' => $potensi_catatan[$idx] ?? '',
-                    'produk' => array_values($produk_arr),
-                    'cara' => array_values($cara_arr)
-                ];
+                if (!isset($yVal['belanja_items'])) {
+                    $yVal['belanja_items'] = [
+                        ['label' => 'Penyelenggaraan Pemerintahan Desa', 'sub' => 'Operasional & Aparatur', 'nilai' => $yVal['belanja_pemerintahan'] ?? 'Rp 866.594.524,92'],
+                        ['label' => 'Pelaksanaan Pembangunan Desa', 'sub' => 'Infrastruktur & Sarpras', 'nilai' => $yVal['belanja_pembangunan'] ?? 'Rp 582.090.603,00'],
+                        ['label' => 'Pembinaan Kemasyarakatan', 'sub' => 'Kepemudaan & Keagamaan', 'nilai' => $yVal['belanja_pembinaan'] ?? 'Rp 42.450.000,00'],
+                        ['label' => 'Pemberdayaan Masyarakat', 'sub' => 'Pelatihan Warga & Kelompok Tani', 'nilai' => $yVal['belanja_pemberdayaan'] ?? 'Rp 158.000.000,00'],
+                        ['label' => 'Penanggulangan Bencana & Keadaan Darurat', 'sub' => 'Keadaan Mendesak', 'nilai' => $yVal['belanja_bencana'] ?? 'Rp 27.760.000,00']
+                    ];
+                }
+                if (!isset($yVal['pembiayaan_items'])) {
+                    $yVal['pembiayaan_items'] = [
+                        ['label' => 'Penerimaan Pembiayaan (SiLPA)', 'sub' => 'Sisa Lebih Perhitungan Anggaran', 'nilai' => $yVal['penerimaan_pembiayaan'] ?? 'Rp 13.265.324,92'],
+                        ['label' => 'Pengeluaran Pembiayaan', 'sub' => 'Penyertaan Modal BUMDes', 'nilai' => $yVal['pengeluaran_pembiayaan'] ?? 'Rp 0,00']
+                    ];
+                }
             }
-
-            Setting::set('data_potensi', json_encode($new_potensi));
         }
 
-        // 6. Update Transparansi APBDes (Multi-Tahun & Dynamic Item Boxes)
+        return view('admin.pengaturan.apbdes', compact('data_apbdes'));
+    }
+
+    public function updateApbdes(Request $request)
+    {
         if ($request->has('apbdes_tahun')) {
             $tahuns = $request->input('apbdes_tahun', []);
             $status_list = $request->input('apbdes_status', []);
@@ -429,7 +243,28 @@ class AdminSettingController extends Controller
             Setting::set('data_apbdes', json_encode($new_apbdes));
         }
 
-        // 7. Update Statistik Demografi (Dynamic Item Boxes)
+        return redirect('/admin/pengaturan/apbdes')->with('success', 'Data Transparansi APBDes berhasil diperbarui!');
+    }
+
+    // =========================================================================
+    // 3. MODUL DATA DEMOGRAFI & MONOGRAFI KEPENDUDUKAN
+    // =========================================================================
+    public function demografi()
+    {
+        $data_demografi_json = Setting::get('data_demografi');
+        if (!$data_demografi_json) {
+            $defaultDemografi = $this->getDefaultDemografi();
+            Setting::set('data_demografi', json_encode($defaultDemografi));
+            $data_demografi = $defaultDemografi;
+        } else {
+            $data_demografi = json_decode($data_demografi_json, true);
+        }
+
+        return view('admin.pengaturan.demografi', compact('data_demografi'));
+    }
+
+    public function updateDemografi(Request $request)
+    {
         if ($request->has('demo_pokok_label')) {
             $collectItems = function($labelKey, $nilaiKey) use ($request) {
                 $labels = $request->input($labelKey, []);
@@ -457,10 +292,216 @@ class AdminSettingController extends Controller
             Setting::set('data_demografi', json_encode($new_demografi));
         }
 
-        return redirect('/admin/pengaturan')->with('success', 'Pengaturan Beranda, APBDes Rekap & Demografi Kependudukan berhasil disimpan!');
+        return redirect('/admin/pengaturan/demografi')->with('success', 'Data Statistik Demografi & Kependudukan berhasil disimpan!');
     }
 
-    // Mendapatkan data default Rincian APBDes & Sumber Dana Rekap Multi-Tahun
+    // =========================================================================
+    // 4. MODUL POTENSI EKONOMI DESA (Tembakau, Pandan, Padi)
+    // =========================================================================
+    public function potensi()
+    {
+        $data_potensi_json = Setting::get('data_potensi');
+        if (!$data_potensi_json) {
+            $defaultPotensi = $this->getDefaultPotensi();
+            Setting::set('data_potensi', json_encode($defaultPotensi));
+            $data_potensi = $defaultPotensi;
+        } else {
+            $data_potensi = json_decode($data_potensi_json, true);
+        }
+
+        return view('admin.pengaturan.potensi', compact('data_potensi'));
+    }
+
+    public function updatePotensi(Request $request)
+    {
+        if ($request->has('potensi_keys')) {
+            $existing_potensi_json = Setting::get('data_potensi');
+            $existing_potensi = $existing_potensi_json ? json_decode($existing_potensi_json, true) : $this->getDefaultPotensi();
+
+            $potensi_keys = $request->input('potensi_keys', []);
+            $potensi_judul = $request->input('potensi_judul', []);
+            $potensi_tag = $request->input('potensi_tag', []);
+            $potensi_catatan = $request->input('potensi_catatan', []);
+            $potensi_isi = $request->input('potensi_isi', []);
+            $potensi_manfaat = $request->input('potensi_manfaat', []);
+            $potensi_cara = $request->input('potensi_cara', []);
+            $potensi_produk = $request->input('potensi_produk', []);
+
+            $new_potensi = [];
+
+            foreach ($potensi_keys as $idx => $key) {
+                // Manfaat split per baris
+                $manfaat_lines = explode("\n", $potensi_manfaat[$idx] ?? '');
+                $manfaat_arr = array_filter(array_map('trim', $manfaat_lines));
+
+                // Cara split per baris
+                $cara_lines = explode("\n", $potensi_cara[$idx] ?? '');
+                $cara_arr = array_filter(array_map('trim', $cara_lines));
+
+                // Produk olahan split koma
+                $produk_parts = explode(",", $potensi_produk[$idx] ?? '');
+                $produk_arr = array_filter(array_map('trim', $produk_parts));
+
+                // Kelola foto
+                $foto_arr = $existing_potensi[$key]['foto'] ?? [];
+                $fileFieldName = "potensi_foto_" . $key;
+                if ($request->hasFile($fileFieldName)) {
+                    $file = $request->file($fileFieldName);
+                    $path = ImageHelper::uploadAndCompress($file, 'potensi');
+                    if ($path) {
+                        $foto_arr[0] = asset('storage/' . $path);
+                    }
+                }
+
+                $new_potensi[$key] = [
+                    'tag' => $potensi_tag[$idx] ?? '',
+                    'judul' => $potensi_judul[$idx] ?? '',
+                    'foto' => $foto_arr,
+                    'isi' => $potensi_isi[$idx] ?? '',
+                    'manfaat' => array_values($manfaat_arr),
+                    'catatan' => $potensi_catatan[$idx] ?? '',
+                    'produk' => array_values($produk_arr),
+                    'cara' => array_values($cara_arr)
+                ];
+            }
+
+            Setting::set('data_potensi', json_encode($new_potensi));
+        }
+
+        return redirect('/admin/pengaturan/potensi')->with('success', 'Data Potensi Ekonomi Komoditas Desa berhasil disimpan!');
+    }
+
+    // =========================================================================
+    // 5. MODUL STRUKTUR PERANGKAT DESA & ORGANOGRAM
+    // =========================================================================
+    public function perangkat()
+    {
+        $data_perangkat_json = Setting::get('data_perangkat');
+        if (!$data_perangkat_json) {
+            $defaultPerangkat = $this->getDefaultPerangkat();
+            Setting::set('data_perangkat', json_encode($defaultPerangkat));
+            $data_perangkat = $defaultPerangkat;
+        } else {
+            $data_perangkat = json_decode($data_perangkat_json, true);
+        }
+
+        return view('admin.pengaturan.perangkat', compact('data_perangkat'));
+    }
+
+    public function updatePerangkat(Request $request)
+    {
+        if ($request->has('perangkat_keys')) {
+            $existing_perangkat_json = Setting::get('data_perangkat');
+            $existing_perangkat = $existing_perangkat_json ? json_decode($existing_perangkat_json, true) : $this->getDefaultPerangkat();
+
+            $perangkat_keys = $request->input('perangkat_keys', []);
+            $perangkat_jabatan = $request->input('perangkat_jabatan', []);
+            $perangkat_nama = $request->input('perangkat_nama', []);
+            $perangkat_note = $request->input('perangkat_note', []);
+
+            $new_perangkat = [];
+
+            foreach ($perangkat_keys as $idx => $key) {
+                $foto_path = $existing_perangkat[$key]['foto'] ?? '/images/perangkat/avatar.png';
+                $fileFieldName = "perangkat_foto_" . $key;
+                if ($request->hasFile($fileFieldName)) {
+                    $file = $request->file($fileFieldName);
+                    $path = ImageHelper::uploadAndCompress($file, 'perangkat');
+                    if ($path) {
+                        $foto_path = asset('storage/' . $path);
+                    }
+                }
+
+                $new_perangkat[$key] = [
+                    'jabatan' => $perangkat_jabatan[$idx] ?? '',
+                    'nama' => $perangkat_nama[$idx] ?? '',
+                    'foto' => $foto_path,
+                    'note' => $perangkat_note[$idx] ?? ''
+                ];
+            }
+
+            Setting::set('data_perangkat', json_encode($new_perangkat));
+        }
+
+        return redirect('/admin/pengaturan/perangkat')->with('success', 'Bagan Struktur Organisasi & Foto Perangkat Desa berhasil disimpan!');
+    }
+
+    // =========================================================================
+    // HELPER DATA BAWAAN (DEFAULT SEEDERS)
+    // =========================================================================
+
+    private function getDefaultPotensi()
+    {
+        return [
+            'tembakau' => [
+                'tag' => 'Komoditas Utama',
+                'judul' => 'Tembakau',
+                'foto' => ['/images/tembakau.jpg'],
+                'isi' => 'Komoditas unggulan Desa Munungkerep, ditanam di lahan tegalan/kering pada musim kemarau karena tidak membutuhkan banyak air dibanding tanaman lain, sehingga cocok dengan kondisi tanah desa yang berada di dataran tinggi Kecamatan Kabuh. Masa panen berlangsung antara bulan Juli hingga November.',
+                'manfaat' => [
+                    'Diolah menjadi tembakau rajangan sebagai bahan baku rokok kretek — produk utama yang dijual ke pengepul',
+                    'Bisa diolah lebih lanjut jadi cerutu atau tembakau lintingan, produk olahan bernilai jual lebih tinggi',
+                    'Sisa/ampas tembakau dimanfaatkan sebagai pestisida alami — kandungan nikotinnya efektif mengusir hama tanaman',
+                    'Batang dan daun sisa panen bisa diolah jadi pupuk kompos organik',
+                    'Jadi sumber penghasilan utama petani saat musim kemarau, ketika tanaman lain sulit tumbuh di lahan kering'
+                ],
+                'catatan' => '📝 Masih perlu: luas lahan, jumlah petani/dusun penghasil, titik lokasi lahan',
+                'produk' => ['Rajangan', 'Cerutu', 'Lintingan', 'Pestisida Alami', 'Pupuk Kompos'],
+                'cara' => [
+                    'Daun dipetik saat sudah matang, biasanya pagi hari setelah embun mengering',
+                    'Daun diperam (curing) dulu sampai warnanya berubah dan agak lentur, tidak mudah hancur',
+                    'Dirajang tipis-tipis pakai pisau tajam atau alat rajang tradisional',
+                    'Hasil rajangan dijemur langsung di bawah matahari selama beberapa hari sampai kering merata',
+                    'Setelah kering, difermentasi agar aroma dan rasanya lebih matang sebelum dikemas dan dijual'
+                ]
+            ],
+            'pandan' => [
+                'tag' => 'Komoditas Pendukung',
+                'judul' => 'Pandan',
+                'foto' => ['/images/pandan.jpeg'],
+                'isi' => 'Komoditas pendukung yang ditanam merata di seluruh wilayah Desa Munungkerep, bukan terpusat di dusun tertentu. Pembuatan anyaman tikar pandan dilakukan sebagai usaha sampingan warga.',
+                'manfaat' => [
+                    'Bahan pewangi & pewarna hijau alami untuk masakan dan kue tradisional',
+                    'Bahan baku anyaman — tikar, tas, dan kerajinan tangan warga',
+                    'Pembungkus alami untuk makanan tradisional',
+                    'Diolah menjadi dupa atau pengharum ruangan alami',
+                    'Akarnya kadang dimanfaatkan warga dalam ramuan tradisional rumahan',
+                    'Ditanam di lahan miring juga membantu menahan erosi tanah, selain nilai ekonominya'
+                ],
+                'catatan' => '📝 Masih perlu: dijual ke mana/pembeli utama, titik lokasi lahan (kalau ada yang representatif)',
+                'produk' => ['Dupa', 'Pewarna Masakan', 'Pembungkus Makanan', 'Ramuan Tradisional'],
+                'cara' => [
+                    'Daun pandan dipetik, lalu duri di tepinya dibersihkan pakai pisau atau senar',
+                    'Daun dipotong/dibelah jadi ukuran seragam, biasanya sekitar 0,5–0,7 cm lebar',
+                    'Direbus sebentar untuk menghilangkan getah dan melunakkan seratnya',
+                    'Dijemur sampai benar-benar kering, lalu diluruskan dan dihaluskan',
+                    'Setelah siap, baru dianyam sesuai motif dan bentuk yang diinginkan — tikar, tas, dompet, dan lainnya'
+                ]
+            ],
+            'padi' => [
+                'tag' => 'Produk Olahan',
+                'judul' => 'Padi',
+                'foto' => ['/images/padi.jpg'],
+                'isi' => 'Padi merupakan salah satu hasil pertanian utama di Desa Munungkerep yang ditanam oleh warga pada musim hujan di lahan basah/sawah. Hasil panen padi menjadi komoditas pangan pokok warga desa dan sebagian dipasarkan ke luar daerah.',
+                'manfaat' => [
+                    'Sumber makanan pokok utama bagi warga Desa Munungkerep',
+                    'Diolah menjadi beras konsumsi dan dipasarkan untuk meningkatkan ekonomi keluarga petani',
+                    'Jerami sisa panen diolah menjadi pakan ternak sapi atau kambing',
+                    'Sisa sekam padi digunakan sebagai bahan bakar pembuatan batu bata atau media tanam'
+                ],
+                'catatan' => '📝 Masih perlu: produktivitas panen per hektar dan data pemasaran beras',
+                'produk' => ['Beras', 'Tepung Beras', 'Pakan Ternak', 'Sekam Bakar'],
+                'cara' => [
+                    'Pembibitan dan penanaman padi di sawah tadah hujan pada awal musim penghujan',
+                    'Perawatan berkala meliputi pemupukan, pengairan yang cukup, dan penyiangan gulma',
+                    'Pemanenan padi menggunakan sabit atau mesin combine harvester saat bulir padi menguning',
+                    'Perontokan bulir padi dan penjemuran gabah hingga kadar air cukup rendah',
+                    'Penggilingan gabah menjadi beras siap konsumsi'
+                ]
+            ]
+        ];
+    }
+
     private function getDefaultApbdes()
     {
         return [
@@ -529,7 +570,6 @@ class AdminSettingController extends Controller
         ];
     }
 
-    // Mendapatkan data default Statistik Demografi Kependudukan
     private function getDefaultDemografi()
     {
         return [
@@ -568,7 +608,6 @@ class AdminSettingController extends Controller
         ];
     }
 
-    // Mendapatkan data default 12 posisi Perangkat Desa (Organogram)
     private function getDefaultPerangkat()
     {
         return [
@@ -647,7 +686,6 @@ class AdminSettingController extends Controller
         ];
     }
 
-    // Mendapatkan data default untuk 6 kartu portal
     private function getDefaultCards()
     {
         return [
