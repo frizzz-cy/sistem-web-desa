@@ -928,7 +928,25 @@
     document.querySelector('.berita-section').scrollIntoView({ behavior: 'smooth' });
   }
 
-  // ================= MODAL LAYANAN (TETAP SAMA) =================
+  // ================= PENGELOLA MODAL (SINGLE ACTIVE MODAL) =================
+  function tutupSemuaModal() {
+    ['modal-layanan-overlay', 'modal-informasi-overlay', 'modal-demografi-overlay', 'modal-kelembagaan-overlay', 'modal-semua-berita-overlay'].forEach(id => {
+      var el = document.getElementById(id);
+      if (el) {
+        el.classList.remove('show');
+        el.style.display = 'none';
+      }
+    });
+  }
+
+  // Tutup modal jika tombol Escape ditekan
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      tutupSemuaModal();
+    }
+  });
+
+  // ================= MODAL LAYANAN =================
   const DATA_SURAT = [
     { nama: 'Surat Keterangan Domisili', syarat: ['Fotocopy KTP', 'Fotocopy KK', 'Pas foto 3x4 (2 lembar)', 'Surat pengantar RT/RW'], keterangan: 'Berlaku selama 6 bulan' },
     { nama: 'Surat Keterangan Usaha', syarat: ['Fotocopy KTP', 'Fotocopy KK', 'Pas foto 3x4 (2 lembar)', 'Surat keterangan usaha dari RT/RW'], keterangan: 'Untuk keperluan kredit atau izin usaha' },
@@ -938,19 +956,22 @@
   ];
 
   function bukaModalLayanan(){
+    tutupSemuaModal();
     const wadah = document.getElementById('daftar-surat');
-    wadah.innerHTML = '';
-    DATA_SURAT.forEach(surat => {
-      const detail = document.createElement('details'); detail.className = 'surat-item';
-      const summary = document.createElement('summary'); summary.textContent = surat.nama; detail.appendChild(summary);
-      const isi = document.createElement('div'); isi.className = 'isi-surat';
-      const labelSyarat = document.createElement('span'); labelSyarat.className = 'label-kecil'; labelSyarat.textContent = 'Persyaratan'; isi.appendChild(labelSyarat);
-      const ul = document.createElement('ul');
-      surat.syarat.forEach(s => { const li = document.createElement('li'); li.textContent = s; ul.appendChild(li); });
-      isi.appendChild(ul);
-      const ket = document.createElement('div'); ket.className = 'ket'; ket.textContent = '📌 ' + surat.keterangan; isi.appendChild(ket);
-      detail.appendChild(isi); wadah.appendChild(detail);
-    });
+    if (wadah) {
+      wadah.innerHTML = '';
+      DATA_SURAT.forEach(surat => {
+        const detail = document.createElement('details'); detail.className = 'surat-item';
+        const summary = document.createElement('summary'); summary.textContent = surat.nama; detail.appendChild(summary);
+        const isi = document.createElement('div'); isi.className = 'isi-surat';
+        const labelSyarat = document.createElement('span'); labelSyarat.className = 'label-kecil'; labelSyarat.textContent = 'Persyaratan'; isi.appendChild(labelSyarat);
+        const ul = document.createElement('ul');
+        surat.syarat.forEach(s => { const li = document.createElement('li'); li.textContent = s; ul.appendChild(li); });
+        isi.appendChild(ul);
+        const ket = document.createElement('div'); ket.className = 'ket'; ket.textContent = '📌 ' + surat.keterangan; isi.appendChild(ket);
+        detail.appendChild(isi); wadah.appendChild(detail);
+      });
+    }
     var el = document.getElementById('modal-layanan-overlay');
     if (el) {
       el.classList.add('show');
@@ -978,6 +999,7 @@
   }
 
   function bukaModalInformasi(){
+    tutupSemuaModal();
     var el = document.getElementById('modal-informasi-overlay');
     if (el) {
       el.classList.add('show');
@@ -996,6 +1018,7 @@
 
   // ================= MODAL DATA KEPENDUDUKAN (DEMOGRAFI) =================
   function bukaModalDemografi(){
+    tutupSemuaModal();
     var el = document.getElementById('modal-demografi-overlay');
     if (el) {
       el.classList.add('show');
@@ -1014,6 +1037,7 @@
 
   // ================= MODAL KELEMBAGAAN DESA =================
   function bukaModalKelembagaan(){
+    tutupSemuaModal();
     var el = document.getElementById('modal-kelembagaan-overlay');
     if (el) {
       el.classList.add('show');
