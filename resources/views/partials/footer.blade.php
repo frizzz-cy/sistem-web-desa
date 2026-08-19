@@ -201,9 +201,9 @@
         <div class="jam-waktu">Senin – Jumat: 08.00 – 15.00 WIB</div>
       </div>
       <a href="javascript:void(0)" onclick="if(typeof bukaModalLayanan === 'function'){ bukaModalLayanan(); } else { window.location.href='/#modal-layanan'; }"><i class="fas fa-file-signature" style="margin-right:6px; font-size:11px;"></i> Surat Administrasi</a>
-      <a href="/profil-desa#demografis"><i class="fas fa-id-card" style="margin-right:6px; font-size:11px;"></i> Pelayanan Kependudukan</a>
+      <a href="javascript:void(0)" onclick="if(typeof bukaModalDemografi === 'function'){ bukaModalDemografi(); } else { window.location.href='/#modal-demografi'; }"><i class="fas fa-id-card" style="margin-right:6px; font-size:11px;"></i> Pelayanan Kependudukan</a>
       <a href="/peta"><i class="fas fa-map-marked-alt" style="margin-right:6px; font-size:11px;"></i> Peta Interaktif &amp; Potensi</a>
-      <a href="/profil-desa#anggaran"><i class="fas fa-chart-pie" style="margin-right:6px; font-size:11px;"></i> Transparansi APBDes</a>
+      <a href="javascript:void(0)" onclick="if(typeof bukaModalInformasi === 'function'){ bukaModalInformasi(); } else { window.location.href='/#modal-informasi'; }"><i class="fas fa-chart-pie" style="margin-right:6px; font-size:11px;"></i> Transparansi APBDes</a>
     </div>
 
     <!-- INFORMASI PENGADUAN & CALL CENTER -->
