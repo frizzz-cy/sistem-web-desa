@@ -341,7 +341,7 @@
     </div>
     
     <div class="berita-grid">
-      @forelse($beritas->take(3) as $item)
+      @forelse($beritas as $item)
       <div class="berita-card">
         <img src="{{ $item->foto ? asset('storage/'.$item->foto) : 'https://placehold.co/600x400/e2e8f0/94a3b8?text=Gambar+Berita' }}" alt="{{ $item->judul }}" class="berita-img" loading="lazy">
         <div class="berita-content">
