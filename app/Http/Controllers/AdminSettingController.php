@@ -19,12 +19,17 @@ class AdminSettingController extends Controller
     // =========================================================================
     public function beranda()
     {
-        $slides = [
-            'hero_slide_1' => Setting::get('hero_slide_1', '/images/slider/sdn2.jpeg'),
-            'hero_slide_2' => Setting::get('hero_slide_2', '/images/slider/tknusa.jpeg'),
-            'hero_slide_3' => Setting::get('hero_slide_3', '/images/slider/sentra.jpg'),
-            'hero_slide_4' => Setting::get('hero_slide_4', '/images/carousel/slide-4.jpg'),
-        ];
+        $hero_slides_json = Setting::get('hero_slides');
+        if ($hero_slides_json) {
+            $slides = json_decode($hero_slides_json, true);
+        } else {
+            $slides = [
+                Setting::get('hero_slide_1', '/images/slider/sdn2.jpeg'),
+                Setting::get('hero_slide_2', '/images/slider/tknusa.jpeg'),
+                Setting::get('hero_slide_3', '/images/slider/sentra.jpg'),
+                Setting::get('hero_slide_4', '/images/carousel/slide-4.jpg'),
+            ];
+        }
 
         $tentang = [
             'tentang_p1' => Setting::get('tentang_p1'),
@@ -51,17 +56,34 @@ class AdminSettingController extends Controller
         Setting::set('tentang_p2', $request->input('tentang_p2'));
         Setting::set('tentang_p3', $request->input('tentang_p3'));
 
-        // 2. Update Slides (Upload Baru & Kompresi jika ada)
-        for ($i = 1; $i <= 4; $i++) {
-            $fieldName = "hero_slide_" . $i;
-            if ($request->hasFile($fieldName)) {
-                $file = $request->file($fieldName);
+        // 2. Update Dynamic Slides (Tambah, Hapus, Upload Baru & Kompresi)
+        $existing_slides = $request->input('slide_existing', []);
+        $slide_keys = $request->input('slide_keys', []);
+        $new_slides = [];
+
+        foreach ($slide_keys as $idx => $key) {
+            $current_url = $existing_slides[$idx] ?? '';
+            $file_input_name = "slide_file_" . $key;
+
+            if ($request->hasFile($file_input_name)) {
+                $file = $request->file($file_input_name);
                 $path = ImageHelper::uploadAndCompress($file, 'slider');
                 if ($path) {
-                    Setting::set($fieldName, asset('storage/' . $path));
+                    $current_url = asset('storage/' . $path);
                 }
             }
+
+            if (!empty($current_url)) {
+                $new_slides[] = $current_url;
+            }
         }
+
+        // Jika user menghapus semua slide sampai kosong, pasang setidaknya 1 fallback
+        if (empty($new_slides)) {
+            $new_slides = ['/images/slider/sdn2.jpeg'];
+        }
+
+        Setting::set('hero_slides', json_encode(array_values($new_slides)));
 
         // 3. Update Layanan & Informasi Cards
         $cards = [];
@@ -80,7 +102,7 @@ class AdminSettingController extends Controller
         }
         Setting::set('layanan_cards', json_encode($cards));
 
-        return redirect('/admin/pengaturan/beranda')->with('success', 'Pengaturan Beranda (Hero Slides, Tentang Desa, dan 6 Kartu Portal) berhasil disimpan!');
+        return redirect('/admin/pengaturan/beranda')->with('success', 'Pengaturan Beranda (Hero Slides dinamis, Tentang Desa, dan 6 Kartu Portal) berhasil disimpan!');
     }
 
     // =========================================================================

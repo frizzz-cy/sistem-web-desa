@@ -24,18 +24,22 @@
         }
         .slide-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 20px;
         }
         .slide-card {
-            border: 1px solid #E2E8F0;
+            border: 1.5px solid #E2E8F0;
             border-radius: 10px;
             padding: 16px;
             background: #F8FAFC;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         .slide-img-preview {
             width: 100%;
-            height: 120px;
+            height: 130px;
             object-fit: cover;
             border-radius: 6px;
             margin-bottom: 12px;
@@ -61,7 +65,7 @@
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
             <div>
                 <h1 style="margin: 0; font-size: 22px; color: var(--biru-tua); font-weight: 800;">🖼️ Pengaturan Beranda &amp; Slider</h1>
-                <p style="margin: 4px 0 0; font-size: 13px; color: var(--teks-muted);">Kelola gambar banner slider, narasi tentang desa, dan 6 kartu portal layanan pada halaman utama.</p>
+                <p style="margin: 4px 0 0; font-size: 13px; color: var(--teks-muted);">Kelola jumlah slide banner hero, narasi tentang desa, dan 6 kartu portal layanan utama.</p>
             </div>
             <a href="/" class="btn btn-secondary" target="_blank">Lihat Web Publik ↗</a>
         </div>
@@ -73,19 +77,43 @@
         <form action="/admin/pengaturan/beranda" method="POST" enctype="multipart/form-data">
             @csrf
 
-            <!-- SECTION 1: HERO SLIDER BACKGROUND -->
+            <!-- SECTION 1: HERO SLIDER BACKGROUND (DYNAMIC) -->
             <div class="setting-section">
-                <div class="section-header">1. Background Slide Hero Header</div>
-                <p style="margin-top:0; margin-bottom:16px; font-size:12.5px; color:var(--teks-muted);">Unggah gambar baru untuk mengganti latar belakang slider beranda desa. Gambar akan otomatis dikompresi agar loading cepat.</p>
-                <div class="slide-grid">
-                    @for($i = 1; $i <= 4; $i++)
-                        @php $slideKey = 'hero_slide_' . $i; @endphp
-                        <div class="slide-card">
-                            <label style="font-weight:700; font-size:13px; display:block; margin-bottom:8px; color:var(--teks);">Slide Ke-{{ $i }}</label>
-                            <img src="{{ $slides[$slideKey] }}" class="slide-img-preview" alt="Preview Slide {{ $i }}">
-                            <input type="file" name="{{ $slideKey }}" accept="image/*" style="font-size:12px;">
+                <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                    <span>1. Background Banner Slide Hero Header</span>
+                    <button type="button" class="btn btn-secondary" onclick="tambahSlideCard()" style="font-size: 12px; padding: 6px 14px; background: #E0F2FE; color: #0369A1; border: 1px solid #BAE6FD; font-weight: 700;">
+                        + Tambah Slide Baru
+                    </button>
+                </div>
+                <p style="margin-top:0; margin-bottom:16px; font-size:12.5px; color:var(--teks-muted);">
+                    Anda dapat bebas menambah atau mengurangi jumlah slide banner. Setiap gambar yang diunggah akan otomatis dikompresi ke WebP agar halaman beranda tetap ringan dan cepat dimuat.
+                </p>
+
+                <div class="slide-grid" id="slide-grid-container">
+                    @foreach($slides as $index => $slideUrl)
+                        <div class="slide-card" data-slide-index="{{ $index }}">
+                            <div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                    <span class="slide-label" style="font-weight:800; font-size:12px; color:var(--biru-tua); background:#E2E8F0; padding:3px 8px; border-radius:4px;">
+                                        SLIDE KE-{{ $loop->iteration }}
+                                    </span>
+                                    <button type="button" onclick="hapusSlideCard(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:4px; padding:3px 8px; font-size:11px; font-weight:700; cursor:pointer;" title="Hapus slide ini">
+                                        ✕ Hapus
+                                    </button>
+                                </div>
+
+                                <img src="{{ $slideUrl }}" class="slide-img-preview" alt="Preview Slide {{ $loop->iteration }}">
+
+                                <input type="hidden" name="slide_keys[]" value="{{ $index }}">
+                                <input type="hidden" name="slide_existing[]" value="{{ $slideUrl }}">
+                            </div>
+
+                            <div style="margin-top: 8px;">
+                                <label style="font-size: 11.5px; font-weight: 600; color: var(--teks-muted); display: block; margin-bottom: 4px;">Ganti Foto Slide:</label>
+                                <input type="file" name="slide_file_{{ $index }}" accept="image/*" style="font-size:12px; width: 100%;" onchange="previewSlideImage(this)">
+                            </div>
                         </div>
-                    @endfor
+                    @endforeach
                 </div>
             </div>
 
@@ -158,4 +186,86 @@
             </div>
         </form>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        function updateSlideNumbering() {
+            const container = document.getElementById('slide-grid-container');
+            const cards = container.querySelectorAll('.slide-card');
+            cards.forEach((card, idx) => {
+                const label = card.querySelector('.slide-label');
+                if (label) {
+                    label.textContent = `SLIDE KE-${idx + 1}`;
+                }
+            });
+        }
+
+        function previewSlideImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                const card = input.closest('.slide-card');
+                const previewImg = card.querySelector('.slide-img-preview');
+                reader.onload = function(e) {
+                    if (previewImg) {
+                        previewImg.src = e.target.result;
+                    }
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function hapusSlideCard(btn) {
+            const container = document.getElementById('slide-grid-container');
+            const cards = container.querySelectorAll('.slide-card');
+            
+            if (cards.length <= 1) {
+                alert('Setidaknya harus tersisa minimal 1 slide banner pada halaman beranda!');
+                return;
+            }
+
+            if (confirm('Apakah Anda yakin ingin menghapus slide ini?')) {
+                const card = btn.closest('.slide-card');
+                if (card) {
+                    card.remove();
+                    updateSlideNumbering();
+                }
+            }
+        }
+
+        function tambahSlideCard() {
+            const container = document.getElementById('slide-grid-container');
+            const uniqueId = 'new_' + Date.now();
+            const currentTotal = container.querySelectorAll('.slide-card').length;
+
+            const card = document.createElement('div');
+            card.className = 'slide-card';
+            card.dataset.slideIndex = uniqueId;
+            card.innerHTML = `
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span class="slide-label" style="font-weight:800; font-size:12px; color:var(--biru-tua); background:#E2E8F0; padding:3px 8px; border-radius:4px;">
+                            SLIDE KE-${currentTotal + 1}
+                        </span>
+                        <button type="button" onclick="hapusSlideCard(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:4px; padding:3px 8px; font-size:11px; font-weight:700; cursor:pointer;" title="Hapus slide ini">
+                            ✕ Hapus
+                        </button>
+                    </div>
+
+                    <img src="/images/slider/sdn2.jpeg" class="slide-img-preview" alt="Preview Slide Baru">
+
+                    <input type="hidden" name="slide_keys[]" value="${uniqueId}">
+                    <input type="hidden" name="slide_existing[]" value="/images/slider/sdn2.jpeg">
+                </div>
+
+                <div style="margin-top: 8px;">
+                    <label style="font-size: 11.5px; font-weight: 600; color: #0284C7; display: block; margin-bottom: 4px;">Pilih Gambar Baru:</label>
+                    <input type="file" name="slide_file_${uniqueId}" accept="image/*" style="font-size:12px; width: 100%;" onchange="previewSlideImage(this)" required>
+                </div>
+            `;
+
+            container.appendChild(card);
+            updateSlideNumbering();
+        }
+    </script>
 @endsection

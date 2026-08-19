@@ -18,12 +18,17 @@ use App\Models\Setting;
 Route::get('/', function () { 
     $beritas = Berita::latest()->get();
     
-    $hero_slides = [
-        Setting::get('hero_slide_1', '/images/slider/sdn2.jpeg'),
-        Setting::get('hero_slide_2', '/images/slider/tknusa.jpeg'),
-        Setting::get('hero_slide_3', '/images/slider/sentra.jpg'),
-        Setting::get('hero_slide_4', '/images/carousel/slide-4.jpg'),
-    ];
+    $hero_slides_json = Setting::get('hero_slides');
+    if ($hero_slides_json) {
+        $hero_slides = json_decode($hero_slides_json, true);
+    } else {
+        $hero_slides = [
+            Setting::get('hero_slide_1', '/images/slider/sdn2.jpeg'),
+            Setting::get('hero_slide_2', '/images/slider/tknusa.jpeg'),
+            Setting::get('hero_slide_3', '/images/slider/sentra.jpg'),
+            Setting::get('hero_slide_4', '/images/carousel/slide-4.jpg'),
+        ];
+    }
 
     $tentang = [
         Setting::get('tentang_p1', 'Desa Munungkerep merupakan salah satu desa di Kecamatan Kabuh, Kabupaten Jombang, Jawa Timur, yang berada di kawasan dataran tinggi dengan kondisi tanah kering pada musim kemarau.'),
