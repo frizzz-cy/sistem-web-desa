@@ -47,6 +47,8 @@ class AdminProdukController extends Controller
             $data['is_hidden'] = $request->boolean('is_hidden');
         }
 
+        $data['user_id'] = auth()->id();
+
         unset($data['foto_produk_media']);
         Produk::create($data);
         return redirect('/admin/produk')->with('success', 'Produk berhasil ditambahkan!');
@@ -74,10 +76,6 @@ class AdminProdukController extends Controller
         ]);
 
         if ($request->hasFile('foto_produk')) {
-            // Hapus foto lama jika ada
-            if ($produk->foto_produk) {
-                Storage::disk('public')->delete($produk->foto_produk);
-            }
             $data['foto_produk'] = ImageHelper::uploadAndCompress($request->file('foto_produk'), 'produk_images');
         } elseif ($request->filled('foto_produk_media')) {
             $data['foto_produk'] = $request->input('foto_produk_media');
@@ -95,9 +93,14 @@ class AdminProdukController extends Controller
     // Menghapus produk
     public function destroy(Produk $produk)
     {
-        if ($produk->foto_produk) {
-            Storage::disk('public')->delete($produk->foto_produk);
+        $user = auth()->user();
+        if (!$user->isAdmin()) {
+            if (!$produk->user_id || $produk->user_id !== $user->id) {
+                return back()->with('error', 'Akses ditolak! Anda tidak berwenang menghapus produk yang dibuat oleh Administrator.');
+            }
         }
+
+        // Catatan: Aset foto di Pustaka Media sengaja tidak di-delete dari disk agar tetap aman digunakan modul lain
         $produk->delete();
         return redirect('/admin/produk')->with('success', 'Produk berhasil dihapus!');
     }

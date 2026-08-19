@@ -10,6 +10,7 @@ class Berita extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'judul',
         'kategori',
         'tanggal',
@@ -22,6 +23,14 @@ class Berita extends Model
     protected $casts = [
         'is_hidden' => 'boolean',
     ];
+
+    /**
+     * Relasi ke User pembuat berita
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * Scope query untuk konten yang tampil / tidak disembunyikan

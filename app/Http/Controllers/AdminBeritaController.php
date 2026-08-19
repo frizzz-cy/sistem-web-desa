@@ -44,6 +44,8 @@ class AdminBeritaController extends Controller
             $data['is_hidden'] = $request->boolean('is_hidden');
         }
 
+        $data['user_id'] = auth()->id();
+
         unset($data['foto_media']);
         Berita::create($data);
         return redirect('/admin/berita')->with('success', 'Berita berhasil ditambahkan!');
@@ -68,14 +70,8 @@ class AdminBeritaController extends Controller
         ]);
 
         if ($request->remove_foto == '1') {
-            if ($berita->foto) {
-                Storage::disk('public')->delete($berita->foto);
-            }
             $data['foto'] = null;
         } elseif ($request->hasFile('foto')) {
-            if ($berita->foto) {
-                Storage::disk('public')->delete($berita->foto);
-            }
             $data['foto'] = ImageHelper::uploadAndCompress($request->file('foto'), 'berita_images');
         } elseif ($request->filled('foto_media')) {
             $data['foto'] = $request->input('foto_media');
@@ -93,9 +89,15 @@ class AdminBeritaController extends Controller
     // Menghapus berita
     public function destroy(Berita $berita)
     {
-        if ($berita->foto) {
-            Storage::disk('public')->delete($berita->foto);
+        $user = auth()->user();
+        if (!$user->isAdmin()) {
+            // Kontributor hanya boleh menghapus berita miliknya sendiri
+            if (!$berita->user_id || $berita->user_id !== $user->id) {
+                return back()->with('error', 'Akses ditolak! Anda tidak berwenang menghapus berita yang dibuat oleh Administrator atau berita resmi desa.');
+            }
         }
+
+        // Catatan: Aset foto di Pustaka Media sengaja tidak di-delete dari disk agar tetap aman digunakan modul lain
         $berita->delete();
         return redirect('/admin/berita')->with('success', 'Berita berhasil dihapus!');
     }

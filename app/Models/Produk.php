@@ -11,6 +11,7 @@ class Produk extends Model
 
     // Kolom yang diizinkan untuk diisi CRUD
     protected $fillable = [
+        'user_id',
         'nama_produk',
         'kategori',
         'harga',
@@ -25,6 +26,14 @@ class Produk extends Model
     protected $casts = [
         'is_hidden' => 'boolean',
     ];
+
+    /**
+     * Relasi ke User pembuat produk
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * Scope query untuk konten yang tampil / tidak disembunyikan

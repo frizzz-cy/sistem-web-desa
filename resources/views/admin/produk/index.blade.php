@@ -73,11 +73,13 @@
                         </td>
                         <td>
                             <a href="/admin/produk/{{ $item->id }}/edit" class="btn btn-warning" style="padding: 6px 12px; font-size: 12.5px;">Edit</a>
+                            @if(auth()->user()->isAdmin() || ($item->user_id && $item->user_id === auth()->id()))
                             <form action="/admin/produk/{{ $item->id }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus produk ini?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-danger" style="padding: 6px 12px; font-size: 12.5px;">Hapus</button>
                             </form>
+                            @endif
                         </td>
                     </tr>
                     @empty
