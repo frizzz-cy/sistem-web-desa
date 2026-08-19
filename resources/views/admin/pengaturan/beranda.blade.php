@@ -183,15 +183,19 @@ $actionOptions = [
                                 <img src="{{ $slideUrl }}" class="slide-img-preview" alt="Preview Slide {{ $loop->iteration }}">
 
                                 <input type="hidden" name="slide_keys[]" value="{{ $index }}">
-                                <input type="hidden" name="slide_existing[]" value="{{ $slideUrl }}">
+                                <input type="hidden" name="slide_existing[]" value="{{ $slideUrl }}" class="slide-existing-input">
                             </div>
 
                             <div style="margin-top: 8px;">
-                                <label style="font-size: 11.5px; font-weight: 600; color: var(--teks-muted); display: block; margin-bottom: 4px;">Ganti Foto Slide:</label>
-                                <div style="display: flex; gap: 6px; align-items: center;">
-                                    <input type="file" name="slide_file_{{ $index }}" accept="image/*" style="font-size:12px; flex: 1;" onchange="previewSlideImage(this)">
-                                    <button type="button" class="btn btn-secondary" onclick="pilihSlideDariMedia(this)" style="font-size: 11px; padding: 5px 8px; white-space: nowrap;" title="Pilih dari Pustaka Media">
-                                        📁 Media
+                                <label style="font-size: 11.5px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Ganti Foto Slide:</label>
+                                <input type="file" name="slide_file_{{ $index }}" accept="image/*" style="font-size: 12px; width: 100%; box-sizing: border-box;" onchange="previewSlideImage(this)">
+                                <div style="margin-top: 6px;">
+                                    <button type="button" class="btn btn-secondary" onclick="openMediaPicker((url) => {
+                                        const c = this.closest('.slide-card');
+                                        c.querySelector('.slide-img-preview').src = url;
+                                        c.querySelector('.slide-existing-input').value = url;
+                                    })" style="width: 100%; font-size: 11.5px; padding: 6px 10px; justify-content: center; font-weight: 600;">
+                                        📁 Pilih dari Pustaka Media
                                     </button>
                                 </div>
                             </div>
