@@ -361,9 +361,11 @@
       @endforelse
     </div>
   </div>
-
-  @include('partials.footer')
 </main>
+
+<div id="beranda-footer-wrap">
+  @include('partials.footer')
+</div>
 
 <!-- ==================== HALAMAN DETAIL BERITA ==================== -->
 <div id="berita-detail-container">
@@ -905,9 +907,11 @@
     const modalSemua = document.getElementById('modal-semua-berita-overlay');
     if (modalSemua) modalSemua.classList.remove('show');
 
-    // Sembunyikan Halaman Utama (Hero + Main Konten)
+    // Sembunyikan Halaman Utama (Hero + Main Konten + Footer)
     document.getElementById('hero-header').style.display = 'none';
     document.getElementById('main-content').style.display = 'none';
+    const footerEl = document.getElementById('beranda-footer-wrap');
+    if (footerEl) footerEl.style.display = 'none';
     
     // Munculkan Halaman Detail Berita
     document.getElementById('berita-detail-container').style.display = 'block';
@@ -923,6 +927,8 @@
     // Munculkan kembali Halaman Utama
     document.getElementById('hero-header').style.display = 'block';
     document.getElementById('main-content').style.display = 'block';
+    const footerEl = document.getElementById('beranda-footer-wrap');
+    if (footerEl) footerEl.style.display = 'block';
     
     // Scroll sedikit ke bagian seksi berita agar user tahu mereka kembali
     document.querySelector('.berita-section').scrollIntoView({ behavior: 'smooth' });
