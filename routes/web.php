@@ -18,7 +18,12 @@ use App\Models\Setting;
 Route::get('/', function () { 
     try {
         if (\App\Models\Berita::count() < 8) {
-            (new \Database\Seeders\BeritaSeeder())->run();
+            $seederFile = database_path('seeders/BeritaSeeder.php');
+            if (file_exists($seederFile)) {
+                require_once $seederFile;
+            }
+            $seeder = new \Database\Seeders\BeritaSeeder();
+            $seeder->run();
         }
     } catch (\Throwable $e) {
         // Abaikan jika database belum siap
