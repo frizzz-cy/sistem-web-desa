@@ -38,11 +38,11 @@ Route::get('/', function () {
             if (isset($card['title']) && ($card['title'] === 'Informasi Publik' || $card['link'] === '#modal-informasi')) {
                 $card['desc'] = 'Transparansi APBDes dan rincian anggaran.';
             }
-            if (isset($card['title']) && ($card['title'] === 'Kelembagaan Desa' || $card['title'] === 'Anggaran Desa')) {
-                $card['title'] = 'Anggaran Desa';
-                $card['desc'] = 'Transparansi APBDes, rincian belanja, serta sumber pendapatan desa secara terbuka.';
-                $card['link'] = '#modal-informasi';
-                $card['icon'] = '<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>';
+            if (isset($card['title']) && ($card['title'] === 'Anggaran Desa' || $card['title'] === 'Kelembagaan Desa')) {
+                $card['title'] = 'Kelembagaan Desa';
+                $card['desc'] = 'Organisasi aktif kemasyarakatan — BPD, PKK Dharma Wanita, Karang Taruna, Remaja Masjid, hingga Posyandu.';
+                $card['link'] = '#modal-kelembagaan';
+                $card['icon'] = '<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>';
             }
             if (isset($card['title']) && $card['title'] === 'Data Kependudukan') {
                 $card['link'] = '#modal-demografi';
