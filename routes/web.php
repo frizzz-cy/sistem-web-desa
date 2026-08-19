@@ -212,8 +212,39 @@ Route::get('/', function () {
     $demografi_json = Setting::get('data_demografi');
     $demografi = $demografi_json ? json_decode($demografi_json, true) : $default_demografi;
 
+    $default_layanan_surat = [
+        [
+            'nama' => 'Surat Keterangan Domisili',
+            'syarat' => ['Fotocopy KTP', 'Fotocopy KK', 'Pas foto 3x4 (2 lembar)', 'Surat pengantar RT/RW'],
+            'keterangan' => 'Berlaku selama 6 bulan'
+        ],
+        [
+            'nama' => 'Surat Keterangan Usaha',
+            'syarat' => ['Fotocopy KTP', 'Fotocopy KK', 'Pas foto 3x4 (2 lembar)', 'Surat keterangan usaha dari RT/RW'],
+            'keterangan' => 'Untuk keperluan kredit atau izin usaha'
+        ],
+        [
+            'nama' => 'Surat Pengantar KTP',
+            'syarat' => ['Fotocopy KK', 'Pas foto 4x6 (2 lembar)', 'Formulir permohonan'],
+            'keterangan' => 'Untuk pembuatan KTP baru atau perpanjangan'
+        ],
+        [
+            'nama' => 'Surat Pengantar Kartu Keluarga',
+            'syarat' => ['Fotocopy KTP kepala keluarga', 'Fotocopy KK lama (jika ada)', 'Akta kelahiran/nikah/cerai', 'Formulir permohonan'],
+            'keterangan' => 'Untuk pembuatan KK baru atau perubahan'
+        ],
+        [
+            'nama' => 'Surat Keterangan Tidak Mampu',
+            'syarat' => ['Fotocopy KK', 'Data sekolah'],
+            'keterangan' => 'Untuk keringanan biaya sekolah & beasiswa'
+        ]
+    ];
+
+    $data_layanan_surat_json = Setting::get('data_layanan_surat');
+    $data_layanan_surat = $data_layanan_surat_json ? json_decode($data_layanan_surat_json, true) : $default_layanan_surat;
+
     return response()
-        ->view('beranda', compact('beritas', 'hero_slides', 'tentang', 'layanan_cards', 'apbdes', 'demografi'))
+        ->view('beranda', compact('beritas', 'hero_slides', 'tentang', 'layanan_cards', 'apbdes', 'demografi', 'data_layanan_surat'))
         ->header('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0')
         ->header('Pragma', 'no-cache')
         ->header('Expires', '0')

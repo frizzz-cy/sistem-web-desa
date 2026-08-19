@@ -40,7 +40,10 @@ class AdminSettingController extends Controller
         $layanan_cards_json = Setting::get('layanan_cards');
         $layanan_cards = $layanan_cards_json ? json_decode($layanan_cards_json, true) : $this->getDefaultCards();
 
-        return view('admin.pengaturan.beranda', compact('slides', 'tentang', 'layanan_cards'));
+        $data_layanan_surat_json = Setting::get('data_layanan_surat');
+        $data_layanan_surat = $data_layanan_surat_json ? json_decode($data_layanan_surat_json, true) : $this->getDefaultLayananSurat();
+
+        return view('admin.pengaturan.beranda', compact('slides', 'tentang', 'layanan_cards', 'data_layanan_surat'));
     }
 
     public function updateBeranda(Request $request)
@@ -102,7 +105,32 @@ class AdminSettingController extends Controller
         }
         Setting::set('layanan_cards', json_encode($cards));
 
-        return redirect('/admin/pengaturan/beranda')->with('success', 'Pengaturan Beranda (Hero Slides dinamis, Tentang Desa, dan 6 Kartu Portal) berhasil disimpan!');
+        // 4. Update Data Layanan Administrasi Surat (Isi Pop-up Modal)
+        if ($request->has('surat_nama')) {
+            $surat_namas = $request->input('surat_nama', []);
+            $surat_syarats = $request->input('surat_syarat', []);
+            $surat_keterangans = $request->input('surat_keterangan', []);
+
+            $new_surat = [];
+            foreach ($surat_namas as $idx => $nama) {
+                $nama = trim($nama);
+                if (empty($nama)) continue;
+
+                $syarat_raw = $surat_syarats[$idx] ?? '';
+                $syarat_lines = explode("\n", $syarat_raw);
+                $syarat_arr = array_values(array_filter(array_map('trim', $syarat_lines)));
+
+                $new_surat[] = [
+                    'nama' => $nama,
+                    'syarat' => $syarat_arr,
+                    'keterangan' => trim($surat_keterangans[$idx] ?? '')
+                ];
+            }
+
+            Setting::set('data_layanan_surat', json_encode($new_surat));
+        }
+
+        return redirect('/admin/pengaturan/beranda')->with('success', 'Pengaturan Beranda (Hero Slides dinamis, Tentang Desa, 6 Kartu Portal, dan Syarat Layanan Surat) berhasil disimpan!');
     }
 
     // =========================================================================
@@ -732,6 +760,59 @@ class AdminSettingController extends Controller
                 'title' => 'Event & Kegiatan',
                 'desc' => 'Dokumentasi dan informasi kegiatan warga — gotong royong, posyandu, dan agenda desa lainnya.',
                 'link' => '/kegiatan'
+            ]
+        ];
+    }
+
+    private function getDefaultLayananSurat()
+    {
+        return [
+            [
+                'nama' => 'Surat Keterangan Domisili',
+                'syarat' => [
+                    'Fotocopy KTP',
+                    'Fotocopy KK',
+                    'Pas foto 3x4 (2 lembar)',
+                    'Surat pengantar RT/RW'
+                ],
+                'keterangan' => 'Berlaku selama 6 bulan'
+            ],
+            [
+                'nama' => 'Surat Keterangan Usaha',
+                'syarat' => [
+                    'Fotocopy KTP',
+                    'Fotocopy KK',
+                    'Pas foto 3x4 (2 lembar)',
+                    'Surat keterangan usaha dari RT/RW'
+                ],
+                'keterangan' => 'Untuk keperluan kredit atau izin usaha'
+            ],
+            [
+                'nama' => 'Surat Pengantar KTP',
+                'syarat' => [
+                    'Fotocopy KK',
+                    'Pas foto 4x6 (2 lembar)',
+                    'Formulir permohonan'
+                ],
+                'keterangan' => 'Untuk pembuatan KTP baru atau perpanjangan'
+            ],
+            [
+                'nama' => 'Surat Pengantar Kartu Keluarga',
+                'syarat' => [
+                    'Fotocopy KTP kepala keluarga',
+                    'Fotocopy KK lama (jika ada)',
+                    'Akta kelahiran/nikah/cerai',
+                    'Formulir permohonan'
+                ],
+                'keterangan' => 'Untuk pembuatan KK baru atau perubahan'
+            ],
+            [
+                'nama' => 'Surat Keterangan Tidak Mampu',
+                'syarat' => [
+                    'Fotocopy KK',
+                    'Data sekolah'
+                ],
+                'keterangan' => 'Untuk keringanan biaya sekolah & beasiswa'
             ]
         ];
     }

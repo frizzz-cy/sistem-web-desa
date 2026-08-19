@@ -302,6 +302,58 @@ $actionOptions = [
                 </div>
             </div>
 
+            <!-- SECTION 4: PERSYARATAN LAYANAN ADMINISTRASI DESA (ISI POP-UP MODAL) -->
+            <div class="setting-section">
+                <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                    <span>4. Persyaratan Layanan Administrasi Surat Desa (Isi Pop-up Modal)</span>
+                    <button type="button" class="btn btn-secondary" onclick="tambahSuratCard()" style="font-size: 12px; padding: 7px 14px; background: #E0F2FE; color: #0369A1; border: 1px solid #BAE6FD; font-weight: 700;">
+                        + Tambah Jenis Surat Baru
+                    </button>
+                </div>
+                <p style="margin-top:0; margin-bottom:16px; font-size:12.5px; color:var(--teks-muted);">
+                    Kelola daftar surat keterangan dan surat pengantar desa (Domisili, Usaha, KTP, KK, SKTM, dll), rincian berkas persyaratan, dan catatan masa berlaku yang ditampilkan pada pop-up modal di beranda.
+                </p>
+
+                <div id="surat-cards-container" style="display: flex; flex-direction: column; gap: 18px;">
+                    @php $suratList = $data_layanan_surat ?? []; @endphp
+                    @foreach($suratList as $sIdx => $surat)
+                        @php 
+                            $syaratText = is_array($surat['syarat'] ?? null) ? implode("\n", $surat['syarat']) : ($surat['syarat'] ?? '');
+                        @endphp
+                        <div class="surat-card" data-surat-idx="{{ $sIdx }}" style="border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 18px; background: #F8FAFC; position: relative;">
+                            <!-- Header Kartu Surat -->
+                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; border-bottom: 1px solid #E2E8F0; padding-bottom: 10px;">
+                                <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 250px;">
+                                    <span class="surat-badge-label" style="background: var(--biru-tua); color: #fff; font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 4px; letter-spacing: 0.5px; white-space: nowrap;">
+                                        SURAT KE-{{ $sIdx + 1 }}
+                                    </span>
+                                    <input type="text" name="surat_nama[]" value="{{ $surat['nama'] ?? '' }}" placeholder="Nama Surat (Contoh: Surat Keterangan Domisili)" required style="flex: 1; font-weight: 700; font-size: 14px; padding: 7px 12px; border: 1.5px solid #94A3B8; border-radius: 6px; background: #FFF; color: var(--biru-tua);">
+                                </div>
+                                <button type="button" onclick="hapusSuratCard(this)" style="background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; border-radius: 6px; padding: 6px 12px; font-size: 12px; font-weight: 700; cursor: pointer;">
+                                    Hapus Surat Ini
+                                </button>
+                            </div>
+
+                            <!-- Form Isi Syarat & Catatan -->
+                            <div style="display: grid; grid-template-columns: 1fr; gap: 12px;">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label style="font-size: 12.5px; font-weight: 700; color: #334155; display: flex; justify-content: space-between;">
+                                        <span>Daftar Berkas Persyaratan (1 baris = 1 syarat):</span>
+                                        <span style="font-size: 11px; font-weight: normal; color: #64748B;">💡 Tekan Enter untuk baris baru</span>
+                                    </label>
+                                    <textarea name="surat_syarat[]" rows="3" required placeholder="Contoh:&#10;Fotocopy KTP&#10;Fotocopy KK&#10;Pas foto 3x4 (2 lembar)&#10;Surat pengantar RT/RW" style="width: 100%; padding: 10px; border: 1px solid #CBD5E1; border-radius: 6px; font-family: inherit; font-size: 13px; box-sizing: border-box; line-height: 1.5; background: #FFF;">{{ $syaratText }}</textarea>
+                                </div>
+
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label style="font-size: 12px; font-weight: 600; color: #475569;">Catatan / Keterangan Tambahan (Ikon 📌):</label>
+                                    <input type="text" name="surat_keterangan[]" value="{{ $surat['keterangan'] ?? '' }}" placeholder="Contoh: Berlaku selama 6 bulan / Untuk keperluan kredit atau izin usaha" style="width: 100%; padding: 8px 12px; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 12.5px; background: #FFF;">
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
             <!-- Submit Floating Bar / Bottom Action -->
             <div style="background: #F8FAFC; border: 1.5px solid var(--border); padding: 18px 24px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 10px;">
                 <span style="font-size: 13px; color: var(--teks-muted);">Periksa kembali formulir di atas sebelum menyimpan.</span>
@@ -361,63 +413,116 @@ $actionOptions = [
 
         function tambahSlideCard() {
             const container = document.getElementById('slide-grid-container');
-            const uniqueId = 'new_' + Date.now();
-            const currentTotal = container.querySelectorAll('.slide-card').length;
+            const currentCards = container.querySelectorAll('.slide-card');
+            const newIndex = currentCards.length;
+            const randomKey = 'new_' + Date.now();
 
             const card = document.createElement('div');
             card.className = 'slide-card';
-            card.dataset.slideIndex = uniqueId;
+            card.dataset.slideIdx = newIndex;
             card.innerHTML = `
-                <div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <span class="slide-label" style="font-weight:800; font-size:12px; color:var(--biru-tua); background:#E2E8F0; padding:3px 8px; border-radius:4px;">
-                            SLIDE KE-${currentTotal + 1}
-                        </span>
-                        <button type="button" onclick="hapusSlideCard(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:4px; padding:3px 8px; font-size:11px; font-weight:700; cursor:pointer;" title="Hapus slide ini">
-                            ✕ Hapus
-                        </button>
-                    </div>
-
-                    <img src="/images/slider/sdn2.jpeg" class="slide-img-preview" alt="Preview Slide Baru">
-
-                    <input type="hidden" name="slide_keys[]" value="${uniqueId}">
-                    <input type="hidden" name="slide_existing[]" value="/images/slider/sdn2.jpeg">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #E2E8F0; padding-bottom: 8px;">
+                    <span class="slide-label" style="font-weight: 800; font-size: 12px; color: var(--biru-tua); background: #E0F2FE; padding: 2px 8px; border-radius: 4px;">SLIDE KE-${newIndex + 1}</span>
+                    <button type="button" onclick="hapusSlideCard(this)" style="background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; border-radius: 6px; padding: 4px 8px; font-size: 11px; font-weight: 700; cursor: pointer;">Hapus</button>
                 </div>
-
-                <div style="margin-top: 8px;">
-                    <label style="font-size: 11.5px; font-weight: 600; color: #0284C7; display: block; margin-bottom: 4px;">Pilih Gambar Baru:</label>
-                    <div style="display: flex; gap: 6px; align-items: center;">
-                        <input type="file" name="slide_file_${uniqueId}" accept="image/*" style="font-size:12px; flex: 1;" onchange="previewSlideImage(this)">
-                        <button type="button" class="btn btn-secondary" onclick="pilihSlideDariMedia(this)" style="font-size: 11px; padding: 5px 8px; white-space: nowrap;" title="Pilih dari Pustaka Media">
-                            📁 Media
-                        </button>
-                    </div>
+                <div style="margin-bottom: 12px; border-radius: 6px; overflow: hidden; height: 120px; background: #000; display: flex; align-items: center; justify-content: center; position: relative;">
+                    <img src="https://placehold.co/600x300/1e293b/ffffff?text=Pilih+Foto+Slide" class="slide-img-preview" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.9;">
                 </div>
+                <div class="form-group" style="margin-bottom: 10px;">
+                    <label style="font-size: 11.5px;">Ganti Foto Slide:</label>
+                    <input type="file" name="slide_file_${randomKey}" accept="image/*" onchange="previewSlideImage(this)" style="font-size: 12px;">
+                </div>
+                <div style="margin-bottom: 10px;">
+                    <button type="button" class="btn btn-secondary" onclick="openMediaPicker((url) => {
+                        const c = this.closest('.slide-card');
+                        c.querySelector('.slide-img-preview').src = url;
+                        c.querySelector('.slide-existing-input').value = url;
+                    })" style="width: 100%; font-size: 12px; padding: 6px; justify-content: center;">
+                        📁 Pilih dari Pustaka Media
+                    </button>
+                </div>
+                <input type="hidden" name="slide_existing[]" value="https://placehold.co/600x300/1e293b/ffffff?text=Slide+Baru" class="slide-existing-input">
+                <input type="hidden" name="slide_keys[]" value="${randomKey}">
             `;
 
             container.appendChild(card);
             updateSlideNumbering();
         }
 
-        function pilihSlideDariMedia(btn) {
-            const card = btn.closest('.slide-card');
-            const previewImg = card.querySelector('.slide-img-preview');
-            const existingInput = card.querySelector('input[name="slide_existing[]"]');
-            const fileInput = card.querySelector('input[type="file"]');
-
-            window.openMediaPicker({
-                onSelect: function(item) {
-                    if (previewImg) previewImg.src = item.url;
-                    if (existingInput) existingInput.value = item.url;
-                    if (fileInput) {
-                        fileInput.value = '';
-                        fileInput.removeAttribute('required');
-                    }
+        // ================= LAYANAN SURAT FUNCTIONS =================
+        function updateSuratNumbering() {
+            const container = document.getElementById('surat-cards-container');
+            const cards = container.querySelectorAll('.surat-card');
+            cards.forEach((card, idx) => {
+                const badge = card.querySelector('.surat-badge-label');
+                if (badge) {
+                    badge.textContent = `SURAT KE-${idx + 1}`;
                 }
             });
         }
 
-        // ================= PORTAL CARDS ICON & ACTION HANDLERS =================
+        function hapusSuratCard(btn) {
+            const container = document.getElementById('surat-cards-container');
+            const cards = container.querySelectorAll('.surat-card');
+            if (cards.length <= 1) {
+                alert('Setidaknya harus tersisa minimal 1 jenis surat layanan administrasi!');
+                return;
+            }
+            if (confirm('Apakah Anda yakin ingin menghapus jenis surat layanan ini?')) {
+                const card = btn.closest('.surat-card');
+                if (card) {
+                    card.remove();
+                    updateSuratNumbering();
+                }
+            }
+        }
+
+        function tambahSuratCard() {
+            const container = document.getElementById('surat-cards-container');
+            const existingCards = container.querySelectorAll('.surat-card');
+            const nextIdx = existingCards.length;
+
+            const card = document.createElement('div');
+            card.className = 'surat-card';
+            card.dataset.suratIdx = nextIdx;
+            card.style = 'border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 18px; background: #F8FAFC; position: relative;';
+
+            card.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; border-bottom: 1px solid #E2E8F0; padding-bottom: 10px;">
+                    <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 250px;">
+                        <span class="surat-badge-label" style="background: var(--biru-tua); color: #fff; font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 4px; letter-spacing: 0.5px; white-space: nowrap;">
+                            SURAT KE-${nextIdx + 1}
+                        </span>
+                        <input type="text" name="surat_nama[]" value="" placeholder="Nama Surat (Contoh: Surat Keterangan Domisili)" required style="flex: 1; font-weight: 700; font-size: 14px; padding: 7px 12px; border: 1.5px solid #94A3B8; border-radius: 6px; background: #FFF; color: var(--biru-tua);">
+                    </div>
+                    <button type="button" onclick="hapusSuratCard(this)" style="background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; border-radius: 6px; padding: 6px 12px; font-size: 12px; font-weight: 700; cursor: pointer;">
+                        Hapus Surat Ini
+                    </button>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr; gap: 12px;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-size: 12.5px; font-weight: 700; color: #334155; display: flex; justify-content: space-between;">
+                            <span>Daftar Berkas Persyaratan (1 baris = 1 syarat):</span>
+                            <span style="font-size: 11px; font-weight: normal; color: #64748B;">💡 Tekan Enter untuk baris baru</span>
+                        </label>
+                        <textarea name="surat_syarat[]" rows="3" required placeholder="Contoh:&#10;Fotocopy KTP&#10;Fotocopy KK&#10;Pas foto 3x4 (2 lembar)&#10;Surat pengantar RT/RW" style="width: 100%; padding: 10px; border: 1px solid #CBD5E1; border-radius: 6px; font-family: inherit; font-size: 13px; box-sizing: border-box; line-height: 1.5; background: #FFF;"></textarea>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-size: 12px; font-weight: 600; color: #475569;">Catatan / Keterangan Tambahan (Ikon 📌):</label>
+                        <input type="text" name="surat_keterangan[]" value="" placeholder="Contoh: Berlaku selama 6 bulan / Untuk keperluan kredit atau izin usaha" style="width: 100%; padding: 8px 12px; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 12.5px; background: #FFF;">
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(card);
+            updateSuratNumbering();
+            const inputNama = card.querySelector('input[name="surat_nama[]"]');
+            if (inputNama) inputNama.focus();
+        }
+
+        // ================= 6 PORTAL CARDS FUNCTIONS =================
         function handleActionChange(selectEl) {
             const card = selectEl.closest('.portal-edit-card');
             const hiddenLinkInput = card.querySelector('.card-link-hidden');

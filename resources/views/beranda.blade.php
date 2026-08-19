@@ -1129,13 +1129,7 @@
   });
 
   // ================= MODAL LAYANAN =================
-  const DATA_SURAT = [
-    { nama: 'Surat Keterangan Domisili', syarat: ['Fotocopy KTP', 'Fotocopy KK', 'Pas foto 3x4 (2 lembar)', 'Surat pengantar RT/RW'], keterangan: 'Berlaku selama 6 bulan' },
-    { nama: 'Surat Keterangan Usaha', syarat: ['Fotocopy KTP', 'Fotocopy KK', 'Pas foto 3x4 (2 lembar)', 'Surat keterangan usaha dari RT/RW'], keterangan: 'Untuk keperluan kredit atau izin usaha' },
-    { nama: 'Surat Pengantar KTP', syarat: ['Fotocopy KK', 'Pas foto 4x6 (2 lembar)', 'Formulir permohonan'], keterangan: 'Untuk pembuatan KTP baru atau perpanjangan' },
-    { nama: 'Surat Pengantar Kartu Keluarga', syarat: ['Fotocopy KTP kepala keluarga', 'Fotocopy KK lama (jika ada)', 'Akta kelahiran/nikah/cerai', 'Formulir permohonan'], keterangan: 'Untuk pembuatan KK baru atau perubahan' },
-    { nama: 'Surat Keterangan Tidak Mampu', syarat: ['Fotocopy KK', 'Data sekolah'], keterangan: 'Untuk keringanan biaya sekolah & beasiswa' }
-  ];
+  const DATA_SURAT = @json($data_layanan_surat ?? []);
 
   window.bukaModalLayanan = function(e){
     if (e && e.preventDefault) e.preventDefault();
@@ -1144,17 +1138,34 @@
     const wadah = document.getElementById('daftar-surat');
     if (wadah) {
       wadah.innerHTML = '';
-      DATA_SURAT.forEach(surat => {
-        const detail = document.createElement('details'); detail.className = 'surat-item';
-        const summary = document.createElement('summary'); summary.textContent = surat.nama; detail.appendChild(summary);
-        const isi = document.createElement('div'); isi.className = 'isi-surat';
-        const labelSyarat = document.createElement('span'); labelSyarat.className = 'label-kecil'; labelSyarat.textContent = 'Persyaratan'; isi.appendChild(labelSyarat);
-        const ul = document.createElement('ul');
-        surat.syarat.forEach(s => { const li = document.createElement('li'); li.textContent = s; ul.appendChild(li); });
-        isi.appendChild(ul);
-        const ket = document.createElement('div'); ket.className = 'ket'; ket.textContent = '📌 ' + surat.keterangan; isi.appendChild(ket);
-        detail.appendChild(isi); wadah.appendChild(detail);
-      });
+      if (Array.isArray(DATA_SURAT) && DATA_SURAT.length > 0) {
+        DATA_SURAT.forEach(surat => {
+          const detail = document.createElement('details'); detail.className = 'surat-item';
+          const summary = document.createElement('summary'); summary.textContent = surat.nama; detail.appendChild(summary);
+          const isi = document.createElement('div'); isi.className = 'isi-surat';
+          const labelSyarat = document.createElement('span'); labelSyarat.className = 'label-kecil'; labelSyarat.textContent = 'Persyaratan'; isi.appendChild(labelSyarat);
+          const ul = document.createElement('ul');
+          const syaratArr = Array.isArray(surat.syarat) ? surat.syarat : [];
+          syaratArr.forEach(s => { 
+            if (s && s.trim()) {
+              const li = document.createElement('li'); 
+              li.textContent = s; 
+              ul.appendChild(li); 
+            }
+          });
+          isi.appendChild(ul);
+          if (surat.keterangan && surat.keterangan.trim()) {
+            const ket = document.createElement('div'); 
+            ket.className = 'ket'; 
+            ket.textContent = '📌 ' + surat.keterangan; 
+            isi.appendChild(ket);
+          }
+          detail.appendChild(isi); 
+          wadah.appendChild(detail);
+        });
+      } else {
+        wadah.innerHTML = '<div style="text-align:center; color:#64748B; padding:20px; font-size:13px;">Belum ada data persyaratan layanan surat.</div>';
+      }
     }
     var el = document.getElementById('modal-layanan-overlay');
     if (el) {
