@@ -104,6 +104,16 @@ class AdminSettingController extends Controller
             $data_potensi = json_decode($data_potensi_json, true);
         }
 
+        // Ambil data perangkat desa dinamis dengan auto-seeding default jika kosong
+        $data_perangkat_json = Setting::get('data_perangkat');
+        if (!$data_perangkat_json) {
+            $defaultPerangkat = $this->getDefaultPerangkat();
+            Setting::set('data_perangkat', json_encode($defaultPerangkat));
+            $data_perangkat = $defaultPerangkat;
+        } else {
+            $data_perangkat = json_decode($data_perangkat_json, true);
+        }
+
         // Ambil data APBDes dinamis dengan auto-seeding default jika kosong
         $data_apbdes_json = Setting::get('data_apbdes');
         if (!$data_apbdes_json) {
