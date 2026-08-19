@@ -50,8 +50,17 @@ Route::get('/', function () {
         }
     }
 
-    $apbdes_json = Setting::get('data_apbdes');
-    $apbdes = $apbdes_json ? json_decode($apbdes_json, true) : [];
+    $apbdes_raw = Setting::get('data_apbdes');
+    if ($apbdes_raw) {
+        $decoded = json_decode($apbdes_raw, true);
+        if (isset($decoded['pendapatan_total'])) {
+            $apbdes = ['2026' => array_merge(['tahun' => '2026', 'status' => 'Murni (Tahun Berjalan)'], $decoded)];
+        } else {
+            $apbdes = $decoded;
+        }
+    } else {
+        $apbdes = [];
+    }
 
     $demografi_json = Setting::get('data_demografi');
     $demografi = $demografi_json ? json_decode($demografi_json, true) : [];

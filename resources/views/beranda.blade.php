@@ -200,6 +200,17 @@
   .surat-item .ket{ font-size:12.5px; color:var(--biru-tua); background:var(--biru-muda); padding:8px 12px; border-radius:6px; font-weight:600; }
 
   /* Style khusus APBDes & Tab di Modal Informasi */
+  .btn-tab-apbdes {
+    padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 700;
+    border: 1px solid #CBD5E1; background: #FFF; color: #334155;
+    cursor: pointer; transition: all 0.2s ease;
+  }
+  .btn-tab-apbdes:hover { background: #E2E8F0; color: #0F172A; }
+  .btn-tab-apbdes.aktif {
+    background: #0B3B60 !important; color: #FFF !important;
+    border-color: #0B3B60 !important; box-shadow: 0 2px 6px rgba(11, 59, 96, 0.25);
+  }
+
   .info-tab-btn {
     background: #F1F5F9; border: 1px solid #CBD5E1; color: #475569;
     padding: 7px 14px; border-radius: 20px; font-size: 12px; font-weight: 700;
@@ -408,69 +419,146 @@
 </div>
 
 @php
-  $ap = $apbdes ?? [];
+  $ap_all = $apbdes ?? [];
+  if (isset($ap_all['pendapatan_total'])) {
+      $ap_all = ['2026' => array_merge(['tahun' => '2026', 'status' => 'Murni (Tahun Berjalan)'], $ap_all)];
+  }
   $demo = $demografi ?? [];
 @endphp
 
 <!-- Modal Informasi Publik / Transparansi APBDes (Card 2) -->
 <div class="modal-informasi-overlay" id="modal-informasi-overlay" onclick="tutupModalInformasi(event)">
-  <div class="modal-informasi-box" style="max-width:800px;">
+  <div class="modal-informasi-box" style="max-width:840px;">
     <button class="modal-informasi-close" onclick="tutupModalInformasi()">✕</button>
-    <h3>Informasi Publik &amp; Transparansi APBDes</h3>
-    <div class="sub">Transparansi APBDes dan rincian anggaran Desa Munungkerep</div>
+    <h3 style="margin-bottom:4px;">Informasi Publik &amp; Transparansi APBDes</h3>
+    <div class="sub" style="margin-bottom:16px;">Transparansi APBDes dan rincian anggaran Desa Munungkerep</div>
 
-    <!-- 1. PENDAPATAN DESA -->
-    <div class="apbdes-section">
-      <div class="apbdes-head">
-        <span><i class="fas fa-wallet" style="margin-right:6px;"></i> PENDAPATAN DESA</span>
-        <span class="total">{{ $ap['pendapatan_total'] ?? 'Rp 1.663.629.803,00' }}</span>
+    <!-- TAHUN SELECTOR & REKAP TABS -->
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:20px; background:#F1F5F9; padding:8px 12px; border-radius:10px; border:1px solid #CBD5E1;">
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <span style="font-size:12px; font-weight:800; color:var(--biru-tua); text-transform:uppercase; letter-spacing:0.5px;">PILIH TAHUN:</span>
+        @foreach($ap_all as $tKey => $tData)
+          <button type="button" class="btn-tab-apbdes {{ $loop->first ? 'aktif' : '' }}" onclick="gantiTahunApbdes('{{ $tKey }}', this)">
+            {{ $tData['tahun'] ?? $tKey }}
+          </button>
+        @endforeach
       </div>
-      <div class="apbdes-body">
-        <div class="apbdes-row"><span class="label">Pendapatan Asli Desa (PAD)</span><span class="val">{{ $ap['pad'] ?? 'Rp 230.760.000,00' }}</span></div>
-        <div class="apbdes-row"><span class="label">Dana Desa (DD - APBN Pusat)</span><span class="val">{{ $ap['dd'] ?? 'Rp 303.093.000,00' }}</span></div>
-        <div class="apbdes-row"><span class="label">Alokasi Dana Desa (ADD - APBD Jombang)</span><span class="val">{{ $ap['add'] ?? 'Rp 376.615.000,00' }}</span></div>
-        <div class="apbdes-row"><span class="label">Bagi Hasil Pajak &amp; Retribusi (PDRD)</span><span class="val">{{ $ap['pdrd'] ?? 'Rp 85.805.300,00' }}</span></div>
-        <div class="apbdes-row"><span class="label">Bantuan Keuangan (BK Provinsi/Kabupaten)</span><span class="val">{{ $ap['bk'] ?? 'Rp 539.600.603,00' }}</span></div>
-        <div class="apbdes-row"><span class="label">Lain-Lain Pendapatan Desa Sah (DLL)</span><span class="val">{{ $ap['dll'] ?? 'Rp 127.755.900,00' }}</span></div>
 
-        <div style="background:#E0F2FE; border-left:3px solid #0284C7; padding:8px 12px; margin-top:10px; border-radius:4px; font-size:12px; color:#0369A1; line-height:1.5;">
-          <strong>ℹ️ Rincian Sumber Dana:</strong> {{ $ap['keterangan_pendapatan'] ?? 'Sumber penerimaan APBDes berasal dari Pendapatan Asli Desa (PAD), Dana Desa (DD APBN Pusat), Alokasi Dana Desa (ADD APBD Kab. Jombang), Bagi Hasil Pajak & Retribusi Daerah (PDRD), Bantuan Keuangan (BK Provinsi/Kabupaten), serta Lain-Lain Pendapatan Desa Sah.' }}
-        </div>
-      </div>
+      <button type="button" class="btn-tab-apbdes" onclick="gantiTahunApbdes('rekap-tahunan', this)" style="border:1px solid #0284C7; background:#E0F2FE; color:#0369A1;">
+        📊 Rekap Jejak Tahunan
+      </button>
     </div>
 
-    <!-- 2. BELANJA DESA -->
-    <div class="apbdes-section">
-      <div class="apbdes-head belanja">
-        <span><i class="fas fa-shopping-bag" style="margin-right:6px;"></i> BELANJA DESA</span>
-        <span class="total">{{ $ap['belanja_total'] ?? 'Rp 1.676.895.127,92' }}</span>
-      </div>
-      <div class="apbdes-body">
-        <div class="apbdes-row"><span class="label">Penyelenggaraan Pemerintahan Desa</span><span class="val">{{ $ap['belanja_pemerintahan'] ?? 'Rp 866.594.524,92' }}</span></div>
-        <div class="apbdes-row"><span class="label">Pelaksanaan Pembangunan Desa</span><span class="val">{{ $ap['belanja_pembangunan'] ?? 'Rp 582.090.603,00' }}</span></div>
-        <div class="apbdes-row"><span class="label">Pembinaan Kemasyarakatan</span><span class="val">{{ $ap['belanja_pembinaan'] ?? 'Rp 42.450.000,00' }}</span></div>
-        <div class="apbdes-row"><span class="label">Pemberdayaan Masyarakat</span><span class="val">{{ $ap['belanja_pemberdayaan'] ?? 'Rp 158.000.000,00' }}</span></div>
-        <div class="apbdes-row"><span class="label">Penanggulangan Bencana &amp; Keadaan Darurat</span><span class="val">{{ $ap['belanja_bencana'] ?? 'Rp 27.760.000,00' }}</span></div>
+    <!-- KONTEN RINCIAN PER TAHUN -->
+    @foreach($ap_all as $tKey => $ap)
+      <div id="apbdes-content-{{ $tKey }}" class="apbdes-year-content" style="{{ $loop->first ? 'display:block;' : 'display:none;' }}">
+        <!-- Label Status APBDes -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; background:#FFF; border:1px solid #E2E8F0; padding:8px 14px; border-radius:8px;">
+          <span style="font-size:13px; font-weight:800; color:var(--biru-tua);">
+            📅 APBDes Tahun Anggaran {{ $ap['tahun'] ?? $tKey }}
+          </span>
+          <span style="font-size:11.5px; font-weight:700; background:#E0F2FE; color:#0369A1; padding:3px 10px; border-radius:12px;">
+            {{ $ap['status'] ?? 'Murni (Tahun Berjalan)' }}
+          </span>
+        </div>
 
-        <div style="background:#FEF2F2; border-left:3px solid #EF4444; padding:8px 12px; margin-top:10px; border-radius:4px; font-size:12px; color:#B91C1C; line-height:1.5;">
-          <strong>📌 Prioritas Alokasi Belanja:</strong> {{ $ap['keterangan_belanja'] ?? 'Pengalokasian anggaran belanja desa diprioritaskan untuk Penyelenggaraan Pemerintahan Desa, Pembangunan Sarana & Prasarana Desa, Pembinaan Kemasyarakatan, Pemberdayaan Masyarakat, serta Penanggulangan Bencana/Darurat.' }}
+        <!-- 1. PENDAPATAN DESA -->
+        <div class="apbdes-section">
+          <div class="apbdes-head">
+            <span><i class="fas fa-wallet" style="margin-right:6px;"></i> PENDAPATAN DESA</span>
+            <span class="total">{{ $ap['pendapatan_total'] ?? 'Rp 0,00' }}</span>
+          </div>
+          <div class="apbdes-body">
+            <div class="apbdes-row"><span class="label">Pendapatan Asli Desa (PAD)</span><span class="val">{{ $ap['pad'] ?? 'Rp 0,00' }}</span></div>
+            <div class="apbdes-row"><span class="label">Dana Desa (DD - APBN Pusat)</span><span class="val">{{ $ap['dd'] ?? 'Rp 0,00' }}</span></div>
+            <div class="apbdes-row"><span class="label">Alokasi Dana Desa (ADD - APBD Jombang)</span><span class="val">{{ $ap['add'] ?? 'Rp 0,00' }}</span></div>
+            <div class="apbdes-row"><span class="label">Bagi Hasil Pajak &amp; Retribusi (PDRD)</span><span class="val">{{ $ap['pdrd'] ?? 'Rp 0,00' }}</span></div>
+            <div class="apbdes-row"><span class="label">Bantuan Keuangan (BK Provinsi/Kabupaten)</span><span class="val">{{ $ap['bk'] ?? 'Rp 0,00' }}</span></div>
+            <div class="apbdes-row"><span class="label">Lain-Lain Pendapatan Desa Sah (DLL)</span><span class="val">{{ $ap['dll'] ?? 'Rp 0,00' }}</span></div>
+
+            @if(!empty($ap['keterangan_pendapatan']))
+              <div style="background:#E0F2FE; border-left:3px solid #0284C7; padding:8px 12px; margin-top:10px; border-radius:4px; font-size:12px; color:#0369A1; line-height:1.5;">
+                <strong>ℹ️ Rincian Sumber Dana:</strong> {{ $ap['keterangan_pendapatan'] }}
+              </div>
+            @endif
+          </div>
+        </div>
+
+        <!-- 2. BELANJA DESA -->
+        <div class="apbdes-section">
+          <div class="apbdes-head belanja">
+            <span><i class="fas fa-shopping-bag" style="margin-right:6px;"></i> BELANJA DESA</span>
+            <span class="total">{{ $ap['belanja_total'] ?? 'Rp 0,00' }}</span>
+          </div>
+          <div class="apbdes-body">
+            <div class="apbdes-row"><span class="label">Penyelenggaraan Pemerintahan Desa</span><span class="val">{{ $ap['belanja_pemerintahan'] ?? 'Rp 0,00' }}</span></div>
+            <div class="apbdes-row"><span class="label">Pelaksanaan Pembangunan Desa</span><span class="val">{{ $ap['belanja_pembangunan'] ?? 'Rp 0,00' }}</span></div>
+            <div class="apbdes-row"><span class="label">Pembinaan Kemasyarakatan</span><span class="val">{{ $ap['belanja_pembinaan'] ?? 'Rp 0,00' }}</span></div>
+            <div class="apbdes-row"><span class="label">Pemberdayaan Masyarakat</span><span class="val">{{ $ap['belanja_pemberdayaan'] ?? 'Rp 0,00' }}</span></div>
+            <div class="apbdes-row"><span class="label">Penanggulangan Bencana &amp; Keadaan Darurat</span><span class="val">{{ $ap['belanja_bencana'] ?? 'Rp 0,00' }}</span></div>
+
+            @if(!empty($ap['keterangan_belanja']))
+              <div style="background:#FEF2F2; border-left:3px solid #EF4444; padding:8px 12px; margin-top:10px; border-radius:4px; font-size:12px; color:#B91C1C; line-height:1.5;">
+                <strong>📌 Prioritas Alokasi Belanja:</strong> {{ $ap['keterangan_belanja'] }}
+              </div>
+            @endif
+          </div>
+        </div>
+
+        <!-- 3. PEMBIAYAAN DESA -->
+        <div class="apbdes-section">
+          <div class="apbdes-head pembiayaan">
+            <span><i class="fas fa-coins" style="margin-right:6px;"></i> PEMBIAYAAN DESA (NETTO)</span>
+            <span class="total">{{ $ap['pembiayaan_total'] ?? 'Rp 0,00' }}</span>
+          </div>
+          <div class="apbdes-body">
+            <div class="apbdes-row"><span class="label">Penerimaan Pembiayaan (SiLPA)</span><span class="val">{{ $ap['penerimaan_pembiayaan'] ?? 'Rp 0,00' }}</span></div>
+            <div class="apbdes-row"><span class="label">Pengeluaran Pembiayaan</span><span class="val">{{ $ap['pengeluaran_pembiayaan'] ?? 'Rp 0,00' }}</span></div>
+
+            @if(!empty($ap['keterangan_pembiayaan']))
+              <div style="background:#ECFDF5; border-left:3px solid #10B981; padding:8px 12px; margin-top:10px; border-radius:4px; font-size:12px; color:#047857; line-height:1.5;">
+                <strong>💡 Keterangan Pembiayaan:</strong> {{ $ap['keterangan_pembiayaan'] }}
+              </div>
+            @endif
+          </div>
         </div>
       </div>
-    </div>
+    @endforeach
 
-    <!-- 3. PEMBIAYAAN DESA -->
-    <div class="apbdes-section">
-      <div class="apbdes-head pembiayaan">
-        <span><i class="fas fa-coins" style="margin-right:6px;"></i> PEMBIAYAAN DESA (NETTO)</span>
-        <span class="total">{{ $ap['pembiayaan_total'] ?? 'Rp 13.265.324,92' }}</span>
+    <!-- KONTEN REKAP JEJAK TAHUNAN -->
+    <div id="apbdes-content-rekap-tahunan" class="apbdes-year-content" style="display:none;">
+      <div style="margin-bottom:14px; background:#FFF; border:1px solid #E2E8F0; padding:12px 16px; border-radius:8px;">
+        <h4 style="margin:0 0 4px; font-size:14px; color:var(--biru-tua);">📊 Tabel Rekapitulasi Jejak APBDes Antar Tahun</h4>
+        <p style="margin:0; font-size:12px; color:var(--teks-muted);">Riwayat komparasi pendapatan, belanja, dan pembiayaan desa Munungkerep dari tahun ke tahun.</p>
       </div>
-      <div class="apbdes-body">
-        <div class="apbdes-row"><span class="label">Penerimaan Pembiayaan (SiLPA)</span><span class="val">{{ $ap['penerimaan_pembiayaan'] ?? 'Rp 13.265.324,92' }}</span></div>
-        <div class="apbdes-row"><span class="label">Pengeluaran Pembiayaan</span><span class="val">{{ $ap['pengeluaran_pembiayaan'] ?? 'Rp 0,00' }}</span></div>
 
-        <div style="background:#ECFDF5; border-left:3px solid #10B981; padding:8px 12px; margin-top:10px; border-radius:4px; font-size:12px; color:#047857; line-height:1.5;">
-          <strong>💡 Keterangan Pembiayaan:</strong> {{ $ap['keterangan_pembiayaan'] ?? 'Penerimaan Pembiayaan Netto berasal dari Sisa Lebih Perhitungan Anggaran (SiLPA) tahun anggaran sebelumnya.' }}
-        </div>
+      <div style="overflow-x:auto; background:#FFF; border:1px solid #CBD5E1; border-radius:8px;">
+        <table style="width:100%; border-collapse:collapse; font-size:12.5px; text-align:left;">
+          <thead>
+            <tr style="background:#0B3B60; color:#FFF;">
+              <th style="padding:10px 14px; font-weight:700;">Tahun</th>
+              <th style="padding:10px 14px; font-weight:700;">Status</th>
+              <th style="padding:10px 14px; font-weight:700;">Total Pendapatan</th>
+              <th style="padding:10px 14px; font-weight:700;">Total Belanja</th>
+              <th style="padding:10px 14px; font-weight:700;">SiLPA / Pembiayaan</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach($ap_all as $tKey => $ap)
+              <tr style="border-bottom:1px solid #E2E8F0; {{ $loop->even ? 'background:#F8FAFC;' : '' }}">
+                <td style="padding:10px 14px; font-weight:800; color:var(--biru-tua);">{{ $ap['tahun'] ?? $tKey }}</td>
+                <td style="padding:10px 14px;">
+                  <span style="font-size:11px; font-weight:700; background:#E0F2FE; color:#0369A1; padding:2px 8px; border-radius:10px;">
+                    {{ $ap['status'] ?? 'Murni (Tahun Berjalan)' }}
+                  </span>
+                </td>
+                <td style="padding:10px 14px; font-weight:700; color:#0369A1;">{{ $ap['pendapatan_total'] ?? 'Rp 0,00' }}</td>
+                <td style="padding:10px 14px; font-weight:700; color:#B91C1C;">{{ $ap['belanja_total'] ?? 'Rp 0,00' }}</td>
+                <td style="padding:10px 14px; font-weight:700; color:#047857;">{{ $ap['pembiayaan_total'] ?? 'Rp 0,00' }}</td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -830,6 +918,15 @@
   };
 
   // ================= MODAL INFORMASI PUBLIK (TRANSPARANSI APBDES) =================
+  window.gantiTahunApbdes = function(tahunKey, btnEl) {
+    document.querySelectorAll('.btn-tab-apbdes').forEach(btn => btn.classList.remove('aktif'));
+    if (btnEl) btnEl.classList.add('aktif');
+
+    document.querySelectorAll('.apbdes-year-content').forEach(el => el.style.display = 'none');
+    const target = document.getElementById('apbdes-content-' + tahunKey);
+    if (target) target.style.display = 'block';
+  };
+
   window.bukaModalInformasi = function(e){
     if (e && e.preventDefault) e.preventDefault();
     if (e && e.stopPropagation) e.stopPropagation();

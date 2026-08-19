@@ -114,14 +114,23 @@ class AdminSettingController extends Controller
             $data_perangkat = json_decode($data_perangkat_json, true);
         }
 
-        // Ambil data APBDes dinamis dengan auto-seeding default jika kosong
-        $data_apbdes_json = Setting::get('data_apbdes');
-        if (!$data_apbdes_json) {
+        // Ambil data APBDes dinamis (Multi-Tahun) dengan auto-seeding default jika kosong
+        $data_apbdes_raw = Setting::get('data_apbdes');
+        if (!$data_apbdes_raw) {
             $defaultApbdes = $this->getDefaultApbdes();
             Setting::set('data_apbdes', json_encode($defaultApbdes));
             $data_apbdes = $defaultApbdes;
         } else {
-            $data_apbdes = json_decode($data_apbdes_json, true);
+            $decoded = json_decode($data_apbdes_raw, true);
+            if (isset($decoded['pendapatan_total'])) {
+                // Konversi data single-year lama ke multi-year
+                $data_apbdes = [
+                    '2026' => array_merge(['tahun' => '2026', 'status' => 'Murni (Berjalan)'], $decoded)
+                ];
+                Setting::set('data_apbdes', json_encode($data_apbdes));
+            } else {
+                $data_apbdes = $decoded;
+            }
         }
 
         // Ambil data Demografi dinamis dengan auto-seeding default jika kosong
@@ -270,9 +279,68 @@ class AdminSettingController extends Controller
             Setting::set('data_potensi', json_encode($new_potensi));
         }
 
-        // 6. Update Transparansi APBDes (Anggaran Desa)
-        if ($request->has('apbdes')) {
-            Setting::set('data_apbdes', json_encode($request->input('apbdes')));
+        // 6. Update Transparansi APBDes (Multi-Tahun)
+        if ($request->has('apbdes_tahun')) {
+            $tahuns = $request->input('apbdes_tahun', []);
+            $status_list = $request->input('apbdes_status', []);
+            $pendapatan_total_list = $request->input('apbdes_pendapatan_total', []);
+            $pad_list = $request->input('apbdes_pad', []);
+            $dd_list = $request->input('apbdes_dd', []);
+            $add_list = $request->input('apbdes_add', []);
+            $pdrd_list = $request->input('apbdes_pdrd', []);
+            $bk_list = $request->input('apbdes_bk', []);
+            $dll_list = $request->input('apbdes_dll', []);
+            $ket_pendapatan_list = $request->input('apbdes_keterangan_pendapatan', []);
+
+            $belanja_total_list = $request->input('apbdes_belanja_total', []);
+            $belanja_pemerintahan_list = $request->input('apbdes_belanja_pemerintahan', []);
+            $belanja_pembangunan_list = $request->input('apbdes_belanja_pembangunan', []);
+            $belanja_pembinaan_list = $request->input('apbdes_belanja_pembinaan', []);
+            $belanja_pemberdayaan_list = $request->input('apbdes_belanja_pemberdayaan', []);
+            $belanja_bencana_list = $request->input('apbdes_belanja_bencana', []);
+            $ket_belanja_list = $request->input('apbdes_keterangan_belanja', []);
+
+            $pembiayaan_total_list = $request->input('apbdes_pembiayaan_total', []);
+            $penerimaan_pembiayaan_list = $request->input('apbdes_penerimaan_pembiayaan', []);
+            $pengeluaran_pembiayaan_list = $request->input('apbdes_pengeluaran_pembiayaan', []);
+            $ket_pembiayaan_list = $request->input('apbdes_keterangan_pembiayaan', []);
+
+            $new_apbdes = [];
+            foreach ($tahuns as $idx => $thn) {
+                $thn = trim($thn);
+                if (empty($thn)) continue;
+
+                $new_apbdes[$thn] = [
+                    'tahun' => $thn,
+                    'status' => $status_list[$idx] ?? 'Murni (Berjalan)',
+                    'pendapatan_total' => $pendapatan_total_list[$idx] ?? 'Rp 0,00',
+                    'pad' => $pad_list[$idx] ?? 'Rp 0,00',
+                    'dd' => $dd_list[$idx] ?? 'Rp 0,00',
+                    'add' => $add_list[$idx] ?? 'Rp 0,00',
+                    'pdrd' => $pdrd_list[$idx] ?? 'Rp 0,00',
+                    'bk' => $bk_list[$idx] ?? 'Rp 0,00',
+                    'dll' => $dll_list[$idx] ?? 'Rp 0,00',
+                    'keterangan_pendapatan' => $ket_pendapatan_list[$idx] ?? '',
+
+                    'belanja_total' => $belanja_total_list[$idx] ?? 'Rp 0,00',
+                    'belanja_pemerintahan' => $belanja_pemerintahan_list[$idx] ?? 'Rp 0,00',
+                    'belanja_pembangunan' => $belanja_pembangunan_list[$idx] ?? 'Rp 0,00',
+                    'belanja_pembinaan' => $belanja_pembinaan_list[$idx] ?? 'Rp 0,00',
+                    'belanja_pemberdayaan' => $belanja_pemberdayaan_list[$idx] ?? 'Rp 0,00',
+                    'belanja_bencana' => $belanja_bencana_list[$idx] ?? 'Rp 0,00',
+                    'keterangan_belanja' => $ket_belanja_list[$idx] ?? '',
+
+                    'pembiayaan_total' => $pembiayaan_total_list[$idx] ?? 'Rp 0,00',
+                    'penerimaan_pembiayaan' => $penerimaan_pembiayaan_list[$idx] ?? 'Rp 0,00',
+                    'pengeluaran_pembiayaan' => $pengeluaran_pembiayaan_list[$idx] ?? 'Rp 0,00',
+                    'keterangan_pembiayaan' => $ket_pembiayaan_list[$idx] ?? ''
+                ];
+            }
+
+            // Urutkan tahun terbaru di atas (descending)
+            krsort($new_apbdes);
+
+            Setting::set('data_apbdes', json_encode($new_apbdes));
         }
 
         // 7. Update Statistik Demografi (Kependudukan)
@@ -280,34 +348,63 @@ class AdminSettingController extends Controller
             Setting::set('data_demografi', json_encode($request->input('demografi')));
         }
 
-        return redirect('/admin/pengaturan')->with('success', 'Pengaturan Beranda, APBDes & Demografi Kependudukan berhasil disimpan!');
+        return redirect('/admin/pengaturan')->with('success', 'Pengaturan Beranda, APBDes Rekap Tahunan & Demografi berhasil disimpan!');
     }
 
-    // Mendapatkan data default Rincian APBDes & Sumber Dana
+    // Mendapatkan data default Rincian APBDes & Sumber Dana Rekap Multi-Tahun
     private function getDefaultApbdes()
     {
         return [
-            'pendapatan_total' => 'Rp 1.663.629.803,00',
-            'pad' => 'Rp 230.760.000,00',
-            'dd' => 'Rp 303.093.000,00',
-            'add' => 'Rp 376.615.000,00',
-            'pdrd' => 'Rp 85.805.300,00',
-            'bk' => 'Rp 539.600.603,00',
-            'dll' => 'Rp 127.755.900,00',
-            'keterangan_pendapatan' => 'Sumber penerimaan APBDes berasal dari Pendapatan Asli Desa (PAD), Dana Desa (DD APBN Pusat), Alokasi Dana Desa (ADD APBD Kab. Jombang), Bagi Hasil Pajak & Retribusi Daerah (PDRD), Bantuan Keuangan (BK Provinsi/Kabupaten), serta Lain-Lain Pendapatan Desa Sah.',
+            '2026' => [
+                'tahun' => '2026',
+                'status' => 'Murni (Tahun Berjalan)',
+                'pendapatan_total' => 'Rp 1.663.629.803,00',
+                'pad' => 'Rp 230.760.000,00',
+                'dd' => 'Rp 303.093.000,00',
+                'add' => 'Rp 376.615.000,00',
+                'pdrd' => 'Rp 85.805.300,00',
+                'bk' => 'Rp 539.600.603,00',
+                'dll' => 'Rp 127.755.900,00',
+                'keterangan_pendapatan' => 'Sumber penerimaan APBDes 2026 berasal dari Pendapatan Asli Desa (PAD), Dana Desa (DD APBN Pusat), Alokasi Dana Desa (ADD APBD Kab. Jombang), Bagi Hasil Pajak & Retribusi Daerah (PDRD), Bantuan Keuangan (BK Provinsi/Kabupaten), serta Lain-Lain Pendapatan Desa Sah.',
 
-            'belanja_total' => 'Rp 1.676.895.127,92',
-            'belanja_pemerintahan' => 'Rp 866.594.524,92',
-            'belanja_pembangunan' => 'Rp 582.090.603,00',
-            'belanja_pembinaan' => 'Rp 42.450.000,00',
-            'belanja_pemberdayaan' => 'Rp 158.000.000,00',
-            'belanja_bencana' => 'Rp 27.760.000,00',
-            'keterangan_belanja' => 'Pengalokasian anggaran belanja desa diprioritaskan untuk Penyelenggaraan Pemerintahan Desa, Pembangunan Sarana & Prasarana Desa, Pembinaan Kemasyarakatan, Pemberdayaan Masyarakat, serta Penanggulangan Bencana/Darurat.',
+                'belanja_total' => 'Rp 1.676.895.127,92',
+                'belanja_pemerintahan' => 'Rp 866.594.524,92',
+                'belanja_pembangunan' => 'Rp 582.090.603,00',
+                'belanja_pembinaan' => 'Rp 42.450.000,00',
+                'belanja_pemberdayaan' => 'Rp 158.000.000,00',
+                'belanja_bencana' => 'Rp 27.760.000,00',
+                'keterangan_belanja' => 'Pengalokasian anggaran belanja desa diprioritaskan untuk Penyelenggaraan Pemerintahan Desa, Pembangunan Sarana & Prasarana Desa, Pembinaan Kemasyarakatan, Pemberdayaan Masyarakat, serta Penanggulangan Bencana/Darurat.',
 
-            'pembiayaan_total' => 'Rp 13.265.324,92',
-            'penerimaan_pembiayaan' => 'Rp 13.265.324,92',
-            'pengeluaran_pembiayaan' => 'Rp 0,00',
-            'keterangan_pembiayaan' => 'Penerimaan Pembiayaan Netto berasal dari Sisa Lebih Perhitungan Anggaran (SiLPA) tahun anggaran sebelumnya.'
+                'pembiayaan_total' => 'Rp 13.265.324,92',
+                'penerimaan_pembiayaan' => 'Rp 13.265.324,92',
+                'pengeluaran_pembiayaan' => 'Rp 0,00',
+                'keterangan_pembiayaan' => 'Penerimaan Pembiayaan Netto berasal dari Sisa Lebih Perhitungan Anggaran (SiLPA) tahun anggaran sebelumnya.'
+            ],
+            '2025' => [
+                'tahun' => '2025',
+                'status' => 'Laporan Realisasi / LPJ',
+                'pendapatan_total' => 'Rp 1.540.210.000,00',
+                'pad' => 'Rp 210.500.000,00',
+                'dd' => 'Rp 295.000.000,00',
+                'add' => 'Rp 360.200.000,00',
+                'pdrd' => 'Rp 78.510.000,00',
+                'bk' => 'Rp 480.000.000,00',
+                'dll' => 'Rp 116.000.000,00',
+                'keterangan_pendapatan' => 'Realisasi penerimaan APBDes Tahun Anggaran 2025 dari seluruh pos pendapatan sah.',
+
+                'belanja_total' => 'Rp 1.535.100.000,00',
+                'belanja_pemerintahan' => 'Rp 790.000.000,00',
+                'belanja_pembangunan' => 'Rp 530.000.000,00',
+                'belanja_pembinaan' => 'Rp 38.500.000,00',
+                'belanja_pemberdayaan' => 'Rp 151.600.000,00',
+                'belanja_bencana' => 'Rp 25.000.000,00',
+                'keterangan_belanja' => 'Realisasi belanja APBDes Tahun Anggaran 2025 untuk pembangunan dan pelayanan masyarakat.',
+
+                'pembiayaan_total' => 'Rp 5.110.000,00',
+                'penerimaan_pembiayaan' => 'Rp 5.110.000,00',
+                'pengeluaran_pembiayaan' => 'Rp 0,00',
+                'keterangan_pembiayaan' => 'Sisa Lebih Perhitungan Anggaran (SiLPA) Tahun Anggaran 2025.'
+            ]
         ];
     }
 

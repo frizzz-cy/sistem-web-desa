@@ -251,108 +251,144 @@
                 </div>
             </div>
 
-            <!-- SECTION 5: TRANSPARANSI APBDES & RINCIAN SUMBER DANA -->
-            <div class="card" style="margin-bottom:30px;">
-                <h3 style="margin-top:0; color:var(--biru-tua); font-size:18px; margin-bottom:6px;">💰 Section 5: Transparansi APBDes &amp; Rincian Sumber Dana</h3>
-                <p style="font-size:13px; color:var(--teks-muted); margin-bottom:20px;">Kelola rincian nominal pendapatan, belanja, pembiayaan, serta keterangan asal-usul sumber dana APBDes.</p>
-
-                @php $ap = $data_apbdes ?? []; @endphp
-
-                <!-- 1. PENDAPATAN DESA -->
-                <div style="background:#F8FAFC; border:1px solid #CBD5E1; border-radius:8px; padding:16px; margin-bottom:20px;">
-                    <h4 style="margin:0 0 12px; font-size:14px; color:#0369A1;">1. Pendapatan Desa &amp; Sumber Dana</h4>
-                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
-                        <div class="form-group">
-                            <label style="font-size:12px;">Total Pendapatan Desa</label>
-                            <input type="text" name="apbdes[pendapatan_total]" value="{{ old('apbdes.pendapatan_total', $ap['pendapatan_total'] ?? 'Rp 1.663.629.803,00') }}" required>
-                        </div>
-                        <div class="form-group">
-                            <label style="font-size:12px;">PAD (Pendapatan Asli Desa)</label>
-                            <input type="text" name="apbdes[pad]" value="{{ old('apbdes.pad', $ap['pad'] ?? 'Rp 230.760.000,00') }}" required>
-                        </div>
-                        <div class="form-group">
-                            <label style="font-size:12px;">DD (Dana Desa APBN Pusat)</label>
-                            <input type="text" name="apbdes[dd]" value="{{ old('apbdes.dd', $ap['dd'] ?? 'Rp 303.093.000,00') }}" required>
-                        </div>
-                        <div class="form-group">
-                            <label style="font-size:12px;">ADD (Alokasi Dana Desa Jombang)</label>
-                            <input type="text" name="apbdes[add]" value="{{ old('apbdes.add', $ap['add'] ?? 'Rp 376.615.000,00') }}" required>
-                        </div>
-                        <div class="form-group">
-                            <label style="font-size:12px;">PDRD (Bagi Hasil Pajak &amp; Retribusi)</label>
-                            <input type="text" name="apbdes[pdrd]" value="{{ old('apbdes.pdrd', $ap['pdrd'] ?? 'Rp 85.805.300,00') }}" required>
-                        </div>
-                        <div class="form-group">
-                            <label style="font-size:12px;">BK (Bantuan Keuangan Kab/Prov)</label>
-                            <input type="text" name="apbdes[bk]" value="{{ old('apbdes.bk', $ap['bk'] ?? 'Rp 539.600.603,00') }}" required>
-                        </div>
-                        <div class="form-group">
-                            <label style="font-size:12px;">DLL (Pendapatan Lain-Lain Sah)</label>
-                            <input type="text" name="apbdes[dll]" value="{{ old('apbdes.dll', $ap['dll'] ?? 'Rp 127.755.900,00') }}" required>
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-top:10px;">
-                        <label style="font-size:12px;">Catatan Keterangan Sumber Dana Pendapatan</label>
-                        <textarea name="apbdes[keterangan_pendapatan]" rows="2" required placeholder="Jelaskan dari mana saja dana pendapatan desa berasal...">{{ old('apbdes.keterangan_pendapatan', $ap['keterangan_pendapatan'] ?? '') }}</textarea>
-                    </div>
+            <!-- SECTION 5: TRANSPARANSI APBDES (REKAP MULTI-TAHUN) -->
+            <div class="setting-section">
+                <div class="section-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                    <span>💰 Section 5: Transparansi APBDes (Rekap Multi-Tahun)</span>
+                    <button type="button" class="btn btn-secondary" onclick="tambahTahunApbdes()" style="font-size:12px; padding:6px 12px; background:#E0F2FE; color:#0369A1; border:1px solid #BAE6FD;">
+                        + Tambah Tahun Anggaran Baru
+                    </button>
                 </div>
+                <p style="margin-top:0; margin-bottom:16px; font-size:12.5px; color:var(--teks-muted);">Kelola data rincian APBDes untuk setiap tahun anggaran. Warga dapat melihat jejak rekapitulasi dan memilih tahun anggaran di modal Informasi Publik Beranda.</p>
 
-                <!-- 2. BELANJA DESA -->
-                <div style="background:#F8FAFC; border:1px solid #CBD5E1; border-radius:8px; padding:16px; margin-bottom:20px;">
-                    <h4 style="margin:0 0 12px; font-size:14px; color:#B91C1C;">2. Belanja Desa &amp; Alokasi</h4>
-                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
-                        <div class="form-group">
-                            <label style="font-size:12px;">Total Belanja Desa</label>
-                            <input type="text" name="apbdes[belanja_total]" value="{{ old('apbdes.belanja_total', $ap['belanja_total'] ?? 'Rp 1.676.895.127,92') }}" required>
-                        </div>
-                        <div class="form-group">
-                            <label style="font-size:12px;">Belanja Penyelenggaraan Pemerintahan</label>
-                            <input type="text" name="apbdes[belanja_pemerintahan]" value="{{ old('apbdes.belanja_pemerintahan', $ap['belanja_pemerintahan'] ?? 'Rp 866.594.524,92') }}" required>
-                        </div>
-                        <div class="form-group">
-                            <label style="font-size:12px;">Belanja Pembangunan Desa</label>
-                            <input type="text" name="apbdes[belanja_pembangunan]" value="{{ old('apbdes.belanja_pembangunan', $ap['belanja_pembangunan'] ?? 'Rp 582.090.603,00') }}" required>
-                        </div>
-                        <div class="form-group">
-                            <label style="font-size:12px;">Belanja Pembinaan Kemasyarakatan</label>
-                            <input type="text" name="apbdes[belanja_pembinaan]" value="{{ old('apbdes.belanja_pembinaan', $ap['belanja_pembinaan'] ?? 'Rp 42.450.000,00') }}" required>
-                        </div>
-                        <div class="form-group">
-                            <label style="font-size:12px;">Belanja Pemberdayaan Masyarakat</label>
-                            <input type="text" name="apbdes[belanja_pemberdayaan]" value="{{ old('apbdes.belanja_pemberdayaan', $ap['belanja_pemberdayaan'] ?? 'Rp 158.000.000,00') }}" required>
-                        </div>
-                        <div class="form-group">
-                            <label style="font-size:12px;">Belanja Bencana &amp; Darurat</label>
-                            <input type="text" name="apbdes[belanja_bencana]" value="{{ old('apbdes.belanja_bencana', $ap['belanja_bencana'] ?? 'Rp 27.760.000,00') }}" required>
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-top:10px;">
-                        <label style="font-size:12px;">Catatan Keterangan Alokasi Belanja</label>
-                        <textarea name="apbdes[keterangan_belanja]" rows="2" required placeholder="Jelaskan untuk apa saja alokasi belanja diprioritaskan...">{{ old('apbdes.keterangan_belanja', $ap['keterangan_belanja'] ?? '') }}</textarea>
-                    </div>
-                </div>
+                <div id="apbdes-years-container" style="display:flex; flex-direction:column; gap:24px;">
+                    @php $ap_list = $data_apbdes ?? []; @endphp
+                    @foreach($ap_list as $thnKey => $ap)
+                        <div class="apbdes-year-card" style="border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 20px; background: #F8FAFC; position: relative;">
+                            <!-- Header Tahun -->
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px; border-bottom:1px solid #E2E8F0; padding-bottom:12px;">
+                                <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                                    <span style="background:var(--biru-tua); color:#fff; font-size:12px; font-weight:800; padding:4px 10px; border-radius:6px; letter-spacing:0.5px;">TAHUN ANGGARAN</span>
+                                    <input type="text" name="apbdes_tahun[]" value="{{ $ap['tahun'] ?? $thnKey }}" style="width:100px; font-weight:800; font-size:15px; text-align:center; padding:5px 8px; border:1.5px solid #94A3B8; border-radius:6px; background:#FFF;" required placeholder="Contoh: 2026">
+                                    
+                                    <select name="apbdes_status[]" style="font-size:12.5px; padding:6px 10px; border-radius:6px; border:1px solid #CBD5E1; font-weight:600; background:#FFF; color:#334155;">
+                                        <option value="Murni (Tahun Berjalan)" {{ ($ap['status'] ?? '') === 'Murni (Tahun Berjalan)' || ($ap['status'] ?? '') === 'Murni (Berjalan)' ? 'selected' : '' }}>🟢 Murni (Tahun Berjalan)</option>
+                                        <option value="Laporan Realisasi / LPJ" {{ ($ap['status'] ?? '') === 'Laporan Realisasi / LPJ' ? 'selected' : '' }}>🔵 Laporan Realisasi / LPJ</option>
+                                        <option value="Perubahan (P-APBDes)" {{ ($ap['status'] ?? '') === 'Perubahan (P-APBDes)' ? 'selected' : '' }}>🟠 Perubahan (P-APBDes)</option>
+                                    </select>
+                                </div>
+                                <button type="button" onclick="hapusTahunApbdes(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; padding:6px 12px; font-size:12px; font-weight:700; cursor:pointer;">
+                                    Hapus Tahun Ini
+                                </button>
+                            </div>
 
-                <!-- 3. PEMBIAYAAN DESA -->
-                <div style="background:#F8FAFC; border:1px solid #CBD5E1; border-radius:8px; padding:16px;">
-                    <h4 style="margin:0 0 12px; font-size:14px; color:#047857;">3. Pembiayaan Desa (Netto &amp; SiLPA)</h4>
-                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
-                        <div class="form-group">
-                            <label style="font-size:12px;">Total Pembiayaan Netto</label>
-                            <input type="text" name="apbdes[pembiayaan_total]" value="{{ old('apbdes.pembiayaan_total', $ap['pembiayaan_total'] ?? 'Rp 13.265.324,92') }}" required>
+                            <!-- 1. PENDAPATAN DESA -->
+                            <div style="background:#FFF; border:1px solid #BAE6FD; border-left:4px solid #0284C7; border-radius:8px; padding:16px; margin-bottom:16px;">
+                                <h4 style="margin:0 0 12px; font-size:14px; color:#0369A1; display:flex; justify-content:space-between; align-items:center;">
+                                    <span>1. Pendapatan Desa &amp; Sumber Dana</span>
+                                    <span style="font-size:11px; background:#E0F2FE; padding:3px 8px; border-radius:4px; font-weight:600;">Pos Penerimaan</span>
+                                </h4>
+                                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label style="font-size:12px; font-weight:700; color:#0369A1;">Total Pendapatan Desa</label>
+                                        <input type="text" name="apbdes_pendapatan_total[]" value="{{ $ap['pendapatan_total'] ?? 'Rp 0,00' }}" required>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label style="font-size:12px;">PAD (Pendapatan Asli Desa)</label>
+                                        <input type="text" name="apbdes_pad[]" value="{{ $ap['pad'] ?? 'Rp 0,00' }}" required>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label style="font-size:12px;">DD (Dana Desa APBN Pusat)</label>
+                                        <input type="text" name="apbdes_dd[]" value="{{ $ap['dd'] ?? 'Rp 0,00' }}" required>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label style="font-size:12px;">ADD (Alokasi Dana Desa Jombang)</label>
+                                        <input type="text" name="apbdes_add[]" value="{{ $ap['add'] ?? 'Rp 0,00' }}" required>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label style="font-size:12px;">PDRD (Bagi Hasil Pajak &amp; Retribusi)</label>
+                                        <input type="text" name="apbdes_pdrd[]" value="{{ $ap['pdrd'] ?? 'Rp 0,00' }}" required>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label style="font-size:12px;">BK (Bantuan Keuangan Kab/Prov)</label>
+                                        <input type="text" name="apbdes_bk[]" value="{{ $ap['bk'] ?? 'Rp 0,00' }}" required>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label style="font-size:12px;">DLL (Pendapatan Lain-Lain Sah)</label>
+                                        <input type="text" name="apbdes_dll[]" value="{{ $ap['dll'] ?? 'Rp 0,00' }}" required>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin-top:12px; margin-bottom:0;">
+                                    <label style="font-size:12px;">Catatan Keterangan Sumber Dana Pendapatan</label>
+                                    <textarea name="apbdes_keterangan_pendapatan[]" rows="2" required placeholder="Jelaskan dari mana saja dana pendapatan desa berasal...">{{ $ap['keterangan_pendapatan'] ?? '' }}</textarea>
+                                </div>
+                            </div>
+
+                            <!-- 2. BELANJA DESA -->
+                            <div style="background:#FFF; border:1px solid #FECACA; border-left:4px solid #EF4444; border-radius:8px; padding:16px; margin-bottom:16px;">
+                                <h4 style="margin:0 0 12px; font-size:14px; color:#B91C1C; display:flex; justify-content:space-between; align-items:center;">
+                                    <span>2. Belanja Desa &amp; Alokasi Bidang</span>
+                                    <span style="font-size:11px; background:#FEE2E2; padding:3px 8px; border-radius:4px; font-weight:600;">Pos Pengeluaran</span>
+                                </h4>
+                                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label style="font-size:12px; font-weight:700; color:#B91C1C;">Total Belanja Desa</label>
+                                        <input type="text" name="apbdes_belanja_total[]" value="{{ $ap['belanja_total'] ?? 'Rp 0,00' }}" required>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label style="font-size:12px;">Penyelenggaraan Pemerintahan Desa</label>
+                                        <input type="text" name="apbdes_belanja_pemerintahan[]" value="{{ $ap['belanja_pemerintahan'] ?? 'Rp 0,00' }}" required>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label style="font-size:12px;">Pelaksanaan Pembangunan Desa</label>
+                                        <input type="text" name="apbdes_belanja_pembangunan[]" value="{{ $ap['belanja_pembangunan'] ?? 'Rp 0,00' }}" required>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label style="font-size:12px;">Pembinaan Kemasyarakatan</label>
+                                        <input type="text" name="apbdes_belanja_pembinaan[]" value="{{ $ap['belanja_pembinaan'] ?? 'Rp 0,00' }}" required>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label style="font-size:12px;">Pemberdayaan Masyarakat</label>
+                                        <input type="text" name="apbdes_belanja_pemberdayaan[]" value="{{ $ap['belanja_pemberdayaan'] ?? 'Rp 0,00' }}" required>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label style="font-size:12px;">Penanggulangan Bencana &amp; Darurat</label>
+                                        <input type="text" name="apbdes_belanja_bencana[]" value="{{ $ap['belanja_bencana'] ?? 'Rp 0,00' }}" required>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin-top:12px; margin-bottom:0;">
+                                    <label style="font-size:12px;">Catatan Keterangan Alokasi Belanja</label>
+                                    <textarea name="apbdes_keterangan_belanja[]" rows="2" required placeholder="Jelaskan untuk apa saja alokasi belanja diprioritaskan...">{{ $ap['keterangan_belanja'] ?? '' }}</textarea>
+                                </div>
+                            </div>
+
+                            <!-- 3. PEMBIAYAAN DESA -->
+                            <div style="background:#FFF; border:1px solid #A7F3D0; border-left:4px solid #10B981; border-radius:8px; padding:16px;">
+                                <h4 style="margin:0 0 12px; font-size:14px; color:#047857; display:flex; justify-content:space-between; align-items:center;">
+                                    <span>3. Pembiayaan Desa (Netto &amp; SiLPA)</span>
+                                    <span style="font-size:11px; background:#D1FAE5; padding:3px 8px; border-radius:4px; font-weight:600;">Pos Pembiayaan</span>
+                                </h4>
+                                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label style="font-size:12px; font-weight:700; color:#047857;">Total Pembiayaan Netto</label>
+                                        <input type="text" name="apbdes_pembiayaan_total[]" value="{{ $ap['pembiayaan_total'] ?? 'Rp 0,00' }}" required>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label style="font-size:12px;">Penerimaan Pembiayaan (SiLPA)</label>
+                                        <input type="text" name="apbdes_penerimaan_pembiayaan[]" value="{{ $ap['penerimaan_pembiayaan'] ?? 'Rp 0,00' }}" required>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label style="font-size:12px;">Pengeluaran Pembiayaan</label>
+                                        <input type="text" name="apbdes_pengeluaran_pembiayaan[]" value="{{ $ap['pengeluaran_pembiayaan'] ?? 'Rp 0,00' }}" required>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="margin-top:12px; margin-bottom:0;">
+                                    <label style="font-size:12px;">Catatan Keterangan Pembiayaan</label>
+                                    <textarea name="apbdes_keterangan_pembiayaan[]" rows="2" required placeholder="Jelaskan asal usul penerimaan pembiayaan...">{{ $ap['keterangan_pembiayaan'] ?? '' }}</textarea>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label style="font-size:12px;">Penerimaan Pembiayaan (SiLPA)</label>
-                            <input type="text" name="apbdes[penerimaan_pembiayaan]" value="{{ old('apbdes.penerimaan_pembiayaan', $ap['penerimaan_pembiayaan'] ?? 'Rp 13.265.324,92') }}" required>
-                        </div>
-                        <div class="form-group">
-                            <label style="font-size:12px;">Pengeluaran Pembiayaan</label>
-                            <input type="text" name="apbdes[pengeluaran_pembiayaan]" value="{{ old('apbdes.pengeluaran_pembiayaan', $ap['pengeluaran_pembiayaan'] ?? 'Rp 0,00') }}" required>
-                        </div>
-                    </div>
-                    <div class="form-group" style="margin-top:10px;">
-                        <label style="font-size:12px;">Catatan Keterangan Pembiayaan</label>
-                        <textarea name="apbdes[keterangan_pembiayaan]" rows="2" required placeholder="Jelaskan asal usul penerimaan pembiayaan...">{{ old('apbdes.keterangan_pembiayaan', $ap['keterangan_pembiayaan'] ?? '') }}</textarea>
-                    </div>
+                    @endforeach
                 </div>
             </div>
 
@@ -474,10 +510,154 @@
 @endsection
 
 @section('scripts')
-    <!-- Script Prevent Double Submit -->
+    <!-- Script Dinamis untuk Tambah & Hapus Tahun APBDes -->
     <script>
+        function tambahTahunApbdes() {
+            const container = document.getElementById('apbdes-years-container');
+            const currentYear = new Date().getFullYear();
+            const yearCard = document.createElement('div');
+            yearCard.className = 'apbdes-year-card';
+            yearCard.style.cssText = 'border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 20px; background: #F8FAFC; position: relative;';
+            yearCard.innerHTML = `
+                <!-- Header Tahun -->
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px; border-bottom:1px solid #E2E8F0; padding-bottom:12px;">
+                    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                        <span style="background:var(--biru-tua); color:#fff; font-size:12px; font-weight:800; padding:4px 10px; border-radius:6px; letter-spacing:0.5px;">TAHUN ANGGARAN</span>
+                        <input type="text" name="apbdes_tahun[]" value="${currentYear}" style="width:100px; font-weight:800; font-size:15px; text-align:center; padding:5px 8px; border:1.5px solid #94A3B8; border-radius:6px; background:#FFF;" required placeholder="Contoh: ${currentYear}">
+                        
+                        <select name="apbdes_status[]" style="font-size:12.5px; padding:6px 10px; border-radius:6px; border:1px solid #CBD5E1; font-weight:600; background:#FFF; color:#334155;">
+                            <option value="Murni (Tahun Berjalan)">🟢 Murni (Tahun Berjalan)</option>
+                            <option value="Laporan Realisasi / LPJ">🔵 Laporan Realisasi / LPJ</option>
+                            <option value="Perubahan (P-APBDes)">🟠 Perubahan (P-APBDes)</option>
+                        </select>
+                    </div>
+                    <button type="button" onclick="hapusTahunApbdes(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; padding:6px 12px; font-size:12px; font-weight:700; cursor:pointer;">
+                        Hapus Tahun Ini
+                    </button>
+                </div>
+
+                <!-- 1. PENDAPATAN DESA -->
+                <div style="background:#FFF; border:1px solid #BAE6FD; border-left:4px solid #0284C7; border-radius:8px; padding:16px; margin-bottom:16px;">
+                    <h4 style="margin:0 0 12px; font-size:14px; color:#0369A1; display:flex; justify-content:space-between; align-items:center;">
+                        <span>1. Pendapatan Desa &amp; Sumber Dana</span>
+                        <span style="font-size:11px; background:#E0F2FE; padding:3px 8px; border-radius:4px; font-weight:600;">Pos Penerimaan</span>
+                    </h4>
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label style="font-size:12px; font-weight:700; color:#0369A1;">Total Pendapatan Desa</label>
+                            <input type="text" name="apbdes_pendapatan_total[]" value="Rp 0,00" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label style="font-size:12px;">PAD (Pendapatan Asli Desa)</label>
+                            <input type="text" name="apbdes_pad[]" value="Rp 0,00" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label style="font-size:12px;">DD (Dana Desa APBN Pusat)</label>
+                            <input type="text" name="apbdes_dd[]" value="Rp 0,00" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label style="font-size:12px;">ADD (Alokasi Dana Desa Jombang)</label>
+                            <input type="text" name="apbdes_add[]" value="Rp 0,00" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label style="font-size:12px;">PDRD (Bagi Hasil Pajak &amp; Retribusi)</label>
+                            <input type="text" name="apbdes_pdrd[]" value="Rp 0,00" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label style="font-size:12px;">BK (Bantuan Keuangan Kab/Prov)</label>
+                            <input type="text" name="apbdes_bk[]" value="Rp 0,00" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label style="font-size:12px;">DLL (Pendapatan Lain-Lain Sah)</label>
+                            <input type="text" name="apbdes_dll[]" value="Rp 0,00" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top:12px; margin-bottom:0;">
+                        <label style="font-size:12px;">Catatan Keterangan Sumber Dana Pendapatan</label>
+                        <textarea name="apbdes_keterangan_pendapatan[]" rows="2" required placeholder="Jelaskan dari mana saja dana pendapatan desa berasal..."></textarea>
+                    </div>
+                </div>
+
+                <!-- 2. BELANJA DESA -->
+                <div style="background:#FFF; border:1px solid #FECACA; border-left:4px solid #EF4444; border-radius:8px; padding:16px; margin-bottom:16px;">
+                    <h4 style="margin:0 0 12px; font-size:14px; color:#B91C1C; display:flex; justify-content:space-between; align-items:center;">
+                        <span>2. Belanja Desa &amp; Alokasi Bidang</span>
+                        <span style="font-size:11px; background:#FEE2E2; padding:3px 8px; border-radius:4px; font-weight:600;">Pos Pengeluaran</span>
+                    </h4>
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label style="font-size:12px; font-weight:700; color:#B91C1C;">Total Belanja Desa</label>
+                            <input type="text" name="apbdes_belanja_total[]" value="Rp 0,00" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label style="font-size:12px;">Penyelenggaraan Pemerintahan Desa</label>
+                            <input type="text" name="apbdes_belanja_pemerintahan[]" value="Rp 0,00" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label style="font-size:12px;">Pelaksanaan Pembangunan Desa</label>
+                            <input type="text" name="apbdes_belanja_pembangunan[]" value="Rp 0,00" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label style="font-size:12px;">Pembinaan Kemasyarakatan</label>
+                            <input type="text" name="apbdes_belanja_pembinaan[]" value="Rp 0,00" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label style="font-size:12px;">Pemberdayaan Masyarakat</label>
+                            <input type="text" name="apbdes_belanja_pemberdayaan[]" value="Rp 0,00" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label style="font-size:12px;">Penanggulangan Bencana &amp; Darurat</label>
+                            <input type="text" name="apbdes_belanja_bencana[]" value="Rp 0,00" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top:12px; margin-bottom:0;">
+                        <label style="font-size:12px;">Catatan Keterangan Alokasi Belanja</label>
+                        <textarea name="apbdes_keterangan_belanja[]" rows="2" required placeholder="Jelaskan untuk apa saja alokasi belanja diprioritaskan..."></textarea>
+                    </div>
+                </div>
+
+                <!-- 3. PEMBIAYAAN DESA -->
+                <div style="background:#FFF; border:1px solid #A7F3D0; border-left:4px solid #10B981; border-radius:8px; padding:16px;">
+                    <h4 style="margin:0 0 12px; font-size:14px; color:#047857; display:flex; justify-content:space-between; align-items:center;">
+                        <span>3. Pembiayaan Desa (Netto &amp; SiLPA)</span>
+                        <span style="font-size:11px; background:#D1FAE5; padding:3px 8px; border-radius:4px; font-weight:600;">Pos Pembiayaan</span>
+                    </h4>
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label style="font-size:12px; font-weight:700; color:#047857;">Total Pembiayaan Netto</label>
+                            <input type="text" name="apbdes_pembiayaan_total[]" value="Rp 0,00" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label style="font-size:12px;">Penerimaan Pembiayaan (SiLPA)</label>
+                            <input type="text" name="apbdes_penerimaan_pembiayaan[]" value="Rp 0,00" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label style="font-size:12px;">Pengeluaran Pembiayaan</label>
+                            <input type="text" name="apbdes_pengeluaran_pembiayaan[]" value="Rp 0,00" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top:12px; margin-bottom:0;">
+                        <label style="font-size:12px;">Catatan Keterangan Pembiayaan</label>
+                        <textarea name="apbdes_keterangan_pembiayaan[]" rows="2" required placeholder="Jelaskan asal usul penerimaan pembiayaan..."></textarea>
+                    </div>
+                </div>
+            `;
+            container.insertBefore(yearCard, container.firstChild);
+        }
+
+        function hapusTahunApbdes(btn) {
+            const container = document.getElementById('apbdes-years-container');
+            if (container.children.length <= 1) {
+                alert('Minimal harus ada 1 data tahun anggaran APBDes.');
+                return;
+            }
+            if (confirm('Apakah Anda yakin ingin menghapus data tahun anggaran ini?')) {
+                btn.closest('.apbdes-year-card').remove();
+            }
+        }
+
+        // Script Prevent Double Submit
         document.querySelector('form').addEventListener('submit', function(e) {
-            // Jangan tampilkan spinner simpan jika tombol reset diklik
             const clickedBtn = document.activeElement;
             if (clickedBtn && clickedBtn.value === 'reset_cards') {
                 return;
@@ -486,7 +666,7 @@
             const submitBtn = document.getElementById('btn-simpan');
             if (submitBtn) {
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = 'Menyimpan...';
+                submitBtn.innerHTML = 'Menyimpan Pengaturan...';
                 submitBtn.style.opacity = '0.7';
                 submitBtn.style.cursor = 'not-allowed';
             }
