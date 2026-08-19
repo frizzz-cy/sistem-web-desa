@@ -16,5 +16,18 @@ class Berita extends Model
         'foto',
         'isi',
         'views',
+        'is_hidden',
     ];
+
+    protected $casts = [
+        'is_hidden' => 'boolean',
+    ];
+
+    /**
+     * Scope query untuk konten yang tampil / tidak disembunyikan
+     */
+    public function scopeVisible($query)
+    {
+        return $query->where('is_hidden', false);
+    }
 }

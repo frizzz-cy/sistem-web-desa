@@ -43,6 +43,10 @@ class AdminProdukController extends Controller
             $data['foto_produk'] = $request->input('foto_produk_media');
         }
 
+        if (auth()->user()->isAdmin()) {
+            $data['is_hidden'] = $request->boolean('is_hidden');
+        }
+
         unset($data['foto_produk_media']);
         Produk::create($data);
         return redirect('/admin/produk')->with('success', 'Produk berhasil ditambahkan!');
@@ -79,6 +83,10 @@ class AdminProdukController extends Controller
             $data['foto_produk'] = $request->input('foto_produk_media');
         }
 
+        if (auth()->user()->isAdmin()) {
+            $data['is_hidden'] = $request->boolean('is_hidden');
+        }
+
         unset($data['foto_produk_media']);
         $produk->update($data);
         return redirect('/admin/produk')->with('success', 'Data produk berhasil diperbarui!');
@@ -92,5 +100,25 @@ class AdminProdukController extends Controller
         }
         $produk->delete();
         return redirect('/admin/produk')->with('success', 'Produk berhasil dihapus!');
+    }
+
+    // Toggle Sembunyikan / Tampilkan Produk (Khusus Administrator)
+    public function toggleVisibility(Produk $produk)
+    {
+        if (!auth()->user()->isAdmin()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Hanya Administrator Desa yang berwenang mengubah status tayang konten.'
+            ], 403);
+        }
+
+        $produk->is_hidden = !$produk->is_hidden;
+        $produk->save();
+
+        return response()->json([
+            'status' => 'success',
+            'is_hidden' => (bool)$produk->is_hidden,
+            'message' => $produk->is_hidden ? 'Produk berhasil disembunyikan dari publik.' : 'Produk berhasil dipublikasikan kembali.'
+        ]);
     }
 }

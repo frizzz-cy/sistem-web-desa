@@ -995,17 +995,79 @@
     const contentDiv = document.getElementById('detail-bd-content');
     contentDiv.innerHTML = isi;
     
+    // Hapus banner arsip jika ada dari sesi sebelumnya
+    const oldNotice = document.getElementById('berita-archived-notice');
+    if (oldNotice) oldNotice.remove();
+
+    // Hentikan timer polling sebelumnya
+    if (window.activeBeritaPollTimer) {
+      clearInterval(window.activeBeritaPollTimer);
+      window.activeBeritaPollTimer = null;
+    }
+
     // Kirim request AJAX (fetch) untuk menambah jumlah tayang secara asinkronus
     if (id) {
       fetch(`/berita/${id}/view`)
-        .then(response => response.json())
+        .then(response => {
+          if (response.status === 403) {
+            throw new Error('ARCHIVED');
+          }
+          return response.json();
+        })
         .then(data => {
+          if (data.is_hidden) {
+            throw new Error('ARCHIVED');
+          }
           // Perbarui teks tayangan di halaman detail
           document.getElementById('detail-bd-views').textContent = `Dilihat: ${data.views}x`;
           // Perbarui nilai data-views pada kartu berita agar jika diklik ulang datanya sinkron
           link.setAttribute('data-views', data.views);
+
+          // Mulai background polling untuk memantau jika admin menyembunyikan berita saat sedang dibaca
+          window.activeBeritaPollTimer = setInterval(() => {
+            fetch(`/berita/${id}/status`)
+              .then(res => res.json())
+              .then(statusData => {
+                if (statusData && statusData.is_hidden) {
+                  clearInterval(window.activeBeritaPollTimer);
+                  window.activeBeritaPollTimer = null;
+                  
+                  // Tampilkan banner pemberitahuan di atas artikel
+                  const card = document.querySelector('.berita-detail-card');
+                  if (card && !document.getElementById('berita-archived-notice')) {
+                    const notice = document.createElement('div');
+                    notice.id = 'berita-archived-notice';
+                    notice.style.cssText = 'background:#FEF2F2; border:1.5px solid #F87171; color:#991B1B; padding:14px 18px; border-radius:10px; margin-bottom:20px; font-size:13.5px; font-weight:700; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; box-shadow:0 4px 12px rgba(220,38,38,0.15);';
+                    notice.innerHTML = `
+                      <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-size:18px;">⚠️</span>
+                        <span>Pemberitahuan: Berita ini baru saja diarsipkan oleh Administrator Desa dan tidak lagi dipublikasikan.</span>
+                      </div>
+                      <button type="button" onclick="tutupBerita()" style="background:#DC2626; color:#fff; border:none; padding:7px 14px; border-radius:6px; font-weight:800; cursor:pointer; font-size:12.5px;">Tutup & Kembali</button>
+                    `;
+                    card.insertBefore(notice, card.firstChild);
+                    
+                    // Otomatis kembali ke beranda setelah 4 detik
+                    setTimeout(() => {
+                      if (document.getElementById('berita-detail-container').style.display === 'block') {
+                        tutupBerita();
+                      }
+                    }, 4500);
+                  }
+                }
+              })
+              .catch(() => {});
+          }, 8000);
         })
-        .catch(err => console.error('Gagal memperbarui jumlah tayangan:', err));
+        .catch(err => {
+          if (err.message === 'ARCHIVED') {
+            alert('Pemberitahuan: Berita ini sedang diarsipkan oleh Administrator Desa dan tidak lagi tersedia.');
+            tutupBerita();
+            if (link && link.closest('.kartu-berita, .modal-semua-berita-item')) {
+              link.closest('.kartu-berita, .modal-semua-berita-item').remove();
+            }
+          }
+        });
     }
     
     // Tutup modal semua berita jika sedang terbuka
@@ -1026,6 +1088,15 @@
   }
 
   function tutupBerita() {
+    // Hentikan timer polling berita aktif
+    if (window.activeBeritaPollTimer) {
+      clearInterval(window.activeBeritaPollTimer);
+      window.activeBeritaPollTimer = null;
+    }
+
+    const oldNotice = document.getElementById('berita-archived-notice');
+    if (oldNotice) oldNotice.remove();
+
     // Sembunyikan Halaman Detail Berita
     document.getElementById('berita-detail-container').style.display = 'none';
     

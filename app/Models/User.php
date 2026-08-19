@@ -20,6 +20,7 @@ class User extends Authenticatable
         'name',
         'username',
         'email',
+        'role',
         'password',
     ];
 
@@ -44,5 +45,21 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Cek apakah pengguna memiliki hak akses Administrator Desa
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * Cek apakah pengguna memiliki hak akses Kontributor / Pemuda Desa
+     */
+    public function isKontributor(): bool
+    {
+        return $this->role === 'kontributor';
     }
 }

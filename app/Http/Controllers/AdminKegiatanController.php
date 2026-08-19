@@ -42,6 +42,10 @@ class AdminKegiatanController extends Controller
             $data['foto'] = $request->input('foto_media');
         }
 
+        if (auth()->user()->isAdmin()) {
+            $data['is_hidden'] = $request->boolean('is_hidden');
+        }
+
         unset($data['foto_media']);
         Kegiatan::create($data);
         return redirect('/admin/kegiatan')->with('success', 'Kegiatan berhasil ditambahkan!');
@@ -76,6 +80,10 @@ class AdminKegiatanController extends Controller
             $data['foto'] = $request->input('foto_media');
         }
 
+        if (auth()->user()->isAdmin()) {
+            $data['is_hidden'] = $request->boolean('is_hidden');
+        }
+
         unset($data['foto_media']);
         $kegiatan->update($data);
         return redirect('/admin/kegiatan')->with('success', 'Kegiatan berhasil diperbarui!');
@@ -89,5 +97,25 @@ class AdminKegiatanController extends Controller
         }
         $kegiatan->delete();
         return redirect('/admin/kegiatan')->with('success', 'Kegiatan berhasil dihapus!');
+    }
+
+    // Toggle Sembunyikan / Tampilkan Kegiatan (Khusus Administrator)
+    public function toggleVisibility(Kegiatan $kegiatan)
+    {
+        if (!auth()->user()->isAdmin()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Hanya Administrator Desa yang berwenang mengubah status tayang konten.'
+            ], 403);
+        }
+
+        $kegiatan->is_hidden = !$kegiatan->is_hidden;
+        $kegiatan->save();
+
+        return response()->json([
+            'status' => 'success',
+            'is_hidden' => (bool)$kegiatan->is_hidden,
+            'message' => $kegiatan->is_hidden ? 'Kegiatan berhasil disembunyikan dari publik.' : 'Kegiatan berhasil dipublikasikan kembali.'
+        ]);
     }
 }

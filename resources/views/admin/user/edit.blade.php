@@ -27,6 +27,22 @@
                 @error('email') <span class="error-msg">{{ $message }}</span> @enderror
             </div>
 
+            <div class="form-group">
+                <label>Peran Pengguna (Role / Hak Akses)</label>
+                <select name="role" required style="width: 100%; padding: 10px 14px; border: 1.5px solid #CBD5E1; border-radius: 6px; font-family: inherit; font-size: 13.5px; background: #fff;">
+                    <option value="kontributor" {{ old('role', $user->role) == 'kontributor' ? 'selected' : '' }}>
+                        ✍️ Kontributor / Pemuda (Hanya Berita, Galeri Kegiatan, UMKM, & Media)
+                    </option>
+                    <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>
+                        👑 Administrator Desa (Akses Penuh Seluruh Sistem & Pengaturan)
+                    </option>
+                </select>
+                @if($user->id === auth()->id())
+                    <small style="color: #0284C7; display: block; margin-top: 4px;">ℹ️ Anda sedang mengedit akun Anda sendiri yang sedang aktif.</small>
+                @endif
+                @error('role') <span class="error-msg">{{ $message }}</span> @enderror
+            </div>
+
             <div class="form-group" style="margin-top: 24px; border-top: 1px dashed #E2E8F0; padding-top: 16px;">
                 <label style="margin-bottom: 2px;">Ganti Password</label>
                 <span style="font-size: 12px; color: var(--teks-muted); display: block; margin-bottom: 10px;">Biarkan kolom password kosong jika tidak ingin mengganti password lama.</span>

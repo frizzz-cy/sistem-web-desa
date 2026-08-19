@@ -36,6 +36,7 @@ class AdminUserController extends Controller
                 'unique:users,email',
                 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'
             ],
+            'role'     => 'required|string|in:admin,kontributor',
             'password' => 'required|string|min:6|confirmed',
         ], [
             'email.regex' => 'Format email tidak valid. Email harus menyertakan domain lengkap (contoh: nama@domain.com).'
@@ -65,13 +66,20 @@ class AdminUserController extends Controller
                 'string',
                 'email',
                 'max:255',
+                'unique:users,email',
                 Rule::unique('users')->ignore($user->id),
                 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'
             ],
+            'role'     => 'required|string|in:admin,kontributor',
             'password' => 'nullable|string|min:6|confirmed',
         ], [
             'email.regex' => 'Format email tidak valid. Email harus menyertakan domain lengkap (contoh: nama@domain.com).'
         ]);
+
+        // Mencegah admin mendemosi akunnya sendiri jika sedang login
+        if ($user->id === auth()->id() && $data['role'] !== 'admin') {
+            return back()->with('error', 'Gagal! Anda tidak dapat mengubah peran akun Anda sendiri menjadi Kontributor.');
+        }
 
         if (!empty($data['password'])) {
             $data['password'] = Hash::make($data['password']);

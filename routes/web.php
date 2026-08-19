@@ -29,7 +29,7 @@ Route::get('/', function () {
         // Abaikan jika database belum siap
     }
 
-    $beritas = Berita::latest()->get();
+    $beritas = Berita::visible()->latest()->get();
     
     $hero_slides_json = Setting::get('hero_slides');
     if ($hero_slides_json) {
@@ -236,8 +236,23 @@ Route::get('/robots.txt', function () {
     abort(404);
 });
 Route::get('/berita/{berita}/view', function (Berita $berita) {
+    if ($berita->is_hidden) {
+        return response()->json([
+            'is_hidden' => true,
+            'views' => $berita->views,
+            'message' => 'Berita ini sedang diarsipkan/disembunyikan oleh administrator.'
+        ], 403);
+    }
     $berita->increment('views');
-    return response()->json(['views' => $berita->views]);
+    return response()->json([
+        'is_hidden' => false,
+        'views' => $berita->views
+    ]);
+});
+Route::get('/berita/{berita}/status', function (Berita $berita) {
+    return response()->json([
+        'is_hidden' => (bool)$berita->is_hidden
+    ]);
 });
 Route::get('/peta', function () { 
     $data_potensi_json = Setting::get('data_potensi');
@@ -321,7 +336,7 @@ Route::get('/profil-desa', function () {
     return view('profil-desa', compact('perangkat')); 
 });
 Route::get('/kegiatan', function () { 
-    $kegiatans = Kegiatan::latest()->get();
+    $kegiatans = Kegiatan::visible()->latest()->get();
     return view('kegiatan', compact('kegiatans')); 
 });
 Route::get('/berita-detail', function () { return view('berita-detail'); }); // Template Detail
@@ -337,34 +352,40 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index']);
     Route::get('dashboard', [AdminDashboardController::class, 'index']);
 
+    // Konten Bersama (Bisa Diakses Administrator & Kontributor)
     Route::resource('produk', AdminProdukController::class);
+    Route::post('produk/{produk}/toggle-visibility', [AdminProdukController::class, 'toggleVisibility'])->name('admin.produk.toggle');
     
     Route::post('berita/upload-image', [AdminBeritaController::class, 'uploadImage']);
     Route::resource('berita', AdminBeritaController::class)->parameters(['berita' => 'berita']);
+    Route::post('berita/{berita}/toggle-visibility', [AdminBeritaController::class, 'toggleVisibility'])->name('admin.berita.toggle');
     
     Route::resource('kegiatan', AdminKegiatanController::class);
-    
-    Route::resource('user', AdminUserController::class);
+    Route::post('kegiatan/{kegiatan}/toggle-visibility', [AdminKegiatanController::class, 'toggleVisibility'])->name('admin.kegiatan.toggle');
     
     Route::get('media', [AdminMediaController::class, 'index']);
     Route::get('media/api', [AdminMediaController::class, 'apiList'])->name('admin.media.api');
     Route::post('media', [AdminMediaController::class, 'store']);
     Route::delete('media', [AdminMediaController::class, 'destroy']);
 
-    // Modular Pengaturan Routes
-    Route::get('pengaturan', [AdminSettingController::class, 'index']);
-    Route::get('pengaturan/beranda', [AdminSettingController::class, 'beranda'])->name('admin.pengaturan.beranda');
-    Route::post('pengaturan/beranda', [AdminSettingController::class, 'updateBeranda']);
+    // Modul Pengaturan & Kelola User (KHUSUS ADMINISTRATOR DESA)
+    Route::middleware('admin')->group(function () {
+        Route::resource('user', AdminUserController::class);
 
-    Route::get('pengaturan/apbdes', [AdminSettingController::class, 'apbdes'])->name('admin.pengaturan.apbdes');
-    Route::post('pengaturan/apbdes', [AdminSettingController::class, 'updateApbdes']);
+        Route::get('pengaturan', [AdminSettingController::class, 'index']);
+        Route::get('pengaturan/beranda', [AdminSettingController::class, 'beranda'])->name('admin.pengaturan.beranda');
+        Route::post('pengaturan/beranda', [AdminSettingController::class, 'updateBeranda']);
 
-    Route::get('pengaturan/demografi', [AdminSettingController::class, 'demografi'])->name('admin.pengaturan.demografi');
-    Route::post('pengaturan/demografi', [AdminSettingController::class, 'updateDemografi']);
+        Route::get('pengaturan/apbdes', [AdminSettingController::class, 'apbdes'])->name('admin.pengaturan.apbdes');
+        Route::post('pengaturan/apbdes', [AdminSettingController::class, 'updateApbdes']);
 
-    Route::get('pengaturan/potensi', [AdminSettingController::class, 'potensi'])->name('admin.pengaturan.potensi');
-    Route::post('pengaturan/potensi', [AdminSettingController::class, 'updatePotensi']);
+        Route::get('pengaturan/demografi', [AdminSettingController::class, 'demografi'])->name('admin.pengaturan.demografi');
+        Route::post('pengaturan/demografi', [AdminSettingController::class, 'updateDemografi']);
 
-    Route::get('pengaturan/perangkat', [AdminSettingController::class, 'perangkat'])->name('admin.pengaturan.perangkat');
-    Route::post('pengaturan/perangkat', [AdminSettingController::class, 'updatePerangkat']);
+        Route::get('pengaturan/potensi', [AdminSettingController::class, 'potensi'])->name('admin.pengaturan.potensi');
+        Route::post('pengaturan/potensi', [AdminSettingController::class, 'updatePotensi']);
+
+        Route::get('pengaturan/perangkat', [AdminSettingController::class, 'perangkat'])->name('admin.pengaturan.perangkat');
+        Route::post('pengaturan/perangkat', [AdminSettingController::class, 'updatePerangkat']);
+    });
 });

@@ -26,6 +26,7 @@
                     <tr>
                         <th>Nama Pengelola</th>
                         <th>Username</th>
+                        <th>Peran (Role)</th>
                         <th>Alamat Email</th>
                         <th>Terdaftar Sejak</th>
                         <th>Aksi</th>
@@ -34,8 +35,19 @@
                 <tbody>
                     @foreach($users as $item)
                     <tr>
-                        <td><b>{{ $item->name }}</b> @if($item->id === auth()->id()) <span style="background: #E0F2FE; color: #0369A1; font-size: 11px; padding: 2px 6px; border-radius: 10px; font-weight: bold; margin-left: 4px;">Aktif</span> @endif</td>
+                        <td><b>{{ $item->name }}</b> @if($item->id === auth()->id()) <span style="background: #E0F2FE; color: #0369A1; font-size: 11px; padding: 2px 6px; border-radius: 10px; font-weight: bold; margin-left: 4px;">Akun Anda</span> @endif</td>
                         <td><code>{{ $item->username }}</code></td>
+                        <td>
+                            @if($item->isAdmin())
+                                <span style="background: #FEF3C7; color: #92400E; padding: 4px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 800; display: inline-flex; align-items: center; gap: 4px;">
+                                    👑 Administrator
+                                </span>
+                            @else
+                                <span style="background: #E0F2FE; color: #075985; padding: 4px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 800; display: inline-flex; align-items: center; gap: 4px;">
+                                    ✍️ Kontributor
+                                </span>
+                            @endif
+                        </td>
                         <td>{{ $item->email }}</td>
                         <td>{{ $item->created_at->format('d M Y') }}</td>
                         <td>
