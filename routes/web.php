@@ -207,7 +207,12 @@ Route::get('/', function () {
     $demografi_json = Setting::get('data_demografi');
     $demografi = $demografi_json ? json_decode($demografi_json, true) : $default_demografi;
 
-    return view('beranda', compact('beritas', 'hero_slides', 'tentang', 'layanan_cards', 'apbdes', 'demografi')); 
+    return response()
+        ->view('beranda', compact('beritas', 'hero_slides', 'tentang', 'layanan_cards', 'apbdes', 'demografi'))
+        ->header('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0')
+        ->header('Pragma', 'no-cache')
+        ->header('Expires', '0')
+        ->header('X-LiteSpeed-Purge', '*');
 });
 Route::get('/berita/{berita}/view', function (Berita $berita) {
     $berita->increment('views');
