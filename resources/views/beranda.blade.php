@@ -257,58 +257,61 @@
   </div>
 
   <div class="portal-grid reveal">
-    @foreach($layanan_cards as $card)
+    @foreach($layanan_cards as $index => $card)
       @php
         $link = strtolower(trim($card['link'] ?? ''));
         $title = strtolower(trim($card['title'] ?? ''));
-        
-        $isLayanan = (str_contains($link, 'layanan') || str_contains($title, 'layanan'));
-        $isInformasi = (str_contains($link, 'informasi') || str_contains($link, 'apbdes') || str_contains($title, 'informasi') || str_contains($title, 'anggaran'));
-        $isDemografi = (str_contains($link, 'demografi') || str_contains($title, 'kependudukan') || str_contains($title, 'demografi') || str_contains($title, 'monografi'));
-        $isKelembagaan = (str_contains($link, 'kelembagaan') || str_contains($title, 'kelembagaan'));
       @endphp
 
-      @if($isLayanan)
+      @if(str_contains($title, 'layanan') || str_contains($link, 'layanan') || $index === 0)
         <button class="portal-card" type="button" onclick="bukaModalLayanan()">
           <div class="p-badge">{!! $card['icon'] !!}</div>
           <h3>{{ $card['title'] }}</h3>
           <p>{{ $card['desc'] }}</p>
           <div class="p-link">Lihat Persyaratan <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         </button>
-      @elseif($isInformasi)
+      @elseif(str_contains($title, 'informasi') || str_contains($title, 'anggaran') || str_contains($link, 'informasi') || str_contains($link, 'apbdes') || $index === 1)
         <button class="portal-card" type="button" onclick="bukaModalInformasi()">
           <div class="p-badge">{!! $card['icon'] !!}</div>
           <h3>{{ $card['title'] }}</h3>
           <p>{{ $card['desc'] }}</p>
           <div class="p-link">Lihat Rincian <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         </button>
-      @elseif($isDemografi)
-        <button class="portal-card" type="button" onclick="bukaModalDemografi()">
+      @elseif(str_contains($title, 'pemerintahan') || str_contains($link, 'pemerintahan') || $index === 2)
+        <a href="/profil-desa#pemerintahan" class="portal-card" onclick="return pindahHalus(event, '/profil-desa#pemerintahan')">
           <div class="p-badge">{!! $card['icon'] !!}</div>
           <h3>{{ $card['title'] }}</h3>
           <p>{{ $card['desc'] }}</p>
-          <div class="p-link">Lihat Data <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        </button>
-      @elseif($isKelembagaan)
+          <div class="p-link">Lihat Detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </a>
+      @elseif(str_contains($title, 'kelembagaan') || str_contains($link, 'kelembagaan') || $index === 3)
         <button class="portal-card" type="button" onclick="bukaModalKelembagaan()">
           <div class="p-badge">{!! $card['icon'] !!}</div>
           <h3>{{ $card['title'] }}</h3>
           <p>{{ $card['desc'] }}</p>
           <div class="p-link">Lihat Detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         </button>
-      @else
-        <a href="{{ !empty($card['link']) ? $card['link'] : '#' }}" class="portal-card" 
-           @if(str_contains($link, 'demografi') || str_contains($title, 'kependudukan') || str_contains($title, 'demografi')) onclick="bukaModalDemografi(); return false;"
-           @elseif(str_contains($link, 'kelembagaan') || str_contains($title, 'kelembagaan')) onclick="bukaModalKelembagaan(); return false;"
-           @elseif(str_contains($link, 'informasi') || str_contains($title, 'informasi') || str_contains($title, 'anggaran')) onclick="bukaModalInformasi(); return false;"
-           @elseif(str_contains($link, 'layanan') || str_contains($title, 'layanan')) onclick="bukaModalLayanan(); return false;"
-           @elseif(str_contains($link, '/kegiatan')) onclick="return pindahHalus(event, '/kegiatan')"
-           @elseif(str_contains($link, 'profil')) onclick="return pindahHalus(event, '{{ $card['link'] }}')" @endif>
+      @elseif(str_contains($title, 'kependudukan') || str_contains($title, 'demografi') || str_contains($link, 'demografi') || $index === 4)
+        <button class="portal-card" type="button" onclick="bukaModalDemografi()">
+          <div class="p-badge">{!! $card['icon'] !!}</div>
+          <h3>{{ $card['title'] }}</h3>
+          <p>{{ $card['desc'] }}</p>
+          <div class="p-link">Lihat Data <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
+      @elseif(str_contains($title, 'kegiatan') || str_contains($link, 'kegiatan') || $index === 5)
+        <a href="/kegiatan" class="portal-card" onclick="return pindahHalus(event, '/kegiatan')">
           <div class="p-badge">{!! $card['icon'] !!}</div>
           <h3>{{ $card['title'] }}</h3>
           <p>{{ $card['desc'] }}</p>
           <div class="p-link">Lihat Detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         </a>
+      @else
+        <button class="portal-card" type="button" onclick="bukaModalDemografi()">
+          <div class="p-badge">{!! $card['icon'] !!}</div>
+          <h3>{{ $card['title'] }}</h3>
+          <p>{{ $card['desc'] }}</p>
+          <div class="p-link">Lihat Detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </button>
       @endif
     @endforeach
   </div>
@@ -948,12 +951,20 @@
       const ket = document.createElement('div'); ket.className = 'ket'; ket.textContent = '📌 ' + surat.keterangan; isi.appendChild(ket);
       detail.appendChild(isi); wadah.appendChild(detail);
     });
-    document.getElementById('modal-layanan-overlay').classList.add('show');
+    var el = document.getElementById('modal-layanan-overlay');
+    if (el) {
+      el.classList.add('show');
+      el.style.display = 'flex';
+    }
   }
 
   function tutupModalLayanan(event){
     if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-layanan-close')) return;
-    document.getElementById('modal-layanan-overlay').classList.remove('show');
+    var el = document.getElementById('modal-layanan-overlay');
+    if (el) {
+      el.classList.remove('show');
+      el.style.display = 'none';
+    }
   }
 
   // ================= MODAL INFORMASI PUBLIK & APBDES =================
@@ -967,32 +978,56 @@
   }
 
   function bukaModalInformasi(){
-    document.getElementById('modal-informasi-overlay').classList.add('show');
+    var el = document.getElementById('modal-informasi-overlay');
+    if (el) {
+      el.classList.add('show');
+      el.style.display = 'flex';
+    }
   }
 
   function tutupModalInformasi(event){
     if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-informasi-close')) return;
-    document.getElementById('modal-informasi-overlay').classList.remove('show');
+    var el = document.getElementById('modal-informasi-overlay');
+    if (el) {
+      el.classList.remove('show');
+      el.style.display = 'none';
+    }
   }
 
   // ================= MODAL DATA KEPENDUDUKAN (DEMOGRAFI) =================
   function bukaModalDemografi(){
-    document.getElementById('modal-demografi-overlay').classList.add('show');
+    var el = document.getElementById('modal-demografi-overlay');
+    if (el) {
+      el.classList.add('show');
+      el.style.display = 'flex';
+    }
   }
 
   function tutupModalDemografi(event){
     if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-informasi-close')) return;
-    document.getElementById('modal-demografi-overlay').classList.remove('show');
+    var el = document.getElementById('modal-demografi-overlay');
+    if (el) {
+      el.classList.remove('show');
+      el.style.display = 'none';
+    }
   }
 
   // ================= MODAL KELEMBAGAAN DESA =================
   function bukaModalKelembagaan(){
-    document.getElementById('modal-kelembagaan-overlay').classList.add('show');
+    var el = document.getElementById('modal-kelembagaan-overlay');
+    if (el) {
+      el.classList.add('show');
+      el.style.display = 'flex';
+    }
   }
 
   function tutupModalKelembagaan(event){
     if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-informasi-close')) return;
-    document.getElementById('modal-kelembagaan-overlay').classList.remove('show');
+    var el = document.getElementById('modal-kelembagaan-overlay');
+    if (el) {
+      el.classList.remove('show');
+      el.style.display = 'none';
+    }
   }
 
   // Global listener pelindung modal
