@@ -408,21 +408,30 @@
       <button class="info-tab-btn" onclick="switchInfoTab('kelembagaan', this)">🤝 Kelembagaan</button>
     </div>
 
+    @php
+      $ap = $apbdes ?? [];
+      $demo = $demografi ?? [];
+    @endphp
+
     <!-- TAB 1: APBDES -->
     <div class="info-tab-content" id="infotab-apbdes">
       <!-- 1. PENDAPATAN DESA -->
       <div class="apbdes-section">
         <div class="apbdes-head">
           <span><i class="fas fa-wallet" style="margin-right:6px;"></i> PENDAPATAN DESA</span>
-          <span class="total">Rp 1.663.629.803,00</span>
+          <span class="total">{{ $ap['pendapatan_total'] ?? 'Rp 1.663.629.803,00' }}</span>
         </div>
         <div class="apbdes-body">
-          <div class="apbdes-row"><span class="label">Pendapatan Asli Desa (PAD)</span><span class="val">Rp 230.760.000,00</span></div>
-          <div class="apbdes-row"><span class="label">Dana Desa (DD)</span><span class="val">Rp 303.093.000,00</span></div>
-          <div class="apbdes-row"><span class="label">Alokasi Dana Desa (ADD)</span><span class="val">Rp 376.615.000,00</span></div>
-          <div class="apbdes-row"><span class="label">Bagi Hasil Pajak &amp; Retribusi (PDRD)</span><span class="val">Rp 85.805.300,00</span></div>
-          <div class="apbdes-row"><span class="label">Bantuan Keuangan (BK)</span><span class="val">Rp 539.600.603,00</span></div>
-          <div class="apbdes-row"><span class="label">Lain-Lain Pendapatan Sah (DLL)</span><span class="val">Rp 127.755.900,00</span></div>
+          <div class="apbdes-row"><span class="label">Pendapatan Asli Desa (PAD)</span><span class="val">{{ $ap['pad'] ?? 'Rp 230.760.000,00' }}</span></div>
+          <div class="apbdes-row"><span class="label">Dana Desa (DD - APBN Pusat)</span><span class="val">{{ $ap['dd'] ?? 'Rp 303.093.000,00' }}</span></div>
+          <div class="apbdes-row"><span class="label">Alokasi Dana Desa (ADD - APBD Jombang)</span><span class="val">{{ $ap['add'] ?? 'Rp 376.615.000,00' }}</span></div>
+          <div class="apbdes-row"><span class="label">Bagi Hasil Pajak &amp; Retribusi (PDRD)</span><span class="val">{{ $ap['pdrd'] ?? 'Rp 85.805.300,00' }}</span></div>
+          <div class="apbdes-row"><span class="label">Bantuan Keuangan (BK Provinsi/Kabupaten)</span><span class="val">{{ $ap['bk'] ?? 'Rp 539.600.603,00' }}</span></div>
+          <div class="apbdes-row"><span class="label">Lain-Lain Pendapatan Desa Sah (DLL)</span><span class="val">{{ $ap['dll'] ?? 'Rp 127.755.900,00' }}</span></div>
+
+          <div style="background:#E0F2FE; border-left:3px solid #0284C7; padding:8px 12px; margin-top:10px; border-radius:4px; font-size:12px; color:#0369A1; line-height:1.5;">
+            <strong>ℹ️ Rincian Sumber Dana:</strong> {{ $ap['keterangan_pendapatan'] ?? 'Sumber penerimaan APBDes berasal dari Pendapatan Asli Desa (PAD), Dana Desa (DD APBN Pusat), Alokasi Dana Desa (ADD APBD Kab. Jombang), Bagi Hasil Pajak & Retribusi Daerah (PDRD), Bantuan Keuangan (BK Provinsi/Kabupaten), serta Lain-Lain Pendapatan Desa Sah.' }}
+          </div>
         </div>
       </div>
 
@@ -430,14 +439,18 @@
       <div class="apbdes-section">
         <div class="apbdes-head belanja">
           <span><i class="fas fa-shopping-bag" style="margin-right:6px;"></i> BELANJA DESA</span>
-          <span class="total">Rp 1.676.895.127,92</span>
+          <span class="total">{{ $ap['belanja_total'] ?? 'Rp 1.676.895.127,92' }}</span>
         </div>
         <div class="apbdes-body">
-          <div class="apbdes-row"><span class="label">Penyelenggaraan Pemerintahan Desa</span><span class="val">Rp 866.594.524,92</span></div>
-          <div class="apbdes-row"><span class="label">Pelaksanaan Pembangunan Desa</span><span class="val">Rp 582.090.603,00</span></div>
-          <div class="apbdes-row"><span class="label">Pembinaan Kemasyarakatan</span><span class="val">Rp 42.450.000,00</span></div>
-          <div class="apbdes-row"><span class="label">Pemberdayaan Masyarakat</span><span class="val">Rp 158.000.000,00</span></div>
-          <div class="apbdes-row"><span class="label">Penanggulangan Bencana &amp; Keadaan Darurat</span><span class="val">Rp 27.760.000,00</span></div>
+          <div class="apbdes-row"><span class="label">Penyelenggaraan Pemerintahan Desa</span><span class="val">{{ $ap['belanja_pemerintahan'] ?? 'Rp 866.594.524,92' }}</span></div>
+          <div class="apbdes-row"><span class="label">Pelaksanaan Pembangunan Desa</span><span class="val">{{ $ap['belanja_pembangunan'] ?? 'Rp 582.090.603,00' }}</span></div>
+          <div class="apbdes-row"><span class="label">Pembinaan Kemasyarakatan</span><span class="val">{{ $ap['belanja_pembinaan'] ?? 'Rp 42.450.000,00' }}</span></div>
+          <div class="apbdes-row"><span class="label">Pemberdayaan Masyarakat</span><span class="val">{{ $ap['belanja_pemberdayaan'] ?? 'Rp 158.000.000,00' }}</span></div>
+          <div class="apbdes-row"><span class="label">Penanggulangan Bencana &amp; Keadaan Darurat</span><span class="val">{{ $ap['belanja_bencana'] ?? 'Rp 27.760.000,00' }}</span></div>
+
+          <div style="background:#FEF2F2; border-left:3px solid #EF4444; padding:8px 12px; margin-top:10px; border-radius:4px; font-size:12px; color:#B91C1C; line-height:1.5;">
+            <strong>📌 Prioritas Alokasi Belanja:</strong> {{ $ap['keterangan_belanja'] ?? 'Pengalokasian anggaran belanja desa diprioritaskan untuk Penyelenggaraan Pemerintahan Desa, Pembangunan Sarana & Prasarana Desa, Pembinaan Kemasyarakatan, Pemberdayaan Masyarakat, serta Penanggulangan Bencana/Darurat.' }}
+          </div>
         </div>
       </div>
 
@@ -445,11 +458,15 @@
       <div class="apbdes-section">
         <div class="apbdes-head pembiayaan">
           <span><i class="fas fa-coins" style="margin-right:6px;"></i> PEMBIAYAAN DESA (NETTO)</span>
-          <span class="total">Rp 13.265.324,92</span>
+          <span class="total">{{ $ap['pembiayaan_total'] ?? 'Rp 13.265.324,92' }}</span>
         </div>
         <div class="apbdes-body">
-          <div class="apbdes-row"><span class="label">Penerimaan Pembiayaan</span><span class="val">Rp 13.265.324,92</span></div>
-          <div class="apbdes-row"><span class="label">Pengeluaran Pembiayaan</span><span class="val">Rp 0,00</span></div>
+          <div class="apbdes-row"><span class="label">Penerimaan Pembiayaan (SiLPA)</span><span class="val">{{ $ap['penerimaan_pembiayaan'] ?? 'Rp 13.265.324,92' }}</span></div>
+          <div class="apbdes-row"><span class="label">Pengeluaran Pembiayaan</span><span class="val">{{ $ap['pengeluaran_pembiayaan'] ?? 'Rp 0,00' }}</span></div>
+
+          <div style="background:#ECFDF5; border-left:3px solid #10B981; padding:8px 12px; margin-top:10px; border-radius:4px; font-size:12px; color:#047857; line-height:1.5;">
+            <strong>💡 Keterangan Pembiayaan:</strong> {{ $ap['keterangan_pembiayaan'] ?? 'Penerimaan Pembiayaan Netto berasal dari Sisa Lebih Perhitungan Anggaran (SiLPA) tahun anggaran sebelumnya.' }}
+          </div>
         </div>
       </div>
     </div>
@@ -499,13 +516,13 @@
       <div class="apbdes-section">
         <div class="apbdes-head" style="background:#1668A3;">
           <span><i class="fas fa-users" style="margin-right:6px;"></i> DATA DEMOGRAFI &amp; KEPENDUDUKAN</span>
-          <span class="total">2.113 Jiwa</span>
+          <span class="total">{{ $demo['total_penduduk'] ?? '2.113' }} Jiwa</span>
         </div>
         <div class="apbdes-body">
-          <div class="apbdes-row"><span class="label">Total Penduduk</span><span class="val">2.113 Orang</span></div>
-          <div class="apbdes-row"><span class="label">Penduduk Laki-Laki</span><span class="val">1.042 Orang</span></div>
-          <div class="apbdes-row"><span class="label">Penduduk Perempuan</span><span class="val">1.071 Orang</span></div>
-          <div class="apbdes-row"><span class="label">Total Kepala Keluarga (KK)</span><span class="val">761 KK</span></div>
+          <div class="apbdes-row"><span class="label">Total Penduduk</span><span class="val">{{ $demo['total_penduduk'] ?? '2.113' }} Orang</span></div>
+          <div class="apbdes-row"><span class="label">Penduduk Laki-Laki</span><span class="val">{{ $demo['laki_laki'] ?? '1.042' }} Orang</span></div>
+          <div class="apbdes-row"><span class="label">Penduduk Perempuan</span><span class="val">{{ $demo['perempuan'] ?? '1.071' }} Orang</span></div>
+          <div class="apbdes-row"><span class="label">Total Kepala Keluarga (KK)</span><span class="val">{{ $demo['total_kk'] ?? '761' }} KK</span></div>
           <div class="apbdes-row"><span class="label">Agama Mayoritas</span><span class="val">Islam (100%)</span></div>
         </div>
       </div>
@@ -516,12 +533,12 @@
           <span class="total">Mayoritas Tani</span>
         </div>
         <div class="apbdes-body">
-          <div class="apbdes-row"><span class="label">Petani Utama / Pemilik Lahan</span><span class="val">986 Orang</span></div>
-          <div class="apbdes-row"><span class="label">Buruh Tani</span><span class="val">457 Orang</span></div>
-          <div class="apbdes-row"><span class="label">Total Angkatan Kerja (15-55 Thn)</span><span class="val">1.169 Orang</span></div>
-          <div class="apbdes-row"><span class="label">Tingkat Kesejahteraan Miskin</span><span class="val">450 KK</span></div>
-          <div class="apbdes-row"><span class="label">Tingkat Kesejahteraan Sedang</span><span class="val">300 KK</span></div>
-          <div class="apbdes-row"><span class="label">Tingkat Kesejahteraan Kaya</span><span class="val">11 KK</span></div>
+          <div class="apbdes-row"><span class="label">Petani Utama / Pemilik Lahan</span><span class="val">{{ $demo['petani_utama'] ?? '986' }} Orang</span></div>
+          <div class="apbdes-row"><span class="label">Buruh Tani</span><span class="val">{{ $demo['buruh_tani'] ?? '457' }} Orang</span></div>
+          <div class="apbdes-row"><span class="label">Total Angkatan Kerja (15-55 Thn)</span><span class="val">{{ $demo['angkatan_kerja'] ?? '1.169' }} Orang</span></div>
+          <div class="apbdes-row"><span class="label">Tingkat Kesejahteraan Miskin</span><span class="val">{{ $demo['kk_miskin'] ?? '450' }} KK</span></div>
+          <div class="apbdes-row"><span class="label">Tingkat Kesejahteraan Sedang</span><span class="val">{{ $demo['kk_sedang'] ?? '300' }} KK</span></div>
+          <div class="apbdes-row"><span class="label">Tingkat Kesejahteraan Kaya</span><span class="val">{{ $demo['kk_kaya'] ?? '11' }} KK</span></div>
         </div>
       </div>
 
@@ -559,9 +576,9 @@
         <div class="apbdes-body">
           <div class="apbdes-row"><span class="label">Tempat Ibadah (Masjid/Musholla)</span><span class="val">10 Unit</span></div>
           <div class="apbdes-row"><span class="label">Lapangan Olahraga</span><span class="val">1 Unit</span></div>
-          <div class="apbdes-row"><span class="label">Populasi Ternak Ayam / Itik</span><span class="val">450 Ekor</span></div>
-          <div class="apbdes-row"><span class="label">Populasi Ternak Kambing</span><span class="val">170 Ekor</span></div>
-          <div class="apbdes-row"><span class="label">Populasi Ternak Sapi</span><span class="val">76 Ekor</span></div>
+          <div class="apbdes-row"><span class="label">Populasi Ternak Ayam / Itik</span><span class="val">{{ $demo['ternak_ayam'] ?? '450' }} Ekor</span></div>
+          <div class="apbdes-row"><span class="label">Populasi Ternak Kambing</span><span class="val">{{ $demo['ternak_kambing'] ?? '170' }} Ekor</span></div>
+          <div class="apbdes-row"><span class="label">Populasi Ternak Sapi</span><span class="val">{{ $demo['ternak_sapi'] ?? '76' }} Ekor</span></div>
         </div>
       </div>
     </div>
@@ -611,19 +628,19 @@
     <!-- HIGHLIGHT STATS GRID (4 KARTU ANGKAN) -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 20px;">
       <div style="background: linear-gradient(135deg, #0B3B60, #1668A3); color: #fff; padding: 12px 14px; border-radius: 10px; text-align: center;">
-        <div style="font-size: 22px; font-weight: 800;">2.113</div>
+        <div style="font-size: 22px; font-weight: 800;">{{ $demo['total_penduduk'] ?? '2.113' }}</div>
         <div style="font-size: 11px; opacity: 0.9; font-weight: 600;">Total Penduduk (Jiwa)</div>
       </div>
       <div style="background: linear-gradient(135deg, #0F6B58, #15803D); color: #fff; padding: 12px 14px; border-radius: 10px; text-align: center;">
-        <div style="font-size: 22px; font-weight: 800;">761</div>
+        <div style="font-size: 22px; font-weight: 800;">{{ $demo['total_kk'] ?? '761' }}</div>
         <div style="font-size: 11px; opacity: 0.9; font-weight: 600;">Kepala Keluarga (KK)</div>
       </div>
       <div style="background: linear-gradient(135deg, #0284C7, #0369A1); color: #fff; padding: 12px 14px; border-radius: 10px; text-align: center;">
-        <div style="font-size: 22px; font-weight: 800;">1.042</div>
+        <div style="font-size: 22px; font-weight: 800;">{{ $demo['laki_laki'] ?? '1.042' }}</div>
         <div style="font-size: 11px; opacity: 0.9; font-weight: 600;">Laki-Laki</div>
       </div>
       <div style="background: linear-gradient(135deg, #DB2777, #BE185D); color: #fff; padding: 12px 14px; border-radius: 10px; text-align: center;">
-        <div style="font-size: 22px; font-weight: 800;">1.071</div>
+        <div style="font-size: 22px; font-weight: 800;">{{ $demo['perempuan'] ?? '1.071' }}</div>
         <div style="font-size: 11px; opacity: 0.9; font-weight: 600;">Perempuan</div>
       </div>
     </div>
@@ -635,11 +652,10 @@
         <span class="total">Mayoritas Tani</span>
       </div>
       <div class="apbdes-body">
-        <div class="apbdes-row"><span class="label">Petani Pemilik Lahan Utama</span><span class="val">986 Orang</span></div>
-        <div class="apbdes-row"><span class="label">Buruh Tani</span><span class="val">457 Orang</span></div>
-        <div class="apbdes-row"><span class="label">Total Angkatan Kerja Aktif (Usia 15-55 Thn)</span><span class="val">1.169 Orang</span></div>
-        <div class="apbdes-row"><span class="label">Belum / Dalam Pencarian Kerja</span><span class="val">55 Orang</span></div>
-        <div class="apbdes-row"><span class="label">Sektor Perdagangan, Swasta &amp; Lainnya</span><span class="val">Tersedia</span></div>
+        <div class="apbdes-row"><span class="label">Petani Pemilik Lahan Utama</span><span class="val">{{ $demo['petani_utama'] ?? '986' }} Orang</span></div>
+        <div class="apbdes-row"><span class="label">Buruh Tani</span><span class="val">{{ $demo['buruh_tani'] ?? '457' }} Orang</span></div>
+        <div class="apbdes-row"><span class="label">Total Angkatan Kerja Aktif (Usia 15-55 Thn)</span><span class="val">{{ $demo['angkatan_kerja'] ?? '1.169' }} Orang</span></div>
+        <div class="apbdes-row"><span class="label">Belum / Dalam Pencarian Kerja</span><span class="val">{{ $demo['belum_kerja'] ?? '55' }} Orang</span></div>
       </div>
     </div>
 
@@ -647,12 +663,12 @@
     <div class="apbdes-section">
       <div class="apbdes-head" style="background:#D4A017;">
         <span><i class="fas fa-chart-line" style="margin-right:6px;"></i> TINGKAT KESEJAHTERAAN KELUARGA (KK)</span>
-        <span class="total">761 KK Total</span>
+        <span class="total">{{ $demo['total_kk'] ?? '761' }} KK Total</span>
       </div>
       <div class="apbdes-body">
-        <div class="apbdes-row"><span class="label">Masyarakat Ekonomi Prasejahtera (Miskin)</span><span class="val">450 KK</span></div>
-        <div class="apbdes-row"><span class="label">Masyarakat Ekonomi Menengah (Sedang)</span><span class="val">300 KK</span></div>
-        <div class="apbdes-row"><span class="label">Masyarakat Ekonomi Sejahtera (Kaya)</span><span class="val">11 KK</span></div>
+        <div class="apbdes-row"><span class="label">Masyarakat Ekonomi Prasejahtera (Miskin)</span><span class="val">{{ $demo['kk_miskin'] ?? '450' }} KK</span></div>
+        <div class="apbdes-row"><span class="label">Masyarakat Ekonomi Menengah (Sedang)</span><span class="val">{{ $demo['kk_sedang'] ?? '300' }} KK</span></div>
+        <div class="apbdes-row"><span class="label">Masyarakat Ekonomi Sejahtera (Kaya)</span><span class="val">{{ $demo['kk_kaya'] ?? '11' }} KK</span></div>
       </div>
     </div>
 
@@ -663,9 +679,9 @@
         <span class="total">100% Islam</span>
       </div>
       <div class="apbdes-body">
-        <div class="apbdes-row"><span class="label">Agama Warga</span><span class="val">Islam (100% / 2.113 Orang)</span></div>
-        <div class="apbdes-row"><span class="label">Rentang Pendidikan Tidak / Belum Tamat SD</span><span class="val">542 Orang</span></div>
-        <div class="apbdes-row"><span class="label">Lulusan Sarjana / Perguruan Tinggi (S-1)</span><span class="val">40 Orang</span></div>
+        <div class="apbdes-row"><span class="label">Agama Warga</span><span class="val">Islam (100% / {{ $demo['agama_islam'] ?? '2.113' }} Orang)</span></div>
+        <div class="apbdes-row"><span class="label">Rentang Pendidikan Tidak / Belum Tamat SD</span><span class="val">{{ $demo['pendidikan_sd'] ?? '542' }} Orang</span></div>
+        <div class="apbdes-row"><span class="label">Lulusan Sarjana / Perguruan Tinggi (S-1)</span><span class="val">{{ $demo['pendidikan_s1'] ?? '40' }} Orang</span></div>
       </div>
     </div>
 
@@ -675,9 +691,9 @@
         <span><i class="fas fa-paw" style="margin-right:6px;"></i> POPULASI PETERNAKAN WARGA</span>
       </div>
       <div class="apbdes-body">
-        <div class="apbdes-row"><span class="label">Populasi Ternak Ayam &amp; Itik</span><span class="val">450 Ekor</span></div>
-        <div class="apbdes-row"><span class="label">Populasi Ternak Kambing</span><span class="val">170 Ekor</span></div>
-        <div class="apbdes-row"><span class="label">Populasi Ternak Sapi</span><span class="val">76 Ekor</span></div>
+        <div class="apbdes-row"><span class="label">Populasi Ternak Ayam &amp; Itik</span><span class="val">{{ $demo['ternak_ayam'] ?? '450' }} Ekor</span></div>
+        <div class="apbdes-row"><span class="label">Populasi Ternak Kambing</span><span class="val">{{ $demo['ternak_kambing'] ?? '170' }} Ekor</span></div>
+        <div class="apbdes-row"><span class="label">Populasi Ternak Sapi</span><span class="val">{{ $demo['ternak_sapi'] ?? '76' }} Ekor</span></div>
       </div>
     </div>
 

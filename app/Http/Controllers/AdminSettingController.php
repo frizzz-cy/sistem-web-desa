@@ -102,19 +102,27 @@ class AdminSettingController extends Controller
             $data_potensi = $defaultPotensi;
         } else {
             $data_potensi = json_decode($data_potensi_json, true);
-        }
-
-        // Ambil data perangkat desa (organogram) dengan auto-seeding default
-        $data_perangkat_json = Setting::get('data_perangkat');
-        if (!$data_perangkat_json) {
-            $defaultPerangkat = $this->getDefaultPerangkat();
-            Setting::set('data_perangkat', json_encode($defaultPerangkat));
-            $data_perangkat = $defaultPerangkat;
+        // Ambil data APBDes dinamis dengan auto-seeding default jika kosong
+        $data_apbdes_json = Setting::get('data_apbdes');
+        if (!$data_apbdes_json) {
+            $defaultApbdes = $this->getDefaultApbdes();
+            Setting::set('data_apbdes', json_encode($defaultApbdes));
+            $data_apbdes = $defaultApbdes;
         } else {
-            $data_perangkat = json_decode($data_perangkat_json, true);
+            $data_apbdes = json_decode($data_apbdes_json, true);
         }
 
-        return view('admin.pengaturan', compact('slides', 'tentang', 'layanan_cards', 'data_potensi', 'data_perangkat'));
+        // Ambil data Demografi dinamis dengan auto-seeding default jika kosong
+        $data_demografi_json = Setting::get('data_demografi');
+        if (!$data_demografi_json) {
+            $defaultDemografi = $this->getDefaultDemografi();
+            Setting::set('data_demografi', json_encode($defaultDemografi));
+            $data_demografi = $defaultDemografi;
+        } else {
+            $data_demografi = json_decode($data_demografi_json, true);
+        }
+
+        return view('admin.pengaturan', compact('slides', 'tentang', 'layanan_cards', 'data_potensi', 'data_perangkat', 'data_apbdes', 'data_demografi'));
     }
 
     // Perbarui seluruh konfigurasi beranda
@@ -250,7 +258,69 @@ class AdminSettingController extends Controller
             Setting::set('data_potensi', json_encode($new_potensi));
         }
 
-        return redirect('/admin/pengaturan')->with('success', 'Pengaturan Beranda & Perangkat Desa berhasil disimpan!');
+        // 6. Update Transparansi APBDes (Anggaran Desa)
+        if ($request->has('apbdes')) {
+            Setting::set('data_apbdes', json_encode($request->input('apbdes')));
+        }
+
+        // 7. Update Statistik Demografi (Kependudukan)
+        if ($request->has('demografi')) {
+            Setting::set('data_demografi', json_encode($request->input('demografi')));
+        }
+
+        return redirect('/admin/pengaturan')->with('success', 'Pengaturan Beranda, APBDes & Demografi Kependudukan berhasil disimpan!');
+    }
+
+    // Mendapatkan data default Rincian APBDes & Sumber Dana
+    private function getDefaultApbdes()
+    {
+        return [
+            'pendapatan_total' => 'Rp 1.663.629.803,00',
+            'pad' => 'Rp 230.760.000,00',
+            'dd' => 'Rp 303.093.000,00',
+            'add' => 'Rp 376.615.000,00',
+            'pdrd' => 'Rp 85.805.300,00',
+            'bk' => 'Rp 539.600.603,00',
+            'dll' => 'Rp 127.755.900,00',
+            'keterangan_pendapatan' => 'Sumber penerimaan APBDes berasal dari Pendapatan Asli Desa (PAD), Dana Desa (DD APBN Pusat), Alokasi Dana Desa (ADD APBD Kab. Jombang), Bagi Hasil Pajak & Retribusi Daerah (PDRD), Bantuan Keuangan (BK Provinsi/Kabupaten), serta Lain-Lain Pendapatan Desa Sah.',
+
+            'belanja_total' => 'Rp 1.676.895.127,92',
+            'belanja_pemerintahan' => 'Rp 866.594.524,92',
+            'belanja_pembangunan' => 'Rp 582.090.603,00',
+            'belanja_pembinaan' => 'Rp 42.450.000,00',
+            'belanja_pemberdayaan' => 'Rp 158.000.000,00',
+            'belanja_bencana' => 'Rp 27.760.000,00',
+            'keterangan_belanja' => 'Pengalokasian anggaran belanja desa diprioritaskan untuk Penyelenggaraan Pemerintahan Desa, Pembangunan Sarana & Prasarana Desa, Pembinaan Kemasyarakatan, Pemberdayaan Masyarakat, serta Penanggulangan Bencana/Darurat.',
+
+            'pembiayaan_total' => 'Rp 13.265.324,92',
+            'penerimaan_pembiayaan' => 'Rp 13.265.324,92',
+            'pengeluaran_pembiayaan' => 'Rp 0,00',
+            'keterangan_pembiayaan' => 'Penerimaan Pembiayaan Netto berasal dari Sisa Lebih Perhitungan Anggaran (SiLPA) tahun anggaran sebelumnya.'
+        ];
+    }
+
+    // Mendapatkan data default Statistik Demografi Kependudukan
+    private function getDefaultDemografi()
+    {
+        return [
+            'total_penduduk' => '2.113',
+            'total_kk' => '761',
+            'laki_laki' => '1.042',
+            'perempuan' => '1.071',
+            'petani_utama' => '986',
+            'buruh_tani' => '457',
+            'angkatan_kerja' => '1.169',
+            'belum_kerja' => '55',
+            'kk_miskin' => '450',
+            'kk_sedang' => '300',
+            'kk_kaya' => '11',
+            'agama_islam' => '2.113',
+            'pendidikan_sd' => '542',
+            'pendidikan_s1' => '40',
+            'ternak_ayam' => '450',
+            'ternak_kambing' => '170',
+            'ternak_sapi' => '76'
+        ];
     }
 
     // Mendapatkan data default 12 posisi Perangkat Desa (Organogram)

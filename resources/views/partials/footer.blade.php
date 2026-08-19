@@ -246,6 +246,7 @@
       <a href="/peta">Peta &amp; Potensi</a>
       <a href="/profil-desa">Profil Desa</a>
       <a href="/kegiatan">Event &amp; Kegiatan</a>
+      <a href="/sertifikat" target="_blank" style="color:#D4A017; font-weight:700;"><i class="fas fa-certificate" style="margin-right:4px;"></i> Sertifikat &amp; Barcode</a>
     </div>
 
     <!-- DETAIL WILAYAH -->

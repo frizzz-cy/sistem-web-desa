@@ -50,7 +50,16 @@ Route::get('/', function () {
         }
     }
 
-    return view('beranda', compact('beritas', 'hero_slides', 'tentang', 'layanan_cards')); 
+    $apbdes_json = Setting::get('data_apbdes');
+    $apbdes = $apbdes_json ? json_decode($apbdes_json, true) : [];
+
+    $demografi_json = Setting::get('data_demografi');
+    $demografi = $demografi_json ? json_decode($demografi_json, true) : [];
+
+    return view('beranda', compact('beritas', 'hero_slides', 'tentang', 'layanan_cards', 'apbdes', 'demografi')); 
+});
+Route::get('/sertifikat', function () {
+    return view('sertifikat');
 });
 Route::get('/berita/{berita}/view', function (Berita $berita) {
     $berita->increment('views');

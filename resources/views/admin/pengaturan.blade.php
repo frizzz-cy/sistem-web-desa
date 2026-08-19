@@ -245,7 +245,196 @@
                                 <textarea name="perangkat_note[]" rows="3" required placeholder="Tulis profil singkat atau deskripsi tugas...">{{ old('perangkat_note.'.$loop->index, $item['note']) }}</textarea>
                             </div>
                         </div>
-                    @endforeach
+            </div>
+
+            <!-- SECTION 5: TRANSPARANSI APBDES & RINCIAN SUMBER DANA -->
+            <div class="card" style="margin-bottom:30px;">
+                <h3 style="margin-top:0; color:var(--biru-tua); font-size:18px; margin-bottom:6px;">💰 Section 5: Transparansi APBDes &amp; Rincian Sumber Dana</h3>
+                <p style="font-size:13px; color:var(--teks-muted); margin-bottom:20px;">Kelola rincian nominal pendapatan, belanja, pembiayaan, serta keterangan asal-usul sumber dana APBDes.</p>
+
+                @php $ap = $data_apbdes ?? []; @endphp
+
+                <!-- 1. PENDAPATAN DESA -->
+                <div style="background:#F8FAFC; border:1px solid #CBD5E1; border-radius:8px; padding:16px; margin-bottom:20px;">
+                    <h4 style="margin:0 0 12px; font-size:14px; color:#0369A1;">1. Pendapatan Desa &amp; Sumber Dana</h4>
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+                        <div class="form-group">
+                            <label style="font-size:12px;">Total Pendapatan Desa</label>
+                            <input type="text" name="apbdes[pendapatan_total]" value="{{ old('apbdes.pendapatan_total', $ap['pendapatan_total'] ?? 'Rp 1.663.629.803,00') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:12px;">PAD (Pendapatan Asli Desa)</label>
+                            <input type="text" name="apbdes[pad]" value="{{ old('apbdes.pad', $ap['pad'] ?? 'Rp 230.760.000,00') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:12px;">DD (Dana Desa APBN Pusat)</label>
+                            <input type="text" name="apbdes[dd]" value="{{ old('apbdes.dd', $ap['dd'] ?? 'Rp 303.093.000,00') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:12px;">ADD (Alokasi Dana Desa Jombang)</label>
+                            <input type="text" name="apbdes[add]" value="{{ old('apbdes.add', $ap['add'] ?? 'Rp 376.615.000,00') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:12px;">PDRD (Bagi Hasil Pajak &amp; Retribusi)</label>
+                            <input type="text" name="apbdes[pdrd]" value="{{ old('apbdes.pdrd', $ap['pdrd'] ?? 'Rp 85.805.300,00') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:12px;">BK (Bantuan Keuangan Kab/Prov)</label>
+                            <input type="text" name="apbdes[bk]" value="{{ old('apbdes.bk', $ap['bk'] ?? 'Rp 539.600.603,00') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:12px;">DLL (Pendapatan Lain-Lain Sah)</label>
+                            <input type="text" name="apbdes[dll]" value="{{ old('apbdes.dll', $ap['dll'] ?? 'Rp 127.755.900,00') }}" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top:10px;">
+                        <label style="font-size:12px;">Catatan Keterangan Sumber Dana Pendapatan</label>
+                        <textarea name="apbdes[keterangan_pendapatan]" rows="2" required placeholder="Jelaskan dari mana saja dana pendapatan desa berasal...">{{ old('apbdes.keterangan_pendapatan', $ap['keterangan_pendapatan'] ?? '') }}</textarea>
+                    </div>
+                </div>
+
+                <!-- 2. BELANJA DESA -->
+                <div style="background:#F8FAFC; border:1px solid #CBD5E1; border-radius:8px; padding:16px; margin-bottom:20px;">
+                    <h4 style="margin:0 0 12px; font-size:14px; color:#B91C1C;">2. Belanja Desa &amp; Alokasi</h4>
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+                        <div class="form-group">
+                            <label style="font-size:12px;">Total Belanja Desa</label>
+                            <input type="text" name="apbdes[belanja_total]" value="{{ old('apbdes.belanja_total', $ap['belanja_total'] ?? 'Rp 1.676.895.127,92') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:12px;">Belanja Penyelenggaraan Pemerintahan</label>
+                            <input type="text" name="apbdes[belanja_pemerintahan]" value="{{ old('apbdes.belanja_pemerintahan', $ap['belanja_pemerintahan'] ?? 'Rp 866.594.524,92') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:12px;">Belanja Pembangunan Desa</label>
+                            <input type="text" name="apbdes[belanja_pembangunan]" value="{{ old('apbdes.belanja_pembangunan', $ap['belanja_pembangunan'] ?? 'Rp 582.090.603,00') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:12px;">Belanja Pembinaan Kemasyarakatan</label>
+                            <input type="text" name="apbdes[belanja_pembinaan]" value="{{ old('apbdes.belanja_pembinaan', $ap['belanja_pembinaan'] ?? 'Rp 42.450.000,00') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:12px;">Belanja Pemberdayaan Masyarakat</label>
+                            <input type="text" name="apbdes[belanja_pemberdayaan]" value="{{ old('apbdes.belanja_pemberdayaan', $ap['belanja_pemberdayaan'] ?? 'Rp 158.000.000,00') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:12px;">Belanja Bencana &amp; Darurat</label>
+                            <input type="text" name="apbdes[belanja_bencana]" value="{{ old('apbdes.belanja_bencana', $ap['belanja_bencana'] ?? 'Rp 27.760.000,00') }}" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top:10px;">
+                        <label style="font-size:12px;">Catatan Keterangan Alokasi Belanja</label>
+                        <textarea name="apbdes[keterangan_belanja]" rows="2" required placeholder="Jelaskan untuk apa saja alokasi belanja diprioritaskan...">{{ old('apbdes.keterangan_belanja', $ap['keterangan_belanja'] ?? '') }}</textarea>
+                    </div>
+                </div>
+
+                <!-- 3. PEMBIAYAAN DESA -->
+                <div style="background:#F8FAFC; border:1px solid #CBD5E1; border-radius:8px; padding:16px;">
+                    <h4 style="margin:0 0 12px; font-size:14px; color:#047857;">3. Pembiayaan Desa (Netto &amp; SiLPA)</h4>
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+                        <div class="form-group">
+                            <label style="font-size:12px;">Total Pembiayaan Netto</label>
+                            <input type="text" name="apbdes[pembiayaan_total]" value="{{ old('apbdes.pembiayaan_total', $ap['pembiayaan_total'] ?? 'Rp 13.265.324,92') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:12px;">Penerimaan Pembiayaan (SiLPA)</label>
+                            <input type="text" name="apbdes[penerimaan_pembiayaan]" value="{{ old('apbdes.penerimaan_pembiayaan', $ap['penerimaan_pembiayaan'] ?? 'Rp 13.265.324,92') }}" required>
+                        </div>
+                        <div class="form-group">
+                            <label style="font-size:12px;">Pengeluaran Pembiayaan</label>
+                            <input type="text" name="apbdes[pengeluaran_pembiayaan]" value="{{ old('apbdes.pengeluaran_pembiayaan', $ap['pengeluaran_pembiayaan'] ?? 'Rp 0,00') }}" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-top:10px;">
+                        <label style="font-size:12px;">Catatan Keterangan Pembiayaan</label>
+                        <textarea name="apbdes[keterangan_pembiayaan]" rows="2" required placeholder="Jelaskan asal usul penerimaan pembiayaan...">{{ old('apbdes.keterangan_pembiayaan', $ap['keterangan_pembiayaan'] ?? '') }}</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 6: STATISTIK DEMOGRAFI & KEPENDUDUKAN -->
+            <div class="card" style="margin-bottom:30px;">
+                <h3 style="margin-top:0; color:var(--biru-tua); font-size:18px; margin-bottom:6px;">📊 Section 6: Statistik Demografi &amp; Kependudukan</h3>
+                <p style="font-size:13px; color:var(--teks-muted); margin-bottom:20px;">Sesuaikan angka monografi kependudukan, mata pencaharian, tingkat kesejahteraan, dan peternakan warga.</p>
+
+                @php $dm = $data_demografi ?? []; @endphp
+
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:14px;">
+                    <!-- Pokok Penduduk -->
+                    <div class="form-group">
+                        <label style="font-size:12px;">Total Penduduk (Jiwa)</label>
+                        <input type="text" name="demografi[total_penduduk]" value="{{ old('demografi.total_penduduk', $dm['total_penduduk'] ?? '2.113') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:12px;">Total Kepala Keluarga (KK)</label>
+                        <input type="text" name="demografi[total_kk]" value="{{ old('demografi.total_kk', $dm['total_kk'] ?? '761') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:12px;">Penduduk Laki-Laki (Jiwa)</label>
+                        <input type="text" name="demografi[laki_laki]" value="{{ old('demografi.laki_laki', $dm['laki_laki'] ?? '1.042') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:12px;">Penduduk Perempuan (Jiwa)</label>
+                        <input type="text" name="demografi[perempuan]" value="{{ old('demografi.perempuan', $dm['perempuan'] ?? '1.071') }}" required>
+                    </div>
+
+                    <!-- Pekerjaan & Ekonomi -->
+                    <div class="form-group">
+                        <label style="font-size:12px;">Petani Pemilik Lahan Utama</label>
+                        <input type="text" name="demografi[petani_utama]" value="{{ old('demografi.petani_utama', $dm['petani_utama'] ?? '986') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:12px;">Buruh Tani</label>
+                        <input type="text" name="demografi[buruh_tani]" value="{{ old('demografi.buruh_tani', $dm['buruh_tani'] ?? '457') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:12px;">Angkatan Kerja Aktif (15-55 Thn)</label>
+                        <input type="text" name="demografi[angkatan_kerja]" value="{{ old('demografi.angkatan_kerja', $dm['angkatan_kerja'] ?? '1.169') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:12px;">Belum / Dalam Pencarian Kerja</label>
+                        <input type="text" name="demografi[belum_kerja]" value="{{ old('demografi.belum_kerja', $dm['belum_kerja'] ?? '55') }}" required>
+                    </div>
+
+                    <!-- Kesejahteraan KK -->
+                    <div class="form-group">
+                        <label style="font-size:12px;">KK Prasejahtera (Miskin)</label>
+                        <input type="text" name="demografi[kk_miskin]" value="{{ old('demografi.kk_miskin', $dm['kk_miskin'] ?? '450') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:12px;">KK Ekonomi Menengah (Sedang)</label>
+                        <input type="text" name="demografi[kk_sedang]" value="{{ old('demografi.kk_sedang', $dm['kk_sedang'] ?? '300') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:12px;">KK Ekonomi Sejahtera (Kaya)</label>
+                        <input type="text" name="demografi[kk_kaya]" value="{{ old('demografi.kk_kaya', $dm['kk_kaya'] ?? '11') }}" required>
+                    </div>
+
+                    <!-- Pendidikan & Peternakan -->
+                    <div class="form-group">
+                        <label style="font-size:12px;">Jumlah Agama Islam (Orang)</label>
+                        <input type="text" name="demografi[agama_islam]" value="{{ old('demografi.agama_islam', $dm['agama_islam'] ?? '2.113') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:12px;">Belum / Tidak Tamat SD (Orang)</label>
+                        <input type="text" name="demografi[pendidikan_sd]" value="{{ old('demografi.pendidikan_sd', $dm['pendidikan_sd'] ?? '542') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:12px;">Lulusan Sarjana S-1 (Orang)</label>
+                        <input type="text" name="demografi[pendidikan_s1]" value="{{ old('demografi.pendidikan_s1', $dm['pendidikan_s1'] ?? '40') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:12px;">Populasi Ternak Ayam &amp; Itik (Ekor)</label>
+                        <input type="text" name="demografi[ternak_ayam]" value="{{ old('demografi.ternak_ayam', $dm['ternak_ayam'] ?? '450') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:12px;">Populasi Ternak Kambing (Ekor)</label>
+                        <input type="text" name="demografi[ternak_kambing]" value="{{ old('demografi.ternak_kambing', $dm['ternak_kambing'] ?? '170') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:12px;">Populasi Ternak Sapi (Ekor)</label>
+                        <input type="text" name="demografi[ternak_sapi]" value="{{ old('demografi.ternak_sapi', $dm['ternak_sapi'] ?? '76') }}" required>
+                    </div>
                 </div>
             </div>
 
