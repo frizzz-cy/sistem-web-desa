@@ -378,6 +378,28 @@
                         <input type="text" name="demografi[perempuan]" value="{{ old('demografi.perempuan', $dm['perempuan'] ?? '1.071') }}" required>
                     </div>
 
+                    <!-- Kelompok Usia -->
+                    <div class="form-group">
+                        <label style="font-size:12px;">Usia Balita (0 - 4 Thn)</label>
+                        <input type="text" name="demografi[usia_balita]" value="{{ old('demografi.usia_balita', $dm['usia_balita'] ?? '145') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:12px;">Usia Anak-Anak (5 - 14 Thn)</label>
+                        <input type="text" name="demografi[usia_anak]" value="{{ old('demografi.usia_anak', $dm['usia_anak'] ?? '312') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:12px;">Usia Produktif (15 - 55 Thn)</label>
+                        <input type="text" name="demografi[usia_produktif]" value="{{ old('demografi.usia_produktif', $dm['usia_produktif'] ?? '1.169') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:12px;">Usia Pra-Lansia (56 - 64 Thn)</label>
+                        <input type="text" name="demografi[usia_pralansia]" value="{{ old('demografi.usia_pralansia', $dm['usia_pralansia'] ?? '280') }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size:12px;">Usia Lansia (65+ Thn)</label>
+                        <input type="text" name="demografi[usia_lansia]" value="{{ old('demografi.usia_lansia', $dm['usia_lansia'] ?? '207') }}" required>
+                    </div>
+
                     <!-- Pekerjaan & Ekonomi -->
                     <div class="form-group">
                         <label style="font-size:12px;">Petani Pemilik Lahan Utama</label>

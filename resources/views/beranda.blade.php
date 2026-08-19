@@ -643,6 +643,19 @@
         <div style="font-size: 22px; font-weight: 800;">{{ $demo['perempuan'] ?? '1.071' }}</div>
         <div style="font-size: 11px; opacity: 0.9; font-weight: 600;">Perempuan</div>
       </div>
+    <!-- SEKSI KELOMPOK USIA PENDUDUK -->
+    <div class="apbdes-section">
+      <div class="apbdes-head" style="background:#0B3B60;">
+        <span><i class="fas fa-child" style="margin-right:6px;"></i> KOMPOSISI KELOMPOK USIA PENDUDUK</span>
+        <span class="total">Demografi Usia</span>
+      </div>
+      <div class="apbdes-body">
+        <div class="apbdes-row"><span class="label">Usia Balita (0 – 4 Tahun)</span><span class="val">{{ $demo['usia_balita'] ?? '145' }} Orang</span></div>
+        <div class="apbdes-row"><span class="label">Usia Anak-Anak (5 – 14 Tahun)</span><span class="val">{{ $demo['usia_anak'] ?? '312' }} Orang</span></div>
+        <div class="apbdes-row"><span class="label">Usia Produktif / Angkatan Kerja (15 – 55 Tahun)</span><span class="val">{{ $demo['usia_produktif'] ?? '1.169' }} Orang</span></div>
+        <div class="apbdes-row"><span class="label">Usia Dewasa / Pra-Lansia (56 – 64 Tahun)</span><span class="val">{{ $demo['usia_pralansia'] ?? '280' }} Orang</span></div>
+        <div class="apbdes-row"><span class="label">Usia Lansia (65+ Tahun)</span><span class="val">{{ $demo['usia_lansia'] ?? '207' }} Orang</span></div>
+      </div>
     </div>
 
     <!-- SEKSI 1: MATA PENCAHARIAN & KETENAGAKERJAAN -->
