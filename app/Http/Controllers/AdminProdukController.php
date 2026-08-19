@@ -26,20 +26,24 @@ class AdminProdukController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'nama_produk'  => 'required|string|max:255',
-            'kategori'     => 'required|string',
-            'harga'        => 'required|string',
-            'status_stok'  => 'required|string',
-            'nama_penjual' => 'required|string',
-            'no_whatsapp'  => 'required|string',
-            'deskripsi'    => 'required|string',
-            'foto_produk'  => 'nullable|image|mimes:jpeg,png,jpg|max:15360',
+            'nama_produk'        => 'required|string|max:255',
+            'kategori'           => 'required|string',
+            'harga'              => 'required|string',
+            'status_stok'        => 'required|string',
+            'nama_penjual'       => 'required|string',
+            'no_whatsapp'        => 'required|string',
+            'deskripsi'          => 'required|string',
+            'foto_produk'        => 'nullable|image|mimes:jpeg,png,jpg|max:15360',
+            'foto_produk_media'  => 'nullable|string',
         ]);
 
         if ($request->hasFile('foto_produk')) {
             $data['foto_produk'] = ImageHelper::uploadAndCompress($request->file('foto_produk'), 'produk_images');
+        } elseif ($request->filled('foto_produk_media')) {
+            $data['foto_produk'] = $request->input('foto_produk_media');
         }
 
+        unset($data['foto_produk_media']);
         Produk::create($data);
         return redirect('/admin/produk')->with('success', 'Produk berhasil ditambahkan!');
     }
@@ -54,14 +58,15 @@ class AdminProdukController extends Controller
     public function update(Request $request, Produk $produk)
     {
         $data = $request->validate([
-            'nama_produk'  => 'required|string|max:255',
-            'kategori'     => 'required|string',
-            'harga'        => 'required|string',
-            'status_stok'  => 'required|string',
-            'nama_penjual' => 'required|string',
-            'no_whatsapp'  => 'required|string',
-            'deskripsi'    => 'required|string',
-            'foto_produk'  => 'nullable|image|mimes:jpeg,png,jpg|max:15360',
+            'nama_produk'        => 'required|string|max:255',
+            'kategori'           => 'required|string',
+            'harga'              => 'required|string',
+            'status_stok'        => 'required|string',
+            'nama_penjual'       => 'required|string',
+            'no_whatsapp'        => 'required|string',
+            'deskripsi'          => 'required|string',
+            'foto_produk'        => 'nullable|image|mimes:jpeg,png,jpg|max:15360',
+            'foto_produk_media'  => 'nullable|string',
         ]);
 
         if ($request->hasFile('foto_produk')) {
@@ -70,8 +75,11 @@ class AdminProdukController extends Controller
                 Storage::disk('public')->delete($produk->foto_produk);
             }
             $data['foto_produk'] = ImageHelper::uploadAndCompress($request->file('foto_produk'), 'produk_images');
+        } elseif ($request->filled('foto_produk_media')) {
+            $data['foto_produk'] = $request->input('foto_produk_media');
         }
 
+        unset($data['foto_produk_media']);
         $produk->update($data);
         return redirect('/admin/produk')->with('success', 'Data produk berhasil diperbarui!');
     }

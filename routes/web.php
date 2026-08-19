@@ -331,6 +331,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::resource('user', AdminUserController::class);
     
     Route::get('media', [AdminMediaController::class, 'index']);
+    Route::get('media/api', [AdminMediaController::class, 'apiList'])->name('admin.media.api');
     Route::post('media', [AdminMediaController::class, 'store']);
     Route::delete('media', [AdminMediaController::class, 'destroy']);
 
