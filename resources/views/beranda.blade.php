@@ -180,7 +180,7 @@
 
   /* ============ MODAL LAYANAN ADMINISTRASI & INFORMASI PUBLIK ============ */
   .modal-layanan-overlay, .modal-informasi-overlay{ display:none; position:fixed; inset:0; z-index:3000; background:rgba(11,40,63,0.78); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:20px; }
-  .modal-layanan-overlay.show, .modal-informasi-overlay.show{display:flex;}
+  .modal-layanan-overlay.show, .modal-informasi-overlay.show{display:flex !important; opacity:1 !important; visibility:visible !important; pointer-events:auto !important;}
   .modal-layanan-box { background:#fff; border-radius:14px; max-width:680px; width:100%; max-height:88vh; overflow-y:auto; position:relative; padding:28px 24px; box-shadow:0 20px 40px rgba(0,0,0,0.25); }
   .modal-informasi-box { background:#fff; border-radius:14px; max-width:820px; width:100%; max-height:85vh; overflow-y:auto; position:relative; padding:28px 24px 36px; box-shadow:0 20px 40px rgba(0,0,0,0.25); }
   .modal-informasi-box::-webkit-scrollbar { width:6px; }
@@ -264,19 +264,19 @@
       @endphp
 
       @if(str_contains($title, 'layanan') || str_contains($link, 'layanan') || $index === 0)
-        <button class="portal-card" type="button" onclick="bukaModalLayanan()">
+        <a href="javascript:void(0)" class="portal-card" data-action="modal-layanan" onclick="bukaModalLayanan()">
           <div class="p-badge">{!! $card['icon'] !!}</div>
           <h3>{{ $card['title'] }}</h3>
           <p>{{ $card['desc'] }}</p>
           <div class="p-link">Lihat Persyaratan <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        </button>
+        </a>
       @elseif(str_contains($title, 'informasi') || str_contains($title, 'anggaran') || str_contains($link, 'informasi') || str_contains($link, 'apbdes') || $index === 1)
-        <button class="portal-card" type="button" onclick="bukaModalInformasi()">
+        <a href="javascript:void(0)" class="portal-card" data-action="modal-informasi" onclick="bukaModalInformasi()">
           <div class="p-badge">{!! $card['icon'] !!}</div>
           <h3>{{ $card['title'] }}</h3>
           <p>{{ $card['desc'] }}</p>
           <div class="p-link">Lihat Rincian <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        </button>
+        </a>
       @elseif(str_contains($title, 'pemerintahan') || str_contains($link, 'pemerintahan') || $index === 2)
         <a href="/profil-desa#pemerintahan" class="portal-card" onclick="return pindahHalus(event, '/profil-desa#pemerintahan')">
           <div class="p-badge">{!! $card['icon'] !!}</div>
@@ -285,19 +285,19 @@
           <div class="p-link">Lihat Detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         </a>
       @elseif(str_contains($title, 'kelembagaan') || str_contains($link, 'kelembagaan') || $index === 3)
-        <button class="portal-card" type="button" onclick="bukaModalKelembagaan()">
+        <a href="javascript:void(0)" class="portal-card" data-action="modal-kelembagaan" onclick="bukaModalKelembagaan()">
           <div class="p-badge">{!! $card['icon'] !!}</div>
           <h3>{{ $card['title'] }}</h3>
           <p>{{ $card['desc'] }}</p>
           <div class="p-link">Lihat Detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        </button>
+        </a>
       @elseif(str_contains($title, 'kependudukan') || str_contains($title, 'demografi') || str_contains($link, 'demografi') || $index === 4)
-        <button class="portal-card" type="button" onclick="bukaModalDemografi()">
+        <a href="javascript:void(0)" class="portal-card" data-action="modal-demografi" onclick="bukaModalDemografi()">
           <div class="p-badge">{!! $card['icon'] !!}</div>
           <h3>{{ $card['title'] }}</h3>
           <p>{{ $card['desc'] }}</p>
           <div class="p-link">Lihat Data <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        </button>
+        </a>
       @elseif(str_contains($title, 'kegiatan') || str_contains($link, 'kegiatan') || $index === 5)
         <a href="/kegiatan" class="portal-card" onclick="return pindahHalus(event, '/kegiatan')">
           <div class="p-badge">{!! $card['icon'] !!}</div>
@@ -306,12 +306,12 @@
           <div class="p-link">Lihat Detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         </a>
       @else
-        <button class="portal-card" type="button" onclick="bukaModalDemografi()">
+        <a href="javascript:void(0)" class="portal-card" data-action="modal-demografi" onclick="bukaModalDemografi()">
           <div class="p-badge">{!! $card['icon'] !!}</div>
           <h3>{{ $card['title'] }}</h3>
           <p>{{ $card['desc'] }}</p>
-          <div class="p-link">Lihat Detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        </button>
+          <div class="p-link">Lihat Data <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </a>
       @endif
     @endforeach
   </div>
@@ -1062,19 +1062,21 @@
 
   // Global listener pelindung modal
   document.addEventListener('click', function(e) {
-    const el = e.target.closest('a, button');
+    const el = e.target.closest('[data-action], a, button');
     if (!el) return;
+    const action = el.getAttribute('data-action');
     const href = (el.getAttribute('href') || '').toLowerCase();
-    if (href === '#modal-demografi') {
-      e.preventDefault();
-      bukaModalDemografi();
-    } else if (href === '#modal-kelembagaan') {
+    
+    if (action === 'modal-kelembagaan' || href === '#modal-kelembagaan') {
       e.preventDefault();
       bukaModalKelembagaan();
-    } else if (href === '#modal-informasi' || href === '#modal-apbdes') {
+    } else if (action === 'modal-demografi' || href === '#modal-demografi') {
+      e.preventDefault();
+      bukaModalDemografi();
+    } else if (action === 'modal-informasi' || href === '#modal-informasi' || href === '#modal-apbdes') {
       e.preventDefault();
       bukaModalInformasi();
-    } else if (href === '#modal-layanan') {
+    } else if (action === 'modal-layanan' || href === '#modal-layanan') {
       e.preventDefault();
       bukaModalLayanan();
     }
