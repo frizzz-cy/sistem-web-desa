@@ -114,7 +114,7 @@ class AdminSettingController extends Controller
             $data_perangkat = json_decode($data_perangkat_json, true);
         }
 
-        // Ambil data APBDes dinamis (Multi-Tahun) dengan auto-seeding default jika kosong
+        // Ambil data APBDes dinamis (Multi-Tahun & Dynamic Items) dengan auto-seeding default jika kosong
         $data_apbdes_raw = Setting::get('data_apbdes');
         if (!$data_apbdes_raw) {
             $defaultApbdes = $this->getDefaultApbdes();
@@ -127,9 +127,37 @@ class AdminSettingController extends Controller
                 $data_apbdes = [
                     '2026' => array_merge(['tahun' => '2026', 'status' => 'Murni (Berjalan)'], $decoded)
                 ];
-                Setting::set('data_apbdes', json_encode($data_apbdes));
             } else {
                 $data_apbdes = $decoded;
+            }
+
+            // Normalisasi dynamic items jika belum ada
+            foreach ($data_apbdes as $yKey => &$yVal) {
+                if (!isset($yVal['pendapatan_items'])) {
+                    $yVal['pendapatan_items'] = [
+                        ['label' => 'Pendapatan Asli Desa (PAD)', 'nilai' => $yVal['pad'] ?? 'Rp 230.760.000,00'],
+                        ['label' => 'Dana Desa (DD - APBN Pusat)', 'nilai' => $yVal['dd'] ?? 'Rp 303.093.000,00'],
+                        ['label' => 'Alokasi Dana Desa (ADD - APBD Jombang)', 'nilai' => $yVal['add'] ?? 'Rp 376.615.000,00'],
+                        ['label' => 'Bagi Hasil Pajak & Retribusi (PDRD)', 'nilai' => $yVal['pdrd'] ?? 'Rp 85.805.300,00'],
+                        ['label' => 'Bantuan Keuangan (BK Provinsi/Kabupaten)', 'nilai' => $yVal['bk'] ?? 'Rp 539.600.603,00'],
+                        ['label' => 'Lain-Lain Pendapatan Desa Sah (DLL)', 'nilai' => $yVal['dll'] ?? 'Rp 127.755.900,00']
+                    ];
+                }
+                if (!isset($yVal['belanja_items'])) {
+                    $yVal['belanja_items'] = [
+                        ['label' => 'Penyelenggaraan Pemerintahan Desa', 'nilai' => $yVal['belanja_pemerintahan'] ?? 'Rp 866.594.524,92'],
+                        ['label' => 'Pelaksanaan Pembangunan Desa', 'nilai' => $yVal['belanja_pembangunan'] ?? 'Rp 582.090.603,00'],
+                        ['label' => 'Pembinaan Kemasyarakatan', 'nilai' => $yVal['belanja_pembinaan'] ?? 'Rp 42.450.000,00'],
+                        ['label' => 'Pemberdayaan Masyarakat', 'nilai' => $yVal['belanja_pemberdayaan'] ?? 'Rp 158.000.000,00'],
+                        ['label' => 'Penanggulangan Bencana & Keadaan Darurat', 'nilai' => $yVal['belanja_bencana'] ?? 'Rp 27.760.000,00']
+                    ];
+                }
+                if (!isset($yVal['pembiayaan_items'])) {
+                    $yVal['pembiayaan_items'] = [
+                        ['label' => 'Penerimaan Pembiayaan (SiLPA)', 'nilai' => $yVal['penerimaan_pembiayaan'] ?? 'Rp 13.265.324,92'],
+                        ['label' => 'Pengeluaran Pembiayaan', 'nilai' => $yVal['pengeluaran_pembiayaan'] ?? 'Rp 0,00']
+                    ];
+                }
             }
         }
 
@@ -141,6 +169,44 @@ class AdminSettingController extends Controller
             $data_demografi = $defaultDemografi;
         } else {
             $data_demografi = json_decode($data_demografi_json, true);
+            // Normalisasi jika masih format lama
+            if (isset($data_demografi['total_penduduk'])) {
+                $data_demografi = [
+                    'pokok' => [
+                        ['label' => 'Total Penduduk (Jiwa)', 'nilai' => $data_demografi['total_penduduk'] ?? '2.113'],
+                        ['label' => 'Total Kepala Keluarga (KK)', 'nilai' => $data_demografi['total_kk'] ?? '761'],
+                        ['label' => 'Penduduk Laki-Laki (Jiwa)', 'nilai' => $data_demografi['laki_laki'] ?? '1.042'],
+                        ['label' => 'Penduduk Perempuan (Jiwa)', 'nilai' => $data_demografi['perempuan'] ?? '1.071']
+                    ],
+                    'usia' => [
+                        ['label' => 'Usia Balita (0 – 4 Tahun)', 'nilai' => ($data_demografi['usia_balita'] ?? '145') . ' Orang'],
+                        ['label' => 'Usia Anak-Anak (5 – 14 Tahun)', 'nilai' => ($data_demografi['usia_anak'] ?? '312') . ' Orang'],
+                        ['label' => 'Usia Produktif / Angkatan Kerja (15 – 55 Tahun)', 'nilai' => ($data_demografi['usia_produktif'] ?? '1.169') . ' Orang'],
+                        ['label' => 'Usia Dewasa / Pra-Lansia (56 – 64 Tahun)', 'nilai' => ($data_demografi['usia_pralansia'] ?? '280') . ' Orang'],
+                        ['label' => 'Usia Lansia (65+ Tahun)', 'nilai' => ($data_demografi['usia_lansia'] ?? '207') . ' Orang']
+                    ],
+                    'pekerjaan' => [
+                        ['label' => 'Petani Pemilik Lahan Utama', 'nilai' => ($data_demografi['petani_utama'] ?? '986') . ' Orang'],
+                        ['label' => 'Buruh Tani', 'nilai' => ($data_demografi['buruh_tani'] ?? '457') . ' Orang'],
+                        ['label' => 'Total Angkatan Kerja Aktif (Usia 15-55 Thn)', 'nilai' => ($data_demografi['angkatan_kerja'] ?? '1.169') . ' Orang'],
+                        ['label' => 'Belum / Dalam Pencarian Kerja', 'nilai' => ($data_demografi['belum_kerja'] ?? '55') . ' Orang']
+                    ],
+                    'kesejahteraan' => [
+                        ['label' => 'KK Prasejahtera (Miskin)', 'nilai' => ($data_demografi['kk_miskin'] ?? '450') . ' KK'],
+                        ['label' => 'KK Ekonomi Menengah (Sedang)', 'nilai' => ($data_demografi['kk_sedang'] ?? '300') . ' KK'],
+                        ['label' => 'KK Ekonomi Sejahtera (Kaya)', 'nilai' => ($data_demografi['kk_kaya'] ?? '11') . ' KK']
+                    ],
+                    'pendidikan_ternak' => [
+                        ['label' => 'Jumlah Agama Islam (Orang)', 'nilai' => ($data_demografi['agama_islam'] ?? '2.113') . ' Orang'],
+                        ['label' => 'Belum / Tidak Tamat SD (Orang)', 'nilai' => ($data_demografi['pendidikan_sd'] ?? '542') . ' Orang'],
+                        ['label' => 'Lulusan Sarjana S-1 (Orang)', 'nilai' => ($data_demografi['pendidikan_s1'] ?? '40') . ' Orang'],
+                        ['label' => 'Populasi Ternak Ayam & Itik (Ekor)', 'nilai' => ($data_demografi['ternak_ayam'] ?? '450') . ' Ekor'],
+                        ['label' => 'Populasi Ternak Kambing (Ekor)', 'nilai' => ($data_demografi['ternak_kambing'] ?? '170') . ' Ekor'],
+                        ['label' => 'Populasi Ternak Sapi (Ekor)', 'nilai' => ($data_demografi['ternak_sapi'] ?? '76') . ' Ekor']
+                    ]
+                ];
+                Setting::set('data_demografi', json_encode($data_demografi));
+            }
         }
 
         return view('admin.pengaturan', compact('slides', 'tentang', 'layanan_cards', 'data_potensi', 'data_perangkat', 'data_apbdes', 'data_demografi'));
@@ -279,30 +345,15 @@ class AdminSettingController extends Controller
             Setting::set('data_potensi', json_encode($new_potensi));
         }
 
-        // 6. Update Transparansi APBDes (Multi-Tahun)
+        // 6. Update Transparansi APBDes (Multi-Tahun & Dynamic Item Boxes)
         if ($request->has('apbdes_tahun')) {
             $tahuns = $request->input('apbdes_tahun', []);
             $status_list = $request->input('apbdes_status', []);
             $pendapatan_total_list = $request->input('apbdes_pendapatan_total', []);
-            $pad_list = $request->input('apbdes_pad', []);
-            $dd_list = $request->input('apbdes_dd', []);
-            $add_list = $request->input('apbdes_add', []);
-            $pdrd_list = $request->input('apbdes_pdrd', []);
-            $bk_list = $request->input('apbdes_bk', []);
-            $dll_list = $request->input('apbdes_dll', []);
             $ket_pendapatan_list = $request->input('apbdes_keterangan_pendapatan', []);
-
             $belanja_total_list = $request->input('apbdes_belanja_total', []);
-            $belanja_pemerintahan_list = $request->input('apbdes_belanja_pemerintahan', []);
-            $belanja_pembangunan_list = $request->input('apbdes_belanja_pembangunan', []);
-            $belanja_pembinaan_list = $request->input('apbdes_belanja_pembinaan', []);
-            $belanja_pemberdayaan_list = $request->input('apbdes_belanja_pemberdayaan', []);
-            $belanja_bencana_list = $request->input('apbdes_belanja_bencana', []);
             $ket_belanja_list = $request->input('apbdes_keterangan_belanja', []);
-
             $pembiayaan_total_list = $request->input('apbdes_pembiayaan_total', []);
-            $penerimaan_pembiayaan_list = $request->input('apbdes_penerimaan_pembiayaan', []);
-            $pengeluaran_pembiayaan_list = $request->input('apbdes_pengeluaran_pembiayaan', []);
             $ket_pembiayaan_list = $request->input('apbdes_keterangan_pembiayaan', []);
 
             $new_apbdes = [];
@@ -310,29 +361,58 @@ class AdminSettingController extends Controller
                 $thn = trim($thn);
                 if (empty($thn)) continue;
 
+                // Pendapatan Items
+                $p_labels = $request->input("apbdes_pendapatan_label_{$idx}", []);
+                $p_values = $request->input("apbdes_pendapatan_nilai_{$idx}", []);
+                $pendapatan_items = [];
+                foreach ($p_labels as $pIdx => $pLab) {
+                    if (!empty(trim($pLab))) {
+                        $pendapatan_items[] = [
+                            'label' => $pLab,
+                            'nilai' => $p_values[$pIdx] ?? 'Rp 0,00'
+                        ];
+                    }
+                }
+
+                // Belanja Items
+                $b_labels = $request->input("apbdes_belanja_label_{$idx}", []);
+                $b_values = $request->input("apbdes_belanja_nilai_{$idx}", []);
+                $belanja_items = [];
+                foreach ($b_labels as $bIdx => $bLab) {
+                    if (!empty(trim($bLab))) {
+                        $belanja_items[] = [
+                            'label' => $bLab,
+                            'nilai' => $b_values[$bIdx] ?? 'Rp 0,00'
+                        ];
+                    }
+                }
+
+                // Pembiayaan Items
+                $pb_labels = $request->input("apbdes_pembiayaan_label_{$idx}", []);
+                $pb_values = $request->input("apbdes_pembiayaan_nilai_{$idx}", []);
+                $pembiayaan_items = [];
+                foreach ($pb_labels as $pbIdx => $pbLab) {
+                    if (!empty(trim($pbLab))) {
+                        $pembiayaan_items[] = [
+                            'label' => $pbLab,
+                            'nilai' => $pb_values[$pbIdx] ?? 'Rp 0,00'
+                        ];
+                    }
+                }
+
                 $new_apbdes[$thn] = [
                     'tahun' => $thn,
-                    'status' => $status_list[$idx] ?? 'Murni (Berjalan)',
+                    'status' => $status_list[$idx] ?? 'Murni (Tahun Berjalan)',
                     'pendapatan_total' => $pendapatan_total_list[$idx] ?? 'Rp 0,00',
-                    'pad' => $pad_list[$idx] ?? 'Rp 0,00',
-                    'dd' => $dd_list[$idx] ?? 'Rp 0,00',
-                    'add' => $add_list[$idx] ?? 'Rp 0,00',
-                    'pdrd' => $pdrd_list[$idx] ?? 'Rp 0,00',
-                    'bk' => $bk_list[$idx] ?? 'Rp 0,00',
-                    'dll' => $dll_list[$idx] ?? 'Rp 0,00',
+                    'pendapatan_items' => $pendapatan_items,
                     'keterangan_pendapatan' => $ket_pendapatan_list[$idx] ?? '',
 
                     'belanja_total' => $belanja_total_list[$idx] ?? 'Rp 0,00',
-                    'belanja_pemerintahan' => $belanja_pemerintahan_list[$idx] ?? 'Rp 0,00',
-                    'belanja_pembangunan' => $belanja_pembangunan_list[$idx] ?? 'Rp 0,00',
-                    'belanja_pembinaan' => $belanja_pembinaan_list[$idx] ?? 'Rp 0,00',
-                    'belanja_pemberdayaan' => $belanja_pemberdayaan_list[$idx] ?? 'Rp 0,00',
-                    'belanja_bencana' => $belanja_bencana_list[$idx] ?? 'Rp 0,00',
+                    'belanja_items' => $belanja_items,
                     'keterangan_belanja' => $ket_belanja_list[$idx] ?? '',
 
                     'pembiayaan_total' => $pembiayaan_total_list[$idx] ?? 'Rp 0,00',
-                    'penerimaan_pembiayaan' => $penerimaan_pembiayaan_list[$idx] ?? 'Rp 0,00',
-                    'pengeluaran_pembiayaan' => $pengeluaran_pembiayaan_list[$idx] ?? 'Rp 0,00',
+                    'pembiayaan_items' => $pembiayaan_items,
                     'keterangan_pembiayaan' => $ket_pembiayaan_list[$idx] ?? ''
                 ];
             }
@@ -343,12 +423,35 @@ class AdminSettingController extends Controller
             Setting::set('data_apbdes', json_encode($new_apbdes));
         }
 
-        // 7. Update Statistik Demografi (Kependudukan)
-        if ($request->has('demografi')) {
-            Setting::set('data_demografi', json_encode($request->input('demografi')));
+        // 7. Update Statistik Demografi (Dynamic Item Boxes)
+        if ($request->has('demo_pokok_label')) {
+            $collectItems = function($labelKey, $nilaiKey) use ($request) {
+                $labels = $request->input($labelKey, []);
+                $values = $request->input($nilaiKey, []);
+                $result = [];
+                foreach ($labels as $idx => $lbl) {
+                    if (!empty(trim($lbl))) {
+                        $result[] = [
+                            'label' => $lbl,
+                            'nilai' => $values[$idx] ?? ''
+                        ];
+                    }
+                }
+                return $result;
+            };
+
+            $new_demografi = [
+                'pokok' => $collectItems('demo_pokok_label', 'demo_pokok_nilai'),
+                'usia' => $collectItems('demo_usia_label', 'demo_usia_nilai'),
+                'pekerjaan' => $collectItems('demo_pekerjaan_label', 'demo_pekerjaan_nilai'),
+                'kesejahteraan' => $collectItems('demo_kesejahteraan_label', 'demo_kesejahteraan_nilai'),
+                'pendidikan_ternak' => $collectItems('demo_pendidikan_ternak_label', 'demo_pendidikan_ternak_nilai')
+            ];
+
+            Setting::set('data_demografi', json_encode($new_demografi));
         }
 
-        return redirect('/admin/pengaturan')->with('success', 'Pengaturan Beranda, APBDes Rekap Tahunan & Demografi berhasil disimpan!');
+        return redirect('/admin/pengaturan')->with('success', 'Pengaturan Beranda, APBDes Rekap & Demografi Kependudukan berhasil disimpan!');
     }
 
     // Mendapatkan data default Rincian APBDes & Sumber Dana Rekap Multi-Tahun
@@ -359,50 +462,62 @@ class AdminSettingController extends Controller
                 'tahun' => '2026',
                 'status' => 'Murni (Tahun Berjalan)',
                 'pendapatan_total' => 'Rp 1.663.629.803,00',
-                'pad' => 'Rp 230.760.000,00',
-                'dd' => 'Rp 303.093.000,00',
-                'add' => 'Rp 376.615.000,00',
-                'pdrd' => 'Rp 85.805.300,00',
-                'bk' => 'Rp 539.600.603,00',
-                'dll' => 'Rp 127.755.900,00',
+                'pendapatan_items' => [
+                    ['label' => 'Pendapatan Asli Desa (PAD)', 'nilai' => 'Rp 230.760.000,00'],
+                    ['label' => 'Dana Desa (DD - APBN Pusat)', 'nilai' => 'Rp 303.093.000,00'],
+                    ['label' => 'Alokasi Dana Desa (ADD - APBD Jombang)', 'nilai' => 'Rp 376.615.000,00'],
+                    ['label' => 'Bagi Hasil Pajak & Retribusi (PDRD)', 'nilai' => 'Rp 85.805.300,00'],
+                    ['label' => 'Bantuan Keuangan (BK Provinsi/Kabupaten)', 'nilai' => 'Rp 539.600.603,00'],
+                    ['label' => 'Lain-Lain Pendapatan Desa Sah (DLL)', 'nilai' => 'Rp 127.755.900,00']
+                ],
                 'keterangan_pendapatan' => 'Sumber penerimaan APBDes 2026 berasal dari Pendapatan Asli Desa (PAD), Dana Desa (DD APBN Pusat), Alokasi Dana Desa (ADD APBD Kab. Jombang), Bagi Hasil Pajak & Retribusi Daerah (PDRD), Bantuan Keuangan (BK Provinsi/Kabupaten), serta Lain-Lain Pendapatan Desa Sah.',
 
                 'belanja_total' => 'Rp 1.676.895.127,92',
-                'belanja_pemerintahan' => 'Rp 866.594.524,92',
-                'belanja_pembangunan' => 'Rp 582.090.603,00',
-                'belanja_pembinaan' => 'Rp 42.450.000,00',
-                'belanja_pemberdayaan' => 'Rp 158.000.000,00',
-                'belanja_bencana' => 'Rp 27.760.000,00',
+                'belanja_items' => [
+                    ['label' => 'Penyelenggaraan Pemerintahan Desa', 'nilai' => 'Rp 866.594.524,92'],
+                    ['label' => 'Pelaksanaan Pembangunan Desa', 'nilai' => 'Rp 582.090.603,00'],
+                    ['label' => 'Pembinaan Kemasyarakatan', 'nilai' => 'Rp 42.450.000,00'],
+                    ['label' => 'Pemberdayaan Masyarakat', 'nilai' => 'Rp 158.000.000,00'],
+                    ['label' => 'Penanggulangan Bencana & Keadaan Darurat', 'nilai' => 'Rp 27.760.000,00']
+                ],
                 'keterangan_belanja' => 'Pengalokasian anggaran belanja desa diprioritaskan untuk Penyelenggaraan Pemerintahan Desa, Pembangunan Sarana & Prasarana Desa, Pembinaan Kemasyarakatan, Pemberdayaan Masyarakat, serta Penanggulangan Bencana/Darurat.',
 
                 'pembiayaan_total' => 'Rp 13.265.324,92',
-                'penerimaan_pembiayaan' => 'Rp 13.265.324,92',
-                'pengeluaran_pembiayaan' => 'Rp 0,00',
+                'pembiayaan_items' => [
+                    ['label' => 'Penerimaan Pembiayaan (SiLPA)', 'nilai' => 'Rp 13.265.324,92'],
+                    ['label' => 'Pengeluaran Pembiayaan', 'nilai' => 'Rp 0,00']
+                ],
                 'keterangan_pembiayaan' => 'Penerimaan Pembiayaan Netto berasal dari Sisa Lebih Perhitungan Anggaran (SiLPA) tahun anggaran sebelumnya.'
             ],
             '2025' => [
                 'tahun' => '2025',
                 'status' => 'Laporan Realisasi / LPJ',
                 'pendapatan_total' => 'Rp 1.540.210.000,00',
-                'pad' => 'Rp 210.500.000,00',
-                'dd' => 'Rp 295.000.000,00',
-                'add' => 'Rp 360.200.000,00',
-                'pdrd' => 'Rp 78.510.000,00',
-                'bk' => 'Rp 480.000.000,00',
-                'dll' => 'Rp 116.000.000,00',
+                'pendapatan_items' => [
+                    ['label' => 'Pendapatan Asli Desa (PAD)', 'nilai' => 'Rp 210.500.000,00'],
+                    ['label' => 'Dana Desa (DD - APBN Pusat)', 'nilai' => 'Rp 295.000.000,00'],
+                    ['label' => 'Alokasi Dana Desa (ADD - APBD Jombang)', 'nilai' => 'Rp 360.200.000,00'],
+                    ['label' => 'Bagi Hasil Pajak & Retribusi (PDRD)', 'nilai' => 'Rp 78.510.000,00'],
+                    ['label' => 'Bantuan Keuangan (BK Provinsi/Kabupaten)', 'nilai' => 'Rp 480.000.000,00'],
+                    ['label' => 'Lain-Lain Pendapatan Desa Sah (DLL)', 'nilai' => 'Rp 116.000.000,00']
+                ],
                 'keterangan_pendapatan' => 'Realisasi penerimaan APBDes Tahun Anggaran 2025 dari seluruh pos pendapatan sah.',
 
                 'belanja_total' => 'Rp 1.535.100.000,00',
-                'belanja_pemerintahan' => 'Rp 790.000.000,00',
-                'belanja_pembangunan' => 'Rp 530.000.000,00',
-                'belanja_pembinaan' => 'Rp 38.500.000,00',
-                'belanja_pemberdayaan' => 'Rp 151.600.000,00',
-                'belanja_bencana' => 'Rp 25.000.000,00',
+                'belanja_items' => [
+                    ['label' => 'Penyelenggaraan Pemerintahan Desa', 'nilai' => 'Rp 790.000.000,00'],
+                    ['label' => 'Pelaksanaan Pembangunan Desa', 'nilai' => 'Rp 530.000.000,00'],
+                    ['label' => 'Pembinaan Kemasyarakatan', 'nilai' => 'Rp 38.500.000,00'],
+                    ['label' => 'Pemberdayaan Masyarakat', 'nilai' => 'Rp 151.600.000,00'],
+                    ['label' => 'Penanggulangan Bencana & Keadaan Darurat', 'nilai' => 'Rp 25.000.000,00']
+                ],
                 'keterangan_belanja' => 'Realisasi belanja APBDes Tahun Anggaran 2025 untuk pembangunan dan pelayanan masyarakat.',
 
                 'pembiayaan_total' => 'Rp 5.110.000,00',
-                'penerimaan_pembiayaan' => 'Rp 5.110.000,00',
-                'pengeluaran_pembiayaan' => 'Rp 0,00',
+                'pembiayaan_items' => [
+                    ['label' => 'Penerimaan Pembiayaan (SiLPA)', 'nilai' => 'Rp 5.110.000,00'],
+                    ['label' => 'Pengeluaran Pembiayaan', 'nilai' => 'Rp 0,00']
+                ],
                 'keterangan_pembiayaan' => 'Sisa Lebih Perhitungan Anggaran (SiLPA) Tahun Anggaran 2025.'
             ]
         ];
@@ -412,28 +527,38 @@ class AdminSettingController extends Controller
     private function getDefaultDemografi()
     {
         return [
-            'total_penduduk' => '2.113',
-            'total_kk' => '761',
-            'laki_laki' => '1.042',
-            'perempuan' => '1.071',
-            'usia_balita' => '145',
-            'usia_anak' => '312',
-            'usia_produktif' => '1.169',
-            'usia_pralansia' => '280',
-            'usia_lansia' => '207',
-            'petani_utama' => '986',
-            'buruh_tani' => '457',
-            'angkatan_kerja' => '1.169',
-            'belum_kerja' => '55',
-            'kk_miskin' => '450',
-            'kk_sedang' => '300',
-            'kk_kaya' => '11',
-            'agama_islam' => '2.113',
-            'pendidikan_sd' => '542',
-            'pendidikan_s1' => '40',
-            'ternak_ayam' => '450',
-            'ternak_kambing' => '170',
-            'ternak_sapi' => '76'
+            'pokok' => [
+                ['label' => 'Total Penduduk (Jiwa)', 'nilai' => '2.113'],
+                ['label' => 'Total Kepala Keluarga (KK)', 'nilai' => '761'],
+                ['label' => 'Penduduk Laki-Laki (Jiwa)', 'nilai' => '1.042'],
+                ['label' => 'Penduduk Perempuan (Jiwa)', 'nilai' => '1.071']
+            ],
+            'usia' => [
+                ['label' => 'Usia Balita (0 – 4 Tahun)', 'nilai' => '145 Orang'],
+                ['label' => 'Usia Anak-Anak (5 – 14 Tahun)', 'nilai' => '312 Orang'],
+                ['label' => 'Usia Produktif / Angkatan Kerja (15 – 55 Tahun)', 'nilai' => '1.169 Orang'],
+                ['label' => 'Usia Dewasa / Pra-Lansia (56 – 64 Tahun)', 'nilai' => '280 Orang'],
+                ['label' => 'Usia Lansia (65+ Tahun)', 'nilai' => '207 Orang']
+            ],
+            'pekerjaan' => [
+                ['label' => 'Petani Pemilik Lahan Utama', 'nilai' => '986 Orang'],
+                ['label' => 'Buruh Tani', 'nilai' => '457 Orang'],
+                ['label' => 'Total Angkatan Kerja Aktif (Usia 15-55 Thn)', 'nilai' => '1.169 Orang'],
+                ['label' => 'Belum / Dalam Pencarian Kerja', 'nilai' => '55 Orang']
+            ],
+            'kesejahteraan' => [
+                ['label' => 'KK Prasejahtera (Miskin)', 'nilai' => '450 KK'],
+                ['label' => 'KK Ekonomi Menengah (Sedang)', 'nilai' => '300 KK'],
+                ['label' => 'KK Ekonomi Sejahtera (Kaya)', 'nilai' => '11 KK']
+            ],
+            'pendidikan_ternak' => [
+                ['label' => 'Jumlah Agama Islam (Orang)', 'nilai' => '2.113 Orang'],
+                ['label' => 'Belum / Tidak Tamat SD (Orang)', 'nilai' => '542 Orang'],
+                ['label' => 'Lulusan Sarjana S-1 (Orang)', 'nilai' => '40 Orang'],
+                ['label' => 'Populasi Ternak Ayam & Itik (Ekor)', 'nilai' => '450 Ekor'],
+                ['label' => 'Populasi Ternak Kambing (Ekor)', 'nilai' => '170 Ekor'],
+                ['label' => 'Populasi Ternak Sapi (Ekor)', 'nilai' => '76 Ekor']
+            ]
         ];
     }
 

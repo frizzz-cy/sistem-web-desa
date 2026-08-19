@@ -259,12 +259,13 @@
                         + Tambah Tahun Anggaran Baru
                     </button>
                 </div>
-                <p style="margin-top:0; margin-bottom:16px; font-size:12.5px; color:var(--teks-muted);">Kelola data rincian APBDes untuk setiap tahun anggaran. Warga dapat melihat jejak rekapitulasi dan memilih tahun anggaran di modal Informasi Publik Beranda.</p>
+                <p style="margin-top:0; margin-bottom:16px; font-size:12.5px; color:var(--teks-muted);">Kelola data rincian APBDes untuk setiap tahun anggaran. Anda dapat menambah atau mengurangi kotak pos anggaran secara bebas menggunakan tombol tambah (+).</p>
 
                 <div id="apbdes-years-container" style="display:flex; flex-direction:column; gap:24px;">
                     @php $ap_list = $data_apbdes ?? []; @endphp
                     @foreach($ap_list as $thnKey => $ap)
-                        <div class="apbdes-year-card" style="border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 20px; background: #F8FAFC; position: relative;">
+                        @php $yearIdx = $loop->index; @endphp
+                        <div class="apbdes-year-card" data-year-idx="{{ $yearIdx }}" style="border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 20px; background: #F8FAFC; position: relative;">
                             <!-- Header Tahun -->
                             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px; border-bottom:1px solid #E2E8F0; padding-bottom:12px;">
                                 <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
@@ -284,41 +285,30 @@
 
                             <!-- 1. PENDAPATAN DESA -->
                             <div style="background:#FFF; border:1px solid #BAE6FD; border-left:4px solid #0284C7; border-radius:8px; padding:16px; margin-bottom:16px;">
-                                <h4 style="margin:0 0 12px; font-size:14px; color:#0369A1; display:flex; justify-content:space-between; align-items:center;">
-                                    <span>1. Pendapatan Desa &amp; Sumber Dana</span>
-                                    <span style="font-size:11px; background:#E0F2FE; padding:3px 8px; border-radius:4px; font-weight:600;">Pos Penerimaan</span>
-                                </h4>
-                                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label style="font-size:12px; font-weight:700; color:#0369A1;">Total Pendapatan Desa</label>
-                                        <input type="text" name="apbdes_pendapatan_total[]" value="{{ $ap['pendapatan_total'] ?? 'Rp 0,00' }}" required>
-                                    </div>
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label style="font-size:12px;">PAD (Pendapatan Asli Desa)</label>
-                                        <input type="text" name="apbdes_pad[]" value="{{ $ap['pad'] ?? 'Rp 0,00' }}" required>
-                                    </div>
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label style="font-size:12px;">DD (Dana Desa APBN Pusat)</label>
-                                        <input type="text" name="apbdes_dd[]" value="{{ $ap['dd'] ?? 'Rp 0,00' }}" required>
-                                    </div>
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label style="font-size:12px;">ADD (Alokasi Dana Desa Jombang)</label>
-                                        <input type="text" name="apbdes_add[]" value="{{ $ap['add'] ?? 'Rp 0,00' }}" required>
-                                    </div>
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label style="font-size:12px;">PDRD (Bagi Hasil Pajak &amp; Retribusi)</label>
-                                        <input type="text" name="apbdes_pdrd[]" value="{{ $ap['pdrd'] ?? 'Rp 0,00' }}" required>
-                                    </div>
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label style="font-size:12px;">BK (Bantuan Keuangan Kab/Prov)</label>
-                                        <input type="text" name="apbdes_bk[]" value="{{ $ap['bk'] ?? 'Rp 0,00' }}" required>
-                                    </div>
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label style="font-size:12px;">DLL (Pendapatan Lain-Lain Sah)</label>
-                                        <input type="text" name="apbdes_dll[]" value="{{ $ap['dll'] ?? 'Rp 0,00' }}" required>
-                                    </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                                    <h4 style="margin:0; font-size:14px; color:#0369A1;">1. Pendapatan Desa &amp; Sumber Dana</h4>
+                                    <button type="button" onclick="tambahItemBox('pendapatan', {{ $yearIdx }})" style="font-size:11.5px; padding:4px 10px; background:#E0F2FE; color:#0369A1; border:1px solid #BAE6FD; border-radius:6px; font-weight:700; cursor:pointer;">
+                                        + Tambah Pos Pendapatan
+                                    </button>
                                 </div>
-                                <div class="form-group" style="margin-top:12px; margin-bottom:0;">
+
+                                <div class="form-group" style="margin-bottom:12px;">
+                                    <label style="font-size:12px; font-weight:700; color:#0369A1;">Total Pendapatan Desa (Header Total)</label>
+                                    <input type="text" name="apbdes_pendapatan_total[]" value="{{ $ap['pendapatan_total'] ?? 'Rp 0,00' }}" required>
+                                </div>
+
+                                <div class="item-boxes-container" id="container-pendapatan-{{ $yearIdx }}" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
+                                    @php $p_items = $ap['pendapatan_items'] ?? []; @endphp
+                                    @foreach($p_items as $item)
+                                        <div class="dynamic-item-row" style="display:flex; align-items:center; gap:8px;">
+                                            <input type="text" name="apbdes_pendapatan_label_{{ $yearIdx }}[]" value="{{ $item['label'] ?? '' }}" placeholder="Kotak A: Nama Pos (misal: Pendapatan Asli Desa)" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px;" required>
+                                            <input type="text" name="apbdes_pendapatan_nilai_{{ $yearIdx }}[]" value="{{ $item['nilai'] ?? '' }}" placeholder="Kotak B: Nilai / Nominal (misal: Rp 230.760.000,00)" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
+                                            <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                <div class="form-group" style="margin-bottom:0;">
                                     <label style="font-size:12px;">Catatan Keterangan Sumber Dana Pendapatan</label>
                                     <textarea name="apbdes_keterangan_pendapatan[]" rows="2" required placeholder="Jelaskan dari mana saja dana pendapatan desa berasal...">{{ $ap['keterangan_pendapatan'] ?? '' }}</textarea>
                                 </div>
@@ -326,37 +316,30 @@
 
                             <!-- 2. BELANJA DESA -->
                             <div style="background:#FFF; border:1px solid #FECACA; border-left:4px solid #EF4444; border-radius:8px; padding:16px; margin-bottom:16px;">
-                                <h4 style="margin:0 0 12px; font-size:14px; color:#B91C1C; display:flex; justify-content:space-between; align-items:center;">
-                                    <span>2. Belanja Desa &amp; Alokasi Bidang</span>
-                                    <span style="font-size:11px; background:#FEE2E2; padding:3px 8px; border-radius:4px; font-weight:600;">Pos Pengeluaran</span>
-                                </h4>
-                                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label style="font-size:12px; font-weight:700; color:#B91C1C;">Total Belanja Desa</label>
-                                        <input type="text" name="apbdes_belanja_total[]" value="{{ $ap['belanja_total'] ?? 'Rp 0,00' }}" required>
-                                    </div>
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label style="font-size:12px;">Penyelenggaraan Pemerintahan Desa</label>
-                                        <input type="text" name="apbdes_belanja_pemerintahan[]" value="{{ $ap['belanja_pemerintahan'] ?? 'Rp 0,00' }}" required>
-                                    </div>
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label style="font-size:12px;">Pelaksanaan Pembangunan Desa</label>
-                                        <input type="text" name="apbdes_belanja_pembangunan[]" value="{{ $ap['belanja_pembangunan'] ?? 'Rp 0,00' }}" required>
-                                    </div>
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label style="font-size:12px;">Pembinaan Kemasyarakatan</label>
-                                        <input type="text" name="apbdes_belanja_pembinaan[]" value="{{ $ap['belanja_pembinaan'] ?? 'Rp 0,00' }}" required>
-                                    </div>
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label style="font-size:12px;">Pemberdayaan Masyarakat</label>
-                                        <input type="text" name="apbdes_belanja_pemberdayaan[]" value="{{ $ap['belanja_pemberdayaan'] ?? 'Rp 0,00' }}" required>
-                                    </div>
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label style="font-size:12px;">Penanggulangan Bencana &amp; Darurat</label>
-                                        <input type="text" name="apbdes_belanja_bencana[]" value="{{ $ap['belanja_bencana'] ?? 'Rp 0,00' }}" required>
-                                    </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                                    <h4 style="margin:0; font-size:14px; color:#B91C1C;">2. Belanja Desa &amp; Alokasi Bidang</h4>
+                                    <button type="button" onclick="tambahItemBox('belanja', {{ $yearIdx }})" style="font-size:11.5px; padding:4px 10px; background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; font-weight:700; cursor:pointer;">
+                                        + Tambah Pos Belanja
+                                    </button>
                                 </div>
-                                <div class="form-group" style="margin-top:12px; margin-bottom:0;">
+
+                                <div class="form-group" style="margin-bottom:12px;">
+                                    <label style="font-size:12px; font-weight:700; color:#B91C1C;">Total Belanja Desa (Header Total)</label>
+                                    <input type="text" name="apbdes_belanja_total[]" value="{{ $ap['belanja_total'] ?? 'Rp 0,00' }}" required>
+                                </div>
+
+                                <div class="item-boxes-container" id="container-belanja-{{ $yearIdx }}" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
+                                    @php $b_items = $ap['belanja_items'] ?? []; @endphp
+                                    @foreach($b_items as $item)
+                                        <div class="dynamic-item-row" style="display:flex; align-items:center; gap:8px;">
+                                            <input type="text" name="apbdes_belanja_label_{{ $yearIdx }}[]" value="{{ $item['label'] ?? '' }}" placeholder="Kotak A: Nama Pos Belanja (misal: Pembangunan Desa)" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px;" required>
+                                            <input type="text" name="apbdes_belanja_nilai_{{ $yearIdx }}[]" value="{{ $item['nilai'] ?? '' }}" placeholder="Kotak B: Nilai / Nominal (misal: Rp 582.090.603,00)" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
+                                            <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                <div class="form-group" style="margin-bottom:0;">
                                     <label style="font-size:12px;">Catatan Keterangan Alokasi Belanja</label>
                                     <textarea name="apbdes_keterangan_belanja[]" rows="2" required placeholder="Jelaskan untuk apa saja alokasi belanja diprioritaskan...">{{ $ap['keterangan_belanja'] ?? '' }}</textarea>
                                 </div>
@@ -364,25 +347,30 @@
 
                             <!-- 3. PEMBIAYAAN DESA -->
                             <div style="background:#FFF; border:1px solid #A7F3D0; border-left:4px solid #10B981; border-radius:8px; padding:16px;">
-                                <h4 style="margin:0 0 12px; font-size:14px; color:#047857; display:flex; justify-content:space-between; align-items:center;">
-                                    <span>3. Pembiayaan Desa (Netto &amp; SiLPA)</span>
-                                    <span style="font-size:11px; background:#D1FAE5; padding:3px 8px; border-radius:4px; font-weight:600;">Pos Pembiayaan</span>
-                                </h4>
-                                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label style="font-size:12px; font-weight:700; color:#047857;">Total Pembiayaan Netto</label>
-                                        <input type="text" name="apbdes_pembiayaan_total[]" value="{{ $ap['pembiayaan_total'] ?? 'Rp 0,00' }}" required>
-                                    </div>
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label style="font-size:12px;">Penerimaan Pembiayaan (SiLPA)</label>
-                                        <input type="text" name="apbdes_penerimaan_pembiayaan[]" value="{{ $ap['penerimaan_pembiayaan'] ?? 'Rp 0,00' }}" required>
-                                    </div>
-                                    <div class="form-group" style="margin-bottom:0;">
-                                        <label style="font-size:12px;">Pengeluaran Pembiayaan</label>
-                                        <input type="text" name="apbdes_pengeluaran_pembiayaan[]" value="{{ $ap['pengeluaran_pembiayaan'] ?? 'Rp 0,00' }}" required>
-                                    </div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                                    <h4 style="margin:0; font-size:14px; color:#047857;">3. Pembiayaan Desa (Netto &amp; SiLPA)</h4>
+                                    <button type="button" onclick="tambahItemBox('pembiayaan', {{ $yearIdx }})" style="font-size:11.5px; padding:4px 10px; background:#D1FAE5; color:#047857; border:1px solid #A7F3D0; border-radius:6px; font-weight:700; cursor:pointer;">
+                                        + Tambah Pos Pembiayaan
+                                    </button>
                                 </div>
-                                <div class="form-group" style="margin-top:12px; margin-bottom:0;">
+
+                                <div class="form-group" style="margin-bottom:12px;">
+                                    <label style="font-size:12px; font-weight:700; color:#047857;">Total Pembiayaan Netto (Header Total)</label>
+                                    <input type="text" name="apbdes_pembiayaan_total[]" value="{{ $ap['pembiayaan_total'] ?? 'Rp 0,00' }}" required>
+                                </div>
+
+                                <div class="item-boxes-container" id="container-pembiayaan-{{ $yearIdx }}" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
+                                    @php $pb_items = $ap['pembiayaan_items'] ?? []; @endphp
+                                    @foreach($pb_items as $item)
+                                        <div class="dynamic-item-row" style="display:flex; align-items:center; gap:8px;">
+                                            <input type="text" name="apbdes_pembiayaan_label_{{ $yearIdx }}[]" value="{{ $item['label'] ?? '' }}" placeholder="Kotak A: Pos Pembiayaan (misal: Penerimaan SiLPA)" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px;" required>
+                                            <input type="text" name="apbdes_pembiayaan_nilai_{{ $yearIdx }}[]" value="{{ $item['nilai'] ?? '' }}" placeholder="Kotak B: Nilai / Nominal (misal: Rp 13.265.324,92)" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
+                                            <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                <div class="form-group" style="margin-bottom:0;">
                                     <label style="font-size:12px;">Catatan Keterangan Pembiayaan</label>
                                     <textarea name="apbdes_keterangan_pembiayaan[]" rows="2" required placeholder="Jelaskan asal usul penerimaan pembiayaan...">{{ $ap['keterangan_pembiayaan'] ?? '' }}</textarea>
                                 </div>
@@ -392,110 +380,107 @@
                 </div>
             </div>
 
-            <!-- SECTION 6: STATISTIK DEMOGRAFI & KEPENDUDUKAN -->
-            <div class="card" style="margin-bottom:30px;">
-                <h3 style="margin-top:0; color:var(--biru-tua); font-size:18px; margin-bottom:6px;">📊 Section 6: Statistik Demografi &amp; Kependudukan</h3>
-                <p style="font-size:13px; color:var(--teks-muted); margin-bottom:20px;">Sesuaikan angka monografi kependudukan, mata pencaharian, tingkat kesejahteraan, dan peternakan warga.</p>
+            <!-- SECTION 6: STATISTIK DEMOGRAFI & KEPENDUDUKAN (DYNAMIC BOXES) -->
+            <div class="setting-section">
+                <div class="section-header">
+                    <span>📊 Section 6: Statistik Demografi &amp; Kependudukan (Form Kotak A &amp; B)</span>
+                </div>
+                <p style="margin-top:0; margin-bottom:20px; font-size:12.5px; color:var(--teks-muted);">Kelola indikator monografi kependudukan, kelompok usia, mata pencaharian, kesejahteraan, dan fasilitas/hewan ternak dengan format kotak pasangan nama &amp; nilai.</p>
 
                 @php $dm = $data_demografi ?? []; @endphp
 
-                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:14px;">
-                    <!-- Pokok Penduduk -->
-                    <div class="form-group">
-                        <label style="font-size:12px;">Total Penduduk (Jiwa)</label>
-                        <input type="text" name="demografi[total_penduduk]" value="{{ old('demografi.total_penduduk', $dm['total_penduduk'] ?? '2.113') }}" required>
+                <!-- 1. DATA POKOK KEPENDUDUKAN -->
+                <div style="background:#F8FAFC; border:1.5px solid #CBD5E1; border-radius:10px; padding:16px; margin-bottom:18px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <h4 style="margin:0; font-size:13.5px; color:var(--biru-tua); font-weight:800;">1. Data Pokok Kependudukan (4 Kartu Highlight)</h4>
+                        <button type="button" onclick="tambahDemoRow('pokok')" style="font-size:11.5px; padding:4px 10px; background:#E0F2FE; color:#0369A1; border:1px solid #BAE6FD; border-radius:6px; font-weight:700; cursor:pointer;">
+                            + Tambah Indikator
+                        </button>
                     </div>
-                    <div class="form-group">
-                        <label style="font-size:12px;">Total Kepala Keluarga (KK)</label>
-                        <input type="text" name="demografi[total_kk]" value="{{ old('demografi.total_kk', $dm['total_kk'] ?? '761') }}" required>
+                    <div id="container-demo-pokok" style="display:flex; flex-direction:column; gap:8px;">
+                        @foreach($dm['pokok'] ?? [] as $item)
+                            <div class="dynamic-item-row" style="display:flex; align-items:center; gap:8px;">
+                                <input type="text" name="demo_pokok_label[]" value="{{ $item['label'] ?? '' }}" placeholder="Kotak A: Nama Indikator (misal: Total Penduduk)" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px;" required>
+                                <input type="text" name="demo_pokok_nilai[]" value="{{ $item['nilai'] ?? '' }}" placeholder="Kotak B: Nilai (misal: 2.113)" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
+                                <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+                            </div>
+                        @endforeach
                     </div>
-                    <div class="form-group">
-                        <label style="font-size:12px;">Penduduk Laki-Laki (Jiwa)</label>
-                        <input type="text" name="demografi[laki_laki]" value="{{ old('demografi.laki_laki', $dm['laki_laki'] ?? '1.042') }}" required>
-                    </div>
-                    <div class="form-group">
-                        <label style="font-size:12px;">Penduduk Perempuan (Jiwa)</label>
-                        <input type="text" name="demografi[perempuan]" value="{{ old('demografi.perempuan', $dm['perempuan'] ?? '1.071') }}" required>
-                    </div>
+                </div>
 
-                    <!-- Kelompok Usia -->
-                    <div class="form-group">
-                        <label style="font-size:12px;">Usia Balita (0 - 4 Thn)</label>
-                        <input type="text" name="demografi[usia_balita]" value="{{ old('demografi.usia_balita', $dm['usia_balita'] ?? '145') }}" required>
+                <!-- 2. KOMPOSISI KELOMPOK USIA -->
+                <div style="background:#F8FAFC; border:1.5px solid #CBD5E1; border-radius:10px; padding:16px; margin-bottom:18px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <h4 style="margin:0; font-size:13.5px; color:#0B3B60; font-weight:800;">2. Komposisi Kelompok Usia Penduduk</h4>
+                        <button type="button" onclick="tambahDemoRow('usia')" style="font-size:11.5px; padding:4px 10px; background:#E0F2FE; color:#0369A1; border:1px solid #BAE6FD; border-radius:6px; font-weight:700; cursor:pointer;">
+                            + Tambah Kelompok Usia
+                        </button>
                     </div>
-                    <div class="form-group">
-                        <label style="font-size:12px;">Usia Anak-Anak (5 - 14 Thn)</label>
-                        <input type="text" name="demografi[usia_anak]" value="{{ old('demografi.usia_anak', $dm['usia_anak'] ?? '312') }}" required>
+                    <div id="container-demo-usia" style="display:flex; flex-direction:column; gap:8px;">
+                        @foreach($dm['usia'] ?? [] as $item)
+                            <div class="dynamic-item-row" style="display:flex; align-items:center; gap:8px;">
+                                <input type="text" name="demo_usia_label[]" value="{{ $item['label'] ?? '' }}" placeholder="Kotak A: Rentang Usia (misal: Usia Balita 0 - 4 Thn)" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px;" required>
+                                <input type="text" name="demo_usia_nilai[]" value="{{ $item['nilai'] ?? '' }}" placeholder="Kotak B: Jumlah (misal: 145 Orang)" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
+                                <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+                            </div>
+                        @endforeach
                     </div>
-                    <div class="form-group">
-                        <label style="font-size:12px;">Usia Produktif (15 - 55 Thn)</label>
-                        <input type="text" name="demografi[usia_produktif]" value="{{ old('demografi.usia_produktif', $dm['usia_produktif'] ?? '1.169') }}" required>
-                    </div>
-                    <div class="form-group">
-                        <label style="font-size:12px;">Usia Pra-Lansia (56 - 64 Thn)</label>
-                        <input type="text" name="demografi[usia_pralansia]" value="{{ old('demografi.usia_pralansia', $dm['usia_pralansia'] ?? '280') }}" required>
-                    </div>
-                    <div class="form-group">
-                        <label style="font-size:12px;">Usia Lansia (65+ Thn)</label>
-                        <input type="text" name="demografi[usia_lansia]" value="{{ old('demografi.usia_lansia', $dm['usia_lansia'] ?? '207') }}" required>
-                    </div>
+                </div>
 
-                    <!-- Pekerjaan & Ekonomi -->
-                    <div class="form-group">
-                        <label style="font-size:12px;">Petani Pemilik Lahan Utama</label>
-                        <input type="text" name="demografi[petani_utama]" value="{{ old('demografi.petani_utama', $dm['petani_utama'] ?? '986') }}" required>
+                <!-- 3. MATA PENCAHARIAN & KETENAGAKERJAAN -->
+                <div style="background:#F8FAFC; border:1.5px solid #CBD5E1; border-radius:10px; padding:16px; margin-bottom:18px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <h4 style="margin:0; font-size:13.5px; color:#1668A3; font-weight:800;">3. Mata Pencaharian &amp; Ketenagakerjaan</h4>
+                        <button type="button" onclick="tambahDemoRow('pekerjaan')" style="font-size:11.5px; padding:4px 10px; background:#E0F2FE; color:#0369A1; border:1px solid #BAE6FD; border-radius:6px; font-weight:700; cursor:pointer;">
+                            + Tambah Pekerjaan
+                        </button>
                     </div>
-                    <div class="form-group">
-                        <label style="font-size:12px;">Buruh Tani</label>
-                        <input type="text" name="demografi[buruh_tani]" value="{{ old('demografi.buruh_tani', $dm['buruh_tani'] ?? '457') }}" required>
+                    <div id="container-demo-pekerjaan" style="display:flex; flex-direction:column; gap:8px;">
+                        @foreach($dm['pekerjaan'] ?? [] as $item)
+                            <div class="dynamic-item-row" style="display:flex; align-items:center; gap:8px;">
+                                <input type="text" name="demo_pekerjaan_label[]" value="{{ $item['label'] ?? '' }}" placeholder="Kotak A: Profesi / Ketenagakerjaan" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px;" required>
+                                <input type="text" name="demo_pekerjaan_nilai[]" value="{{ $item['nilai'] ?? '' }}" placeholder="Kotak B: Jumlah Jiwa (misal: 986 Orang)" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
+                                <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+                            </div>
+                        @endforeach
                     </div>
-                    <div class="form-group">
-                        <label style="font-size:12px;">Angkatan Kerja Aktif (15-55 Thn)</label>
-                        <input type="text" name="demografi[angkatan_kerja]" value="{{ old('demografi.angkatan_kerja', $dm['angkatan_kerja'] ?? '1.169') }}" required>
-                    </div>
-                    <div class="form-group">
-                        <label style="font-size:12px;">Belum / Dalam Pencarian Kerja</label>
-                        <input type="text" name="demografi[belum_kerja]" value="{{ old('demografi.belum_kerja', $dm['belum_kerja'] ?? '55') }}" required>
-                    </div>
+                </div>
 
-                    <!-- Kesejahteraan KK -->
-                    <div class="form-group">
-                        <label style="font-size:12px;">KK Prasejahtera (Miskin)</label>
-                        <input type="text" name="demografi[kk_miskin]" value="{{ old('demografi.kk_miskin', $dm['kk_miskin'] ?? '450') }}" required>
+                <!-- 4. TINGKAT KESEJAHTERAAN KELUARGA (KK) -->
+                <div style="background:#F8FAFC; border:1.5px solid #CBD5E1; border-radius:10px; padding:16px; margin-bottom:18px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <h4 style="margin:0; font-size:13.5px; color:#D4A017; font-weight:800;">4. Tingkat Kesejahteraan Keluarga (KK)</h4>
+                        <button type="button" onclick="tambahDemoRow('kesejahteraan')" style="font-size:11.5px; padding:4px 10px; background:#FEF3C7; color:#B45309; border:1px solid #FDE68A; border-radius:6px; font-weight:700; cursor:pointer;">
+                            + Tambah Kategori KK
+                        </button>
                     </div>
-                    <div class="form-group">
-                        <label style="font-size:12px;">KK Ekonomi Menengah (Sedang)</label>
-                        <input type="text" name="demografi[kk_sedang]" value="{{ old('demografi.kk_sedang', $dm['kk_sedang'] ?? '300') }}" required>
+                    <div id="container-demo-kesejahteraan" style="display:flex; flex-direction:column; gap:8px;">
+                        @foreach($dm['kesejahteraan'] ?? [] as $item)
+                            <div class="dynamic-item-row" style="display:flex; align-items:center; gap:8px;">
+                                <input type="text" name="demo_kesejahteraan_label[]" value="{{ $item['label'] ?? '' }}" placeholder="Kotak A: Tingkat Kesejahteraan" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px;" required>
+                                <input type="text" name="demo_kesejahteraan_nilai[]" value="{{ $item['nilai'] ?? '' }}" placeholder="Kotak B: Jumlah KK (misal: 450 KK)" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
+                                <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+                            </div>
+                        @endforeach
                     </div>
-                    <div class="form-group">
-                        <label style="font-size:12px;">KK Ekonomi Sejahtera (Kaya)</label>
-                        <input type="text" name="demografi[kk_kaya]" value="{{ old('demografi.kk_kaya', $dm['kk_kaya'] ?? '11') }}" required>
-                    </div>
+                </div>
 
-                    <!-- Pendidikan & Peternakan -->
-                    <div class="form-group">
-                        <label style="font-size:12px;">Jumlah Agama Islam (Orang)</label>
-                        <input type="text" name="demografi[agama_islam]" value="{{ old('demografi.agama_islam', $dm['agama_islam'] ?? '2.113') }}" required>
+                <!-- 5. SARANA, PENDIDIKAN, AGAMA & PETERNAKAN -->
+                <div style="background:#F8FAFC; border:1.5px solid #CBD5E1; border-radius:10px; padding:16px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <h4 style="margin:0; font-size:13.5px; color:#047857; font-weight:800;">5. Sarana, Pendidikan, Agama &amp; Peternakan</h4>
+                        <button type="button" onclick="tambahDemoRow('pendidikan_ternak')" style="font-size:11.5px; padding:4px 10px; background:#D1FAE5; color:#047857; border:1px solid #A7F3D0; border-radius:6px; font-weight:700; cursor:pointer;">
+                            + Tambah Data Fasilitas / Ternak
+                        </button>
                     </div>
-                    <div class="form-group">
-                        <label style="font-size:12px;">Belum / Tidak Tamat SD (Orang)</label>
-                        <input type="text" name="demografi[pendidikan_sd]" value="{{ old('demografi.pendidikan_sd', $dm['pendidikan_sd'] ?? '542') }}" required>
-                    </div>
-                    <div class="form-group">
-                        <label style="font-size:12px;">Lulusan Sarjana S-1 (Orang)</label>
-                        <input type="text" name="demografi[pendidikan_s1]" value="{{ old('demografi.pendidikan_s1', $dm['pendidikan_s1'] ?? '40') }}" required>
-                    </div>
-                    <div class="form-group">
-                        <label style="font-size:12px;">Populasi Ternak Ayam &amp; Itik (Ekor)</label>
-                        <input type="text" name="demografi[ternak_ayam]" value="{{ old('demografi.ternak_ayam', $dm['ternak_ayam'] ?? '450') }}" required>
-                    </div>
-                    <div class="form-group">
-                        <label style="font-size:12px;">Populasi Ternak Kambing (Ekor)</label>
-                        <input type="text" name="demografi[ternak_kambing]" value="{{ old('demografi.ternak_kambing', $dm['ternak_kambing'] ?? '170') }}" required>
-                    </div>
-                    <div class="form-group">
-                        <label style="font-size:12px;">Populasi Ternak Sapi (Ekor)</label>
-                        <input type="text" name="demografi[ternak_sapi]" value="{{ old('demografi.ternak_sapi', $dm['ternak_sapi'] ?? '76') }}" required>
+                    <div id="container-demo-pendidikan_ternak" style="display:flex; flex-direction:column; gap:8px;">
+                        @foreach($dm['pendidikan_ternak'] ?? [] as $item)
+                            <div class="dynamic-item-row" style="display:flex; align-items:center; gap:8px;">
+                                <input type="text" name="demo_pendidikan_ternak_label[]" value="{{ $item['label'] ?? '' }}" placeholder="Kotak A: Fasilitas / Ternak" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px;" required>
+                                <input type="text" name="demo_pendidikan_ternak_nilai[]" value="{{ $item['nilai'] ?? '' }}" placeholder="Kotak B: Jumlah / Populasi (misal: 450 Ekor)" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
+                                <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+                            </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -503,20 +488,98 @@
             <!-- Form Actions -->
             <div style="display:flex; justify-content:flex-end; gap:10px; margin-bottom:40px;">
                 <a href="/admin/dashboard" class="btn btn-secondary">Batal</a>
-                <button type="submit" id="btn-simpan" class="btn btn-primary">Simpan Pengaturan</button>
+                <button type="submit" id="btn-simpan" class="btn btn-primary" style="padding:12px 28px; font-size:15px; font-weight:700;">Simpan Pengaturan</button>
             </div>
         </form>
     </div>
 @endsection
 
 @section('scripts')
-    <!-- Script Dinamis untuk Tambah & Hapus Tahun APBDes -->
+    <!-- Script Dinamis untuk Tambah & Hapus Kotak APBDes dan Demografi -->
     <script>
+        // Helper Hapus Baris Item Kotak A & B
+        function hapusItemBox(btn) {
+            const row = btn.closest('.dynamic-item-row');
+            const container = row.parentElement;
+            if (container.children.length <= 1) {
+                alert('Minimal harus ada 1 baris data di bagian ini.');
+                return;
+            }
+            row.remove();
+        }
+
+        // Helper Tambah Baris Kotak Pos APBDes (Pendapatan / Belanja / Pembiayaan)
+        function tambahItemBox(kategori, yearIdx) {
+            const container = document.getElementById(`container-${kategori}-${yearIdx}`);
+            if (!container) return;
+
+            let placeholderA = "Kotak A: Nama Pos";
+            let placeholderB = "Kotak B: Nilai / Nominal (misal: Rp 0,00)";
+            if (kategori === 'pendapatan') {
+                placeholderA = "Kotak A: Pos Pendapatan (misal: PAD, Dana Desa)";
+            } else if (kategori === 'belanja') {
+                placeholderA = "Kotak A: Pos Belanja (misal: Pelaksanaan Pembangunan)";
+            } else if (kategori === 'pembiayaan') {
+                placeholderA = "Kotak A: Pos Pembiayaan (misal: Penerimaan SiLPA)";
+            }
+
+            const row = document.createElement('div');
+            row.className = 'dynamic-item-row';
+            row.style.cssText = 'display:flex; align-items:center; gap:8px;';
+            row.innerHTML = `
+                <input type="text" name="apbdes_${kategori}_label_${yearIdx}[]" value="" placeholder="${placeholderA}" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px;" required>
+                <input type="text" name="apbdes_${kategori}_nilai_${yearIdx}[]" value="Rp 0,00" placeholder="${placeholderB}" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
+                <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+            `;
+            container.appendChild(row);
+        }
+
+        // Helper Tambah Baris Kotak Demografi (Pokok / Usia / Pekerjaan / Kesejahteraan / Pendidikan Ternak)
+        function tambahDemoRow(kategori) {
+            const container = document.getElementById(`container-demo-${kategori}`);
+            if (!container) return;
+
+            let placeholderA = "Kotak A: Nama Kategori";
+            let placeholderB = "Kotak B: Jumlah / Nilai";
+
+            if (kategori === 'pokok') {
+                placeholderA = "Kotak A: Nama Indikator Pokok";
+                placeholderB = "Kotak B: Jumlah Jiwa/KK (misal: 1.000)";
+            } else if (kategori === 'usia') {
+                placeholderA = "Kotak A: Rentang Usia (misal: Usia Remaja 15 - 24 Thn)";
+                placeholderB = "Kotak B: Jumlah Jiwa (misal: 250 Orang)";
+            } else if (kategori === 'pekerjaan') {
+                placeholderA = "Kotak A: Kategori Pekerjaan";
+                placeholderB = "Kotak B: Jumlah Jiwa (misal: 100 Orang)";
+            } else if (kategori === 'kesejahteraan') {
+                placeholderA = "Kotak A: Kategori Kesejahteraan KK";
+                placeholderB = "Kotak B: Jumlah KK (misal: 50 KK)";
+            } else if (kategori === 'pendidikan_ternak') {
+                placeholderA = "Kotak A: Fasilitas / Jenis Hewan Ternak";
+                placeholderB = "Kotak B: Jumlah / Populasi (misal: 80 Ekor)";
+            }
+
+            const row = document.createElement('div');
+            row.className = 'dynamic-item-row';
+            row.style.cssText = 'display:flex; align-items:center; gap:8px;';
+            row.innerHTML = `
+                <input type="text" name="demo_${kategori}_label[]" value="" placeholder="${placeholderA}" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px;" required>
+                <input type="text" name="demo_${kategori}_nilai[]" value="" placeholder="${placeholderB}" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
+                <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+            `;
+            container.appendChild(row);
+        }
+
+        // Helper Tambah Tahun APBDes Baru
         function tambahTahunApbdes() {
             const container = document.getElementById('apbdes-years-container');
             const currentYear = new Date().getFullYear();
+            const yearCards = document.querySelectorAll('.apbdes-year-card');
+            const newYearIdx = yearCards.length;
+
             const yearCard = document.createElement('div');
             yearCard.className = 'apbdes-year-card';
+            yearCard.setAttribute('data-year-idx', newYearIdx);
             yearCard.style.cssText = 'border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 20px; background: #F8FAFC; position: relative;';
             yearCard.innerHTML = `
                 <!-- Header Tahun -->
@@ -538,41 +601,27 @@
 
                 <!-- 1. PENDAPATAN DESA -->
                 <div style="background:#FFF; border:1px solid #BAE6FD; border-left:4px solid #0284C7; border-radius:8px; padding:16px; margin-bottom:16px;">
-                    <h4 style="margin:0 0 12px; font-size:14px; color:#0369A1; display:flex; justify-content:space-between; align-items:center;">
-                        <span>1. Pendapatan Desa &amp; Sumber Dana</span>
-                        <span style="font-size:11px; background:#E0F2FE; padding:3px 8px; border-radius:4px; font-weight:600;">Pos Penerimaan</span>
-                    </h4>
-                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
-                        <div class="form-group" style="margin-bottom:0;">
-                            <label style="font-size:12px; font-weight:700; color:#0369A1;">Total Pendapatan Desa</label>
-                            <input type="text" name="apbdes_pendapatan_total[]" value="Rp 0,00" required>
-                        </div>
-                        <div class="form-group" style="margin-bottom:0;">
-                            <label style="font-size:12px;">PAD (Pendapatan Asli Desa)</label>
-                            <input type="text" name="apbdes_pad[]" value="Rp 0,00" required>
-                        </div>
-                        <div class="form-group" style="margin-bottom:0;">
-                            <label style="font-size:12px;">DD (Dana Desa APBN Pusat)</label>
-                            <input type="text" name="apbdes_dd[]" value="Rp 0,00" required>
-                        </div>
-                        <div class="form-group" style="margin-bottom:0;">
-                            <label style="font-size:12px;">ADD (Alokasi Dana Desa Jombang)</label>
-                            <input type="text" name="apbdes_add[]" value="Rp 0,00" required>
-                        </div>
-                        <div class="form-group" style="margin-bottom:0;">
-                            <label style="font-size:12px;">PDRD (Bagi Hasil Pajak &amp; Retribusi)</label>
-                            <input type="text" name="apbdes_pdrd[]" value="Rp 0,00" required>
-                        </div>
-                        <div class="form-group" style="margin-bottom:0;">
-                            <label style="font-size:12px;">BK (Bantuan Keuangan Kab/Prov)</label>
-                            <input type="text" name="apbdes_bk[]" value="Rp 0,00" required>
-                        </div>
-                        <div class="form-group" style="margin-bottom:0;">
-                            <label style="font-size:12px;">DLL (Pendapatan Lain-Lain Sah)</label>
-                            <input type="text" name="apbdes_dll[]" value="Rp 0,00" required>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                        <h4 style="margin:0; font-size:14px; color:#0369A1;">1. Pendapatan Desa &amp; Sumber Dana</h4>
+                        <button type="button" onclick="tambahItemBox('pendapatan', ${newYearIdx})" style="font-size:11.5px; padding:4px 10px; background:#E0F2FE; color:#0369A1; border:1px solid #BAE6FD; border-radius:6px; font-weight:700; cursor:pointer;">
+                            + Tambah Pos Pendapatan
+                        </button>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom:12px;">
+                        <label style="font-size:12px; font-weight:700; color:#0369A1;">Total Pendapatan Desa (Header Total)</label>
+                        <input type="text" name="apbdes_pendapatan_total[]" value="Rp 0,00" required>
+                    </div>
+
+                    <div class="item-boxes-container" id="container-pendapatan-${newYearIdx}" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
+                        <div class="dynamic-item-row" style="display:flex; align-items:center; gap:8px;">
+                            <input type="text" name="apbdes_pendapatan_label_${newYearIdx}[]" value="Pendapatan Asli Desa (PAD)" placeholder="Kotak A: Nama Pos" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px;" required>
+                            <input type="text" name="apbdes_pendapatan_nilai_${newYearIdx}[]" value="Rp 0,00" placeholder="Kotak B: Nilai / Nominal" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
+                            <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
                         </div>
                     </div>
-                    <div class="form-group" style="margin-top:12px; margin-bottom:0;">
+
+                    <div class="form-group" style="margin-bottom:0;">
                         <label style="font-size:12px;">Catatan Keterangan Sumber Dana Pendapatan</label>
                         <textarea name="apbdes_keterangan_pendapatan[]" rows="2" required placeholder="Jelaskan dari mana saja dana pendapatan desa berasal..."></textarea>
                     </div>
@@ -580,37 +629,27 @@
 
                 <!-- 2. BELANJA DESA -->
                 <div style="background:#FFF; border:1px solid #FECACA; border-left:4px solid #EF4444; border-radius:8px; padding:16px; margin-bottom:16px;">
-                    <h4 style="margin:0 0 12px; font-size:14px; color:#B91C1C; display:flex; justify-content:space-between; align-items:center;">
-                        <span>2. Belanja Desa &amp; Alokasi Bidang</span>
-                        <span style="font-size:11px; background:#FEE2E2; padding:3px 8px; border-radius:4px; font-weight:600;">Pos Pengeluaran</span>
-                    </h4>
-                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
-                        <div class="form-group" style="margin-bottom:0;">
-                            <label style="font-size:12px; font-weight:700; color:#B91C1C;">Total Belanja Desa</label>
-                            <input type="text" name="apbdes_belanja_total[]" value="Rp 0,00" required>
-                        </div>
-                        <div class="form-group" style="margin-bottom:0;">
-                            <label style="font-size:12px;">Penyelenggaraan Pemerintahan Desa</label>
-                            <input type="text" name="apbdes_belanja_pemerintahan[]" value="Rp 0,00" required>
-                        </div>
-                        <div class="form-group" style="margin-bottom:0;">
-                            <label style="font-size:12px;">Pelaksanaan Pembangunan Desa</label>
-                            <input type="text" name="apbdes_belanja_pembangunan[]" value="Rp 0,00" required>
-                        </div>
-                        <div class="form-group" style="margin-bottom:0;">
-                            <label style="font-size:12px;">Pembinaan Kemasyarakatan</label>
-                            <input type="text" name="apbdes_belanja_pembinaan[]" value="Rp 0,00" required>
-                        </div>
-                        <div class="form-group" style="margin-bottom:0;">
-                            <label style="font-size:12px;">Pemberdayaan Masyarakat</label>
-                            <input type="text" name="apbdes_belanja_pemberdayaan[]" value="Rp 0,00" required>
-                        </div>
-                        <div class="form-group" style="margin-bottom:0;">
-                            <label style="font-size:12px;">Penanggulangan Bencana &amp; Darurat</label>
-                            <input type="text" name="apbdes_belanja_bencana[]" value="Rp 0,00" required>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                        <h4 style="margin:0; font-size:14px; color:#B91C1C;">2. Belanja Desa &amp; Alokasi Bidang</h4>
+                        <button type="button" onclick="tambahItemBox('belanja', ${newYearIdx})" style="font-size:11.5px; padding:4px 10px; background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; font-weight:700; cursor:pointer;">
+                            + Tambah Pos Belanja
+                        </button>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom:12px;">
+                        <label style="font-size:12px; font-weight:700; color:#B91C1C;">Total Belanja Desa (Header Total)</label>
+                        <input type="text" name="apbdes_belanja_total[]" value="Rp 0,00" required>
+                    </div>
+
+                    <div class="item-boxes-container" id="container-belanja-${newYearIdx}" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
+                        <div class="dynamic-item-row" style="display:flex; align-items:center; gap:8px;">
+                            <input type="text" name="apbdes_belanja_label_${newYearIdx}[]" value="Penyelenggaraan Pemerintahan Desa" placeholder="Kotak A: Nama Pos Belanja" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px;" required>
+                            <input type="text" name="apbdes_belanja_nilai_${newYearIdx}[]" value="Rp 0,00" placeholder="Kotak B: Nilai / Nominal" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
+                            <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
                         </div>
                     </div>
-                    <div class="form-group" style="margin-top:12px; margin-bottom:0;">
+
+                    <div class="form-group" style="margin-bottom:0;">
                         <label style="font-size:12px;">Catatan Keterangan Alokasi Belanja</label>
                         <textarea name="apbdes_keterangan_belanja[]" rows="2" required placeholder="Jelaskan untuk apa saja alokasi belanja diprioritaskan..."></textarea>
                     </div>
@@ -618,25 +657,27 @@
 
                 <!-- 3. PEMBIAYAAN DESA -->
                 <div style="background:#FFF; border:1px solid #A7F3D0; border-left:4px solid #10B981; border-radius:8px; padding:16px;">
-                    <h4 style="margin:0 0 12px; font-size:14px; color:#047857; display:flex; justify-content:space-between; align-items:center;">
-                        <span>3. Pembiayaan Desa (Netto &amp; SiLPA)</span>
-                        <span style="font-size:11px; background:#D1FAE5; padding:3px 8px; border-radius:4px; font-weight:600;">Pos Pembiayaan</span>
-                    </h4>
-                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
-                        <div class="form-group" style="margin-bottom:0;">
-                            <label style="font-size:12px; font-weight:700; color:#047857;">Total Pembiayaan Netto</label>
-                            <input type="text" name="apbdes_pembiayaan_total[]" value="Rp 0,00" required>
-                        </div>
-                        <div class="form-group" style="margin-bottom:0;">
-                            <label style="font-size:12px;">Penerimaan Pembiayaan (SiLPA)</label>
-                            <input type="text" name="apbdes_penerimaan_pembiayaan[]" value="Rp 0,00" required>
-                        </div>
-                        <div class="form-group" style="margin-bottom:0;">
-                            <label style="font-size:12px;">Pengeluaran Pembiayaan</label>
-                            <input type="text" name="apbdes_pengeluaran_pembiayaan[]" value="Rp 0,00" required>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+                        <h4 style="margin:0; font-size:14px; color:#047857;">3. Pembiayaan Desa (Netto &amp; SiLPA)</h4>
+                        <button type="button" onclick="tambahItemBox('pembiayaan', ${newYearIdx})" style="font-size:11.5px; padding:4px 10px; background:#D1FAE5; color:#047857; border:1px solid #A7F3D0; border-radius:6px; font-weight:700; cursor:pointer;">
+                            + Tambah Pos Pembiayaan
+                        </button>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom:12px;">
+                        <label style="font-size:12px; font-weight:700; color:#047857;">Total Pembiayaan Netto (Header Total)</label>
+                        <input type="text" name="apbdes_pembiayaan_total[]" value="Rp 0,00" required>
+                    </div>
+
+                    <div class="item-boxes-container" id="container-pembiayaan-${newYearIdx}" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
+                        <div class="dynamic-item-row" style="display:flex; align-items:center; gap:8px;">
+                            <input type="text" name="apbdes_pembiayaan_label_${newYearIdx}[]" value="Penerimaan Pembiayaan (SiLPA)" placeholder="Kotak A: Pos Pembiayaan" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px;" required>
+                            <input type="text" name="apbdes_pembiayaan_nilai_${newYearIdx}[]" value="Rp 0,00" placeholder="Kotak B: Nilai / Nominal" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
+                            <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
                         </div>
                     </div>
-                    <div class="form-group" style="margin-top:12px; margin-bottom:0;">
+
+                    <div class="form-group" style="margin-bottom:0;">
                         <label style="font-size:12px;">Catatan Keterangan Pembiayaan</label>
                         <textarea name="apbdes_keterangan_pembiayaan[]" rows="2" required placeholder="Jelaskan asal usul penerimaan pembiayaan..."></textarea>
                     </div>

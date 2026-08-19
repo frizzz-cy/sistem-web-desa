@@ -469,12 +469,18 @@
             <span class="total">{{ $ap['pendapatan_total'] ?? 'Rp 0,00' }}</span>
           </div>
           <div class="apbdes-body">
-            <div class="apbdes-row"><span class="label">Pendapatan Asli Desa (PAD)</span><span class="val">{{ $ap['pad'] ?? 'Rp 0,00' }}</span></div>
-            <div class="apbdes-row"><span class="label">Dana Desa (DD - APBN Pusat)</span><span class="val">{{ $ap['dd'] ?? 'Rp 0,00' }}</span></div>
-            <div class="apbdes-row"><span class="label">Alokasi Dana Desa (ADD - APBD Jombang)</span><span class="val">{{ $ap['add'] ?? 'Rp 0,00' }}</span></div>
-            <div class="apbdes-row"><span class="label">Bagi Hasil Pajak &amp; Retribusi (PDRD)</span><span class="val">{{ $ap['pdrd'] ?? 'Rp 0,00' }}</span></div>
-            <div class="apbdes-row"><span class="label">Bantuan Keuangan (BK Provinsi/Kabupaten)</span><span class="val">{{ $ap['bk'] ?? 'Rp 0,00' }}</span></div>
-            <div class="apbdes-row"><span class="label">Lain-Lain Pendapatan Desa Sah (DLL)</span><span class="val">{{ $ap['dll'] ?? 'Rp 0,00' }}</span></div>
+            @if(!empty($ap['pendapatan_items']))
+              @foreach($ap['pendapatan_items'] as $item)
+                <div class="apbdes-row"><span class="label">{{ $item['label'] ?? '' }}</span><span class="val">{{ $item['nilai'] ?? '' }}</span></div>
+              @endforeach
+            @else
+              <div class="apbdes-row"><span class="label">Pendapatan Asli Desa (PAD)</span><span class="val">{{ $ap['pad'] ?? 'Rp 0,00' }}</span></div>
+              <div class="apbdes-row"><span class="label">Dana Desa (DD - APBN Pusat)</span><span class="val">{{ $ap['dd'] ?? 'Rp 0,00' }}</span></div>
+              <div class="apbdes-row"><span class="label">Alokasi Dana Desa (ADD - APBD Jombang)</span><span class="val">{{ $ap['add'] ?? 'Rp 0,00' }}</span></div>
+              <div class="apbdes-row"><span class="label">Bagi Hasil Pajak &amp; Retribusi (PDRD)</span><span class="val">{{ $ap['pdrd'] ?? 'Rp 0,00' }}</span></div>
+              <div class="apbdes-row"><span class="label">Bantuan Keuangan (BK Provinsi/Kabupaten)</span><span class="val">{{ $ap['bk'] ?? 'Rp 0,00' }}</span></div>
+              <div class="apbdes-row"><span class="label">Lain-Lain Pendapatan Desa Sah (DLL)</span><span class="val">{{ $ap['dll'] ?? 'Rp 0,00' }}</span></div>
+            @endif
 
             @if(!empty($ap['keterangan_pendapatan']))
               <div style="background:#E0F2FE; border-left:3px solid #0284C7; padding:8px 12px; margin-top:10px; border-radius:4px; font-size:12px; color:#0369A1; line-height:1.5;">
@@ -491,11 +497,17 @@
             <span class="total">{{ $ap['belanja_total'] ?? 'Rp 0,00' }}</span>
           </div>
           <div class="apbdes-body">
-            <div class="apbdes-row"><span class="label">Penyelenggaraan Pemerintahan Desa</span><span class="val">{{ $ap['belanja_pemerintahan'] ?? 'Rp 0,00' }}</span></div>
-            <div class="apbdes-row"><span class="label">Pelaksanaan Pembangunan Desa</span><span class="val">{{ $ap['belanja_pembangunan'] ?? 'Rp 0,00' }}</span></div>
-            <div class="apbdes-row"><span class="label">Pembinaan Kemasyarakatan</span><span class="val">{{ $ap['belanja_pembinaan'] ?? 'Rp 0,00' }}</span></div>
-            <div class="apbdes-row"><span class="label">Pemberdayaan Masyarakat</span><span class="val">{{ $ap['belanja_pemberdayaan'] ?? 'Rp 0,00' }}</span></div>
-            <div class="apbdes-row"><span class="label">Penanggulangan Bencana &amp; Keadaan Darurat</span><span class="val">{{ $ap['belanja_bencana'] ?? 'Rp 0,00' }}</span></div>
+            @if(!empty($ap['belanja_items']))
+              @foreach($ap['belanja_items'] as $item)
+                <div class="apbdes-row"><span class="label">{{ $item['label'] ?? '' }}</span><span class="val">{{ $item['nilai'] ?? '' }}</span></div>
+              @endforeach
+            @else
+              <div class="apbdes-row"><span class="label">Penyelenggaraan Pemerintahan Desa</span><span class="val">{{ $ap['belanja_pemerintahan'] ?? 'Rp 0,00' }}</span></div>
+              <div class="apbdes-row"><span class="label">Pelaksanaan Pembangunan Desa</span><span class="val">{{ $ap['belanja_pembangunan'] ?? 'Rp 0,00' }}</span></div>
+              <div class="apbdes-row"><span class="label">Pembinaan Kemasyarakatan</span><span class="val">{{ $ap['belanja_pembinaan'] ?? 'Rp 0,00' }}</span></div>
+              <div class="apbdes-row"><span class="label">Pemberdayaan Masyarakat</span><span class="val">{{ $ap['belanja_pemberdayaan'] ?? 'Rp 0,00' }}</span></div>
+              <div class="apbdes-row"><span class="label">Penanggulangan Bencana &amp; Keadaan Darurat</span><span class="val">{{ $ap['belanja_bencana'] ?? 'Rp 0,00' }}</span></div>
+            @endif
 
             @if(!empty($ap['keterangan_belanja']))
               <div style="background:#FEF2F2; border-left:3px solid #EF4444; padding:8px 12px; margin-top:10px; border-radius:4px; font-size:12px; color:#B91C1C; line-height:1.5;">
@@ -512,8 +524,14 @@
             <span class="total">{{ $ap['pembiayaan_total'] ?? 'Rp 0,00' }}</span>
           </div>
           <div class="apbdes-body">
-            <div class="apbdes-row"><span class="label">Penerimaan Pembiayaan (SiLPA)</span><span class="val">{{ $ap['penerimaan_pembiayaan'] ?? 'Rp 0,00' }}</span></div>
-            <div class="apbdes-row"><span class="label">Pengeluaran Pembiayaan</span><span class="val">{{ $ap['pengeluaran_pembiayaan'] ?? 'Rp 0,00' }}</span></div>
+            @if(!empty($ap['pembiayaan_items']))
+              @foreach($ap['pembiayaan_items'] as $item)
+                <div class="apbdes-row"><span class="label">{{ $item['label'] ?? '' }}</span><span class="val">{{ $item['nilai'] ?? '' }}</span></div>
+              @endforeach
+            @else
+              <div class="apbdes-row"><span class="label">Penerimaan Pembiayaan (SiLPA)</span><span class="val">{{ $ap['penerimaan_pembiayaan'] ?? 'Rp 0,00' }}</span></div>
+              <div class="apbdes-row"><span class="label">Pengeluaran Pembiayaan</span><span class="val">{{ $ap['pengeluaran_pembiayaan'] ?? 'Rp 0,00' }}</span></div>
+            @endif
 
             @if(!empty($ap['keterangan_pembiayaan']))
               <div style="background:#ECFDF5; border-left:3px solid #10B981; padding:8px 12px; margin-top:10px; border-radius:4px; font-size:12px; color:#047857; line-height:1.5;">
@@ -640,27 +658,56 @@
   <div class="modal-informasi-box" style="max-width:800px;">
     <button class="modal-informasi-close" onclick="tutupModalDemografi()">✕</button>
     <h3>Statistik &amp; Data Kependudukan Desa</h3>
-    <div class="sub">Statistik jumlah penduduk, KK, usia, dan sarana-prasarana desa berdasarkan data monografi.</div>
+    <div class="sub">Statistik jumlah penduduk, KK, usia, mata pencaharian, dan kesejahteraan desa berdasarkan data monografi.</div>
 
-    <!-- HIGHLIGHT STATS GRID (4 KARTU ANGKA) -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 20px;">
-      <div style="background: linear-gradient(135deg, #0B3B60, #1668A3); color: #fff; padding: 12px 14px; border-radius: 10px; text-align: center;">
-        <div style="font-size: 22px; font-weight: 800;">{{ $demo['total_penduduk'] ?? '2.113' }}</div>
-        <div style="font-size: 11px; opacity: 0.9; font-weight: 600;">Total Penduduk (Jiwa)</div>
+    @php
+      $demo_pokok = $demo['pokok'] ?? [];
+      $demo_usia = $demo['usia'] ?? [];
+      $demo_pekerjaan = $demo['pekerjaan'] ?? [];
+      $demo_kesejahteraan = $demo['kesejahteraan'] ?? [];
+      $demo_pendidikan_ternak = $demo['pendidikan_ternak'] ?? [];
+    @endphp
+
+    <!-- HIGHLIGHT STATS GRID (KARTU ANGKA) -->
+    @if(!empty($demo_pokok))
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 20px;">
+        @php
+          $bg_gradients = [
+            'linear-gradient(135deg, #0B3B60, #1668A3)',
+            'linear-gradient(135deg, #0F6B58, #15803D)',
+            'linear-gradient(135deg, #0284C7, #0369A1)',
+            'linear-gradient(135deg, #DB2777, #BE185D)',
+            'linear-gradient(135deg, #D4A017, #B45309)',
+            'linear-gradient(135deg, #7C3AED, #6D28D9)'
+          ];
+        @endphp
+        @foreach($demo_pokok as $pIdx => $pItem)
+          <div style="background: {{ $bg_gradients[$pIdx % count($bg_gradients)] }}; color: #fff; padding: 12px 14px; border-radius: 10px; text-align: center;">
+            <div style="font-size: 22px; font-weight: 800;">{{ $pItem['nilai'] ?? '0' }}</div>
+            <div style="font-size: 11px; opacity: 0.9; font-weight: 600;">{{ $pItem['label'] ?? '' }}</div>
+          </div>
+        @endforeach
       </div>
-      <div style="background: linear-gradient(135deg, #0F6B58, #15803D); color: #fff; padding: 12px 14px; border-radius: 10px; text-align: center;">
-        <div style="font-size: 22px; font-weight: 800;">{{ $demo['total_kk'] ?? '761' }}</div>
-        <div style="font-size: 11px; opacity: 0.9; font-weight: 600;">Kepala Keluarga (KK)</div>
+    @elseif(isset($demo['total_penduduk']))
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 20px;">
+        <div style="background: linear-gradient(135deg, #0B3B60, #1668A3); color: #fff; padding: 12px 14px; border-radius: 10px; text-align: center;">
+          <div style="font-size: 22px; font-weight: 800;">{{ $demo['total_penduduk'] ?? '2.113' }}</div>
+          <div style="font-size: 11px; opacity: 0.9; font-weight: 600;">Total Penduduk (Jiwa)</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #0F6B58, #15803D); color: #fff; padding: 12px 14px; border-radius: 10px; text-align: center;">
+          <div style="font-size: 22px; font-weight: 800;">{{ $demo['total_kk'] ?? '761' }}</div>
+          <div style="font-size: 11px; opacity: 0.9; font-weight: 600;">Kepala Keluarga (KK)</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #0284C7, #0369A1); color: #fff; padding: 12px 14px; border-radius: 10px; text-align: center;">
+          <div style="font-size: 22px; font-weight: 800;">{{ $demo['laki_laki'] ?? '1.042' }}</div>
+          <div style="font-size: 11px; opacity: 0.9; font-weight: 600;">Laki-Laki</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #DB2777, #BE185D); color: #fff; padding: 12px 14px; border-radius: 10px; text-align: center;">
+          <div style="font-size: 22px; font-weight: 800;">{{ $demo['perempuan'] ?? '1.071' }}</div>
+          <div style="font-size: 11px; opacity: 0.9; font-weight: 600;">Perempuan</div>
+        </div>
       </div>
-      <div style="background: linear-gradient(135deg, #0284C7, #0369A1); color: #fff; padding: 12px 14px; border-radius: 10px; text-align: center;">
-        <div style="font-size: 22px; font-weight: 800;">{{ $demo['laki_laki'] ?? '1.042' }}</div>
-        <div style="font-size: 11px; opacity: 0.9; font-weight: 600;">Laki-Laki</div>
-      </div>
-      <div style="background: linear-gradient(135deg, #DB2777, #BE185D); color: #fff; padding: 12px 14px; border-radius: 10px; text-align: center;">
-        <div style="font-size: 22px; font-weight: 800;">{{ $demo['perempuan'] ?? '1.071' }}</div>
-        <div style="font-size: 11px; opacity: 0.9; font-weight: 600;">Perempuan</div>
-      </div>
-    </div>
+    @endif
 
     <!-- SEKSI 1: KOMPOSISI KELOMPOK USIA PENDUDUK -->
     <div class="apbdes-section">
@@ -669,11 +716,17 @@
         <span class="total">Demografi Usia</span>
       </div>
       <div class="apbdes-body">
-        <div class="apbdes-row"><span class="label">Usia Balita (0 – 4 Tahun)</span><span class="val">{{ $demo['usia_balita'] ?? '145' }} Orang</span></div>
-        <div class="apbdes-row"><span class="label">Usia Anak-Anak (5 – 14 Tahun)</span><span class="val">{{ $demo['usia_anak'] ?? '312' }} Orang</span></div>
-        <div class="apbdes-row"><span class="label">Usia Produktif / Angkatan Kerja (15 – 55 Tahun)</span><span class="val">{{ $demo['usia_produktif'] ?? '1.169' }} Orang</span></div>
-        <div class="apbdes-row"><span class="label">Usia Dewasa / Pra-Lansia (56 – 64 Tahun)</span><span class="val">{{ $demo['usia_pralansia'] ?? '280' }} Orang</span></div>
-        <div class="apbdes-row"><span class="label">Usia Lansia (65+ Tahun)</span><span class="val">{{ $demo['usia_lansia'] ?? '207' }} Orang</span></div>
+        @if(!empty($demo_usia))
+          @foreach($demo_usia as $uItem)
+            <div class="apbdes-row"><span class="label">{{ $uItem['label'] ?? '' }}</span><span class="val">{{ $uItem['nilai'] ?? '' }}</span></div>
+          @endforeach
+        @else
+          <div class="apbdes-row"><span class="label">Usia Balita (0 – 4 Tahun)</span><span class="val">{{ $demo['usia_balita'] ?? '145' }} Orang</span></div>
+          <div class="apbdes-row"><span class="label">Usia Anak-Anak (5 – 14 Tahun)</span><span class="val">{{ $demo['usia_anak'] ?? '312' }} Orang</span></div>
+          <div class="apbdes-row"><span class="label">Usia Produktif / Angkatan Kerja (15 – 55 Tahun)</span><span class="val">{{ $demo['usia_produktif'] ?? '1.169' }} Orang</span></div>
+          <div class="apbdes-row"><span class="label">Usia Dewasa / Pra-Lansia (56 – 64 Tahun)</span><span class="val">{{ $demo['usia_pralansia'] ?? '280' }} Orang</span></div>
+          <div class="apbdes-row"><span class="label">Usia Lansia (65+ Tahun)</span><span class="val">{{ $demo['usia_lansia'] ?? '207' }} Orang</span></div>
+        @endif
       </div>
     </div>
 
@@ -684,10 +737,16 @@
         <span class="total">Mayoritas Tani</span>
       </div>
       <div class="apbdes-body">
-        <div class="apbdes-row"><span class="label">Petani Pemilik Lahan Utama</span><span class="val">{{ $demo['petani_utama'] ?? '986' }} Orang</span></div>
-        <div class="apbdes-row"><span class="label">Buruh Tani</span><span class="val">{{ $demo['buruh_tani'] ?? '457' }} Orang</span></div>
-        <div class="apbdes-row"><span class="label">Total Angkatan Kerja Aktif (Usia 15-55 Thn)</span><span class="val">{{ $demo['angkatan_kerja'] ?? '1.169' }} Orang</span></div>
-        <div class="apbdes-row"><span class="label">Belum / Dalam Pencarian Kerja</span><span class="val">{{ $demo['belum_kerja'] ?? '55' }} Orang</span></div>
+        @if(!empty($demo_pekerjaan))
+          @foreach($demo_pekerjaan as $pkItem)
+            <div class="apbdes-row"><span class="label">{{ $pkItem['label'] ?? '' }}</span><span class="val">{{ $pkItem['nilai'] ?? '' }}</span></div>
+          @endforeach
+        @else
+          <div class="apbdes-row"><span class="label">Petani Pemilik Lahan Utama</span><span class="val">{{ $demo['petani_utama'] ?? '986' }} Orang</span></div>
+          <div class="apbdes-row"><span class="label">Buruh Tani</span><span class="val">{{ $demo['buruh_tani'] ?? '457' }} Orang</span></div>
+          <div class="apbdes-row"><span class="label">Total Angkatan Kerja Aktif (Usia 15-55 Thn)</span><span class="val">{{ $demo['angkatan_kerja'] ?? '1.169' }} Orang</span></div>
+          <div class="apbdes-row"><span class="label">Belum / Dalam Pencarian Kerja</span><span class="val">{{ $demo['belum_kerja'] ?? '55' }} Orang</span></div>
+        @endif
       </div>
     </div>
 
@@ -695,40 +754,40 @@
     <div class="apbdes-section">
       <div class="apbdes-head" style="background:#D4A017;">
         <span><i class="fas fa-chart-line" style="margin-right:6px;"></i> TINGKAT KESEJAHTERAAN KELUARGA (KK)</span>
-        <span class="total">{{ $demo['total_kk'] ?? '761' }} KK Total</span>
+        <span class="total">Monografi KK</span>
       </div>
       <div class="apbdes-body">
-        <div class="apbdes-row"><span class="label">Masyarakat Ekonomi Prasejahtera (Miskin)</span><span class="val">{{ $demo['kk_miskin'] ?? '450' }} KK</span></div>
-        <div class="apbdes-row"><span class="label">Masyarakat Ekonomi Menengah (Sedang)</span><span class="val">{{ $demo['kk_sedang'] ?? '300' }} KK</span></div>
-        <div class="apbdes-row"><span class="label">Masyarakat Ekonomi Sejahtera (Kaya)</span><span class="val">{{ $demo['kk_kaya'] ?? '11' }} KK</span></div>
+        @if(!empty($demo_kesejahteraan))
+          @foreach($demo_kesejahteraan as $ksItem)
+            <div class="apbdes-row"><span class="label">{{ $ksItem['label'] ?? '' }}</span><span class="val">{{ $ksItem['nilai'] ?? '' }}</span></div>
+          @endforeach
+        @else
+          <div class="apbdes-row"><span class="label">Masyarakat Ekonomi Prasejahtera (Miskin)</span><span class="val">{{ $demo['kk_miskin'] ?? '450' }} KK</span></div>
+          <div class="apbdes-row"><span class="label">Masyarakat Ekonomi Menengah (Sedang)</span><span class="val">{{ $demo['kk_sedang'] ?? '300' }} KK</span></div>
+          <div class="apbdes-row"><span class="label">Masyarakat Ekonomi Sejahtera (Kaya)</span><span class="val">{{ $demo['kk_kaya'] ?? '11' }} KK</span></div>
+        @endif
       </div>
     </div>
 
-    <!-- SEKSI 4: PENDIDIKAN & AGAMA -->
+    <!-- SEKSI 4: SARANA, PENDIDIKAN, AGAMA & PETERNAKAN -->
     <div class="apbdes-section">
       <div class="apbdes-head" style="background:#0F6B58;">
-        <span><i class="fas fa-graduation-cap" style="margin-right:6px;"></i> PENDIDIKAN &amp; AGAMA WARGA</span>
-        <span class="total">100% Islam</span>
+        <span><i class="fas fa-graduation-cap" style="margin-right:6px;"></i> SARANA, PENDIDIKAN, AGAMA &amp; PETERNAKAN</span>
+        <span class="total">Potensi Sosial</span>
       </div>
       <div class="apbdes-body">
-        <div class="apbdes-row"><span class="label">Agama Warga</span><span class="val">Islam (100% / {{ $demo['agama_islam'] ?? '2.113' }} Orang)</span></div>
-        <div class="apbdes-row"><span class="label">Rentang Pendidikan Tidak / Belum Tamat SD</span><span class="val">{{ $demo['pendidikan_sd'] ?? '542' }} Orang</span></div>
-        <div class="apbdes-row"><span class="label">Lulusan Sarjana / Perguruan Tinggi (S-1)</span><span class="val">{{ $demo['pendidikan_s1'] ?? '40' }} Orang</span></div>
-      </div>
-    </div>
-
-    <!-- SEKSI 5: SARANA PRASARANA & PETERNAKAN WARGA -->
-    <div class="apbdes-section">
-      <div class="apbdes-head" style="background:#854D0E;">
-        <span><i class="fas fa-paw" style="margin-right:6px;"></i> SARANA &amp; POPULASI PETERNAKAN</span>
-      </div>
-      <div class="apbdes-body">
-        <div class="apbdes-row"><span class="label">Populasi Ternak Ayam &amp; Itik</span><span class="val">{{ $demo['ternak_ayam'] ?? '450' }} Ekor</span></div>
-        <div class="apbdes-row"><span class="label">Populasi Ternak Kambing</span><span class="val">{{ $demo['ternak_kambing'] ?? '170' }} Ekor</span></div>
-        <div class="apbdes-row"><span class="label">Populasi Ternak Sapi</span><span class="val">{{ $demo['ternak_sapi'] ?? '76' }} Ekor</span></div>
-        <div class="apbdes-row"><span class="label">Tempat Ibadah (Masjid/Musholla)</span><span class="val">10 Unit</span></div>
-        <div class="apbdes-row"><span class="label">Gedung Pendidikan (TK, SD, TPQ)</span><span class="val">10 Unit</span></div>
-        <div class="apbdes-row"><span class="label">Posyandu Balita &amp; Lansia</span><span class="val">14 Unit</span></div>
+        @if(!empty($demo_pendidikan_ternak))
+          @foreach($demo_pendidikan_ternak as $ptItem)
+            <div class="apbdes-row"><span class="label">{{ $ptItem['label'] ?? '' }}</span><span class="val">{{ $ptItem['nilai'] ?? '' }}</span></div>
+          @endforeach
+        @else
+          <div class="apbdes-row"><span class="label">Populasi Ternak Ayam &amp; Itik</span><span class="val">{{ $demo['ternak_ayam'] ?? '450' }} Ekor</span></div>
+          <div class="apbdes-row"><span class="label">Populasi Ternak Kambing</span><span class="val">{{ $demo['ternak_kambing'] ?? '170' }} Ekor</span></div>
+          <div class="apbdes-row"><span class="label">Populasi Ternak Sapi</span><span class="val">{{ $demo['ternak_sapi'] ?? '76' }} Ekor</span></div>
+          <div class="apbdes-row"><span class="label">Agama Warga</span><span class="val">Islam (100% / {{ $demo['agama_islam'] ?? '2.113' }} Orang)</span></div>
+          <div class="apbdes-row"><span class="label">Rentang Pendidikan Tidak / Belum Tamat SD</span><span class="val">{{ $demo['pendidikan_sd'] ?? '542' }} Orang</span></div>
+          <div class="apbdes-row"><span class="label">Lulusan Sarjana / Perguruan Tinggi (S-1)</span><span class="val">{{ $demo['pendidikan_s1'] ?? '40' }} Orang</span></div>
+        @endif
       </div>
     </div>
   </div>
