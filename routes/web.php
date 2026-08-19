@@ -311,6 +311,20 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::post('media', [AdminMediaController::class, 'store']);
     Route::delete('media', [AdminMediaController::class, 'destroy']);
 
+    // Modular Pengaturan Routes
     Route::get('pengaturan', [AdminSettingController::class, 'index']);
-    Route::post('pengaturan', [AdminSettingController::class, 'update']);
+    Route::get('pengaturan/beranda', [AdminSettingController::class, 'beranda'])->name('admin.pengaturan.beranda');
+    Route::post('pengaturan/beranda', [AdminSettingController::class, 'updateBeranda']);
+
+    Route::get('pengaturan/apbdes', [AdminSettingController::class, 'apbdes'])->name('admin.pengaturan.apbdes');
+    Route::post('pengaturan/apbdes', [AdminSettingController::class, 'updateApbdes']);
+
+    Route::get('pengaturan/demografi', [AdminSettingController::class, 'demografi'])->name('admin.pengaturan.demografi');
+    Route::post('pengaturan/demografi', [AdminSettingController::class, 'updateDemografi']);
+
+    Route::get('pengaturan/potensi', [AdminSettingController::class, 'potensi'])->name('admin.pengaturan.potensi');
+    Route::post('pengaturan/potensi', [AdminSettingController::class, 'updatePotensi']);
+
+    Route::get('pengaturan/perangkat', [AdminSettingController::class, 'perangkat'])->name('admin.pengaturan.perangkat');
+    Route::post('pengaturan/perangkat', [AdminSettingController::class, 'updatePerangkat']);
 });

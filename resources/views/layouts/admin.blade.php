@@ -74,6 +74,15 @@
             overflow-y: auto;
         }
         
+        .sidebar-category {
+            padding: 16px 24px 6px;
+            font-size: 10.5px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: rgba(255, 255, 255, 0.38);
+        }
+        
         .sidebar-item a {
             display: flex;
             align-items: center;
@@ -239,18 +248,40 @@
                     <span>Dashboard</span>
                 </a>
             </li>
-            <li class="sidebar-item @if(($activePage ?? '') == 'pengaturan') active @endif">
-                <a href="/admin/pengaturan">
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-                    <span>Pengaturan Beranda</span>
+
+            <div class="sidebar-category">Konten & Monografi</div>
+            <li class="sidebar-item @if(($activePage ?? '') == 'pengaturan-beranda') active @endif">
+                <a href="/admin/pengaturan/beranda">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                    <span>Beranda & Slider</span>
                 </a>
             </li>
-            <li class="sidebar-item @if(($activePage ?? '') == 'produk') active @endif">
-                <a href="/admin/produk">
-                    <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
-                    <span>Produk UMKM</span>
+            <li class="sidebar-item @if(($activePage ?? '') == 'pengaturan-apbdes') active @endif">
+                <a href="/admin/pengaturan/apbdes">
+                    <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    <span>Transparansi APBDes</span>
                 </a>
             </li>
+            <li class="sidebar-item @if(($activePage ?? '') == 'pengaturan-demografi') active @endif">
+                <a href="/admin/pengaturan/demografi">
+                    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    <span>Data Demografi</span>
+                </a>
+            </li>
+            <li class="sidebar-item @if(($activePage ?? '') == 'pengaturan-potensi') active @endif">
+                <a href="/admin/pengaturan/potensi">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polygon points="12 8 8 12 12 16 16 12 12 8"></polygon></svg>
+                    <span>Potensi Ekonomi</span>
+                </a>
+            </li>
+            <li class="sidebar-item @if(($activePage ?? '') == 'pengaturan-perangkat') active @endif">
+                <a href="/admin/pengaturan/perangkat">
+                    <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                    <span>Struktur Perangkat</span>
+                </a>
+            </li>
+
+            <div class="sidebar-category">Informasi & Publikasi</div>
             <li class="sidebar-item @if(($activePage ?? '') == 'berita') active @endif">
                 <a href="/admin/berita">
                     <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
@@ -259,10 +290,18 @@
             </li>
             <li class="sidebar-item @if(($activePage ?? '') == 'kegiatan') active @endif">
                 <a href="/admin/kegiatan">
-                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
                     <span>Galeri & Kegiatan</span>
                 </a>
             </li>
+            <li class="sidebar-item @if(($activePage ?? '') == 'produk') active @endif">
+                <a href="/admin/produk">
+                    <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                    <span>Produk UMKM</span>
+                </a>
+            </li>
+
+            <div class="sidebar-category">Sistem & Akun</div>
             <li class="sidebar-item @if(($activePage ?? '') == 'media') active @endif">
                 <a href="/admin/media">
                     <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
