@@ -1213,14 +1213,25 @@
   checkUrlHash();
 
   // ================= MODAL ARSIP SEMUA BERITA DESA =================
-  function bukaModalSemuaBerita(){
-    document.getElementById('modal-semua-berita-overlay').classList.add('show');
-  }
+  window.bukaModalSemuaBerita = function(e){
+    if (e && e.preventDefault) e.preventDefault();
+    tutupSemuaModal();
+    var el = document.getElementById('modal-semua-berita-overlay');
+    if (el) {
+      el.classList.add('show');
+      el.style.setProperty('display', 'flex', 'important');
+      el.style.setProperty('z-index', '99999', 'important');
+    }
+  };
 
-  function tutupModalSemuaBerita(event){
+  window.tutupModalSemuaBerita = function(event){
     if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-informasi-close')) return;
-    document.getElementById('modal-semua-berita-overlay').classList.remove('show');
-  }
+    var el = document.getElementById('modal-semua-berita-overlay');
+    if (el) {
+      el.classList.remove('show');
+      el.style.setProperty('display', 'none', 'important');
+    }
+  };
 
   function filterModalBerita(){
     const input = document.getElementById('cari-berita-input').value.toLowerCase();
