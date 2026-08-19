@@ -660,6 +660,8 @@
         <div style="font-size: 22px; font-weight: 800;">{{ $demo['perempuan'] ?? '1.071' }}</div>
         <div style="font-size: 11px; opacity: 0.9; font-weight: 600;">Perempuan</div>
       </div>
+    </div>
+
     <!-- SEKSI KELOMPOK USIA PENDUDUK -->
     <div class="apbdes-section">
       <div class="apbdes-head" style="background:#0B3B60;">
