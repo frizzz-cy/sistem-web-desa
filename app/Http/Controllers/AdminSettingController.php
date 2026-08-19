@@ -102,6 +102,8 @@ class AdminSettingController extends Controller
             $data_potensi = $defaultPotensi;
         } else {
             $data_potensi = json_decode($data_potensi_json, true);
+        }
+
         // Ambil data APBDes dinamis dengan auto-seeding default jika kosong
         $data_apbdes_json = Setting::get('data_apbdes');
         if (!$data_apbdes_json) {
