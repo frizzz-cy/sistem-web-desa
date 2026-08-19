@@ -214,6 +214,22 @@ Route::get('/', function () {
         ->header('Expires', '0')
         ->header('X-LiteSpeed-Purge', '*');
 });
+Route::get('/sitemap.xml', function () {
+    $path = public_path('sitemap.xml');
+    if (file_exists($path)) {
+        return response(file_get_contents($path), 200)
+            ->header('Content-Type', 'application/xml');
+    }
+    abort(404);
+});
+Route::get('/robots.txt', function () {
+    $path = public_path('robots.txt');
+    if (file_exists($path)) {
+        return response(file_get_contents($path), 200)
+            ->header('Content-Type', 'text/plain');
+    }
+    abort(404);
+});
 Route::get('/berita/{berita}/view', function (Berita $berita) {
     $berita->increment('views');
     return response()->json(['views' => $berita->views]);
