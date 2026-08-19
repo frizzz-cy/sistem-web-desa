@@ -208,9 +208,11 @@
                         </div>
                     </div>
                 @endforeach
-            <!-- SECTION 4: PERANGKAT DESA & ORGANOGRAM -->
+            </div>
+
+            <!-- SECTION 5: PERANGKAT DESA & ORGANOGRAM -->
             <div class="setting-section">
-                <div class="section-header">4. Perangkat Desa &amp; Bagan Organogram</div>
+                <div class="section-header">5. Perangkat Desa &amp; Bagan Organogram</div>
                 <p style="margin-top:0; margin-bottom:16px; font-size:12.5px; color:var(--teks-muted);">Kelola foto, nama pejabat, jabatan, dan profil singkat 12 posisi Perangkat Desa. Perubahan di sini akan langsung memperbarui bagan susunan organisasi pada halaman Profil Desa secara otomatis.</p>
                 
                 <div class="card-grid">
@@ -245,6 +247,8 @@
                                 <textarea name="perangkat_note[]" rows="3" required placeholder="Tulis profil singkat atau deskripsi tugas...">{{ old('perangkat_note.'.$loop->index, $item['note']) }}</textarea>
                             </div>
                         </div>
+                    @endforeach
+                </div>
             </div>
 
             <!-- SECTION 5: TRANSPARANSI APBDES & RINCIAN SUMBER DANA -->
