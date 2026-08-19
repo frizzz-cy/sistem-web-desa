@@ -181,7 +181,10 @@
   /* ============ MODAL LAYANAN ADMINISTRASI & INFORMASI PUBLIK ============ */
   .modal-layanan-overlay, .modal-informasi-overlay{ display:none; position:fixed; inset:0; z-index:3000; background:rgba(11,40,63,0.78); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:20px; }
   .modal-layanan-overlay.show, .modal-informasi-overlay.show{display:flex;}
-  .modal-layanan-box, .modal-informasi-box{ background:#fff; border-radius:14px; max-width:680px; width:100%; max-height:88vh; overflow-y:auto; position:relative; padding:28px 24px; box-shadow:0 20px 40px rgba(0,0,0,0.25); }
+  .modal-layanan-box { background:#fff; border-radius:14px; max-width:680px; width:100%; max-height:88vh; overflow-y:auto; position:relative; padding:28px 24px; box-shadow:0 20px 40px rgba(0,0,0,0.25); }
+  .modal-informasi-box { background:#fff; border-radius:14px; max-width:820px; width:100%; max-height:85vh; overflow-y:auto; position:relative; padding:28px 24px 36px; box-shadow:0 20px 40px rgba(0,0,0,0.25); }
+  .modal-informasi-box::-webkit-scrollbar { width:6px; }
+  .modal-informasi-box::-webkit-scrollbar-thumb { background:#CBD5E1; border-radius:4px; }
   .modal-layanan-close, .modal-informasi-close{ position:absolute; top:18px; right:18px; background:var(--biru-tua); color:#fff; border:none; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:15px; display:flex; align-items:center; justify-content:center; }
   .modal-layanan-box h3, .modal-informasi-box h3{font-size:20px; font-weight:800; color:var(--biru-tua); margin-bottom:6px;}
   .modal-layanan-box .sub, .modal-informasi-box .sub{font-size:12.5px; color:var(--teks-muted); margin-bottom:20px;}
@@ -405,7 +408,7 @@
     <div class="sub">Portal Resmi Keterbukaan Informasi Publik Desa Munungkerep</div>
 
     <!-- TAB NAVIGASI -->
-    <div class="info-tab-btns" style="display:flex; gap:6px; margin-bottom:18px; overflow-x:auto; padding-bottom:4px;">
+    <div class="info-tab-btns" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px;">
       <button class="info-tab-btn active" onclick="switchInfoTab('apbdes', this)">💰 APBDes</button>
       <button class="info-tab-btn" onclick="switchInfoTab('geografi', this)">🗺️ Geografi &amp; Wilayah</button>
       <button class="info-tab-btn" onclick="switchInfoTab('demografi', this)">👥 Demografi</button>
