@@ -420,11 +420,107 @@
 </div>
 
 @php
-  $ap_all = $apbdes ?? [];
+  $default_ap_template = [
+      '2026' => [
+          'tahun' => '2026',
+          'status' => 'Murni (Tahun Berjalan)',
+          'pendapatan_total' => 'Rp 1.663.629.803,00',
+          'pendapatan_items' => [
+              ['label' => 'Pendapatan Asli Desa (PAD)', 'sub' => 'Hasil Usaha Desa, Tanah Kas Desa, dan Swadaya Masyarakat', 'nilai' => 'Rp 230.760.000,00'],
+              ['label' => 'Dana Desa (DD - APBN Pusat)', 'sub' => 'Dana Transfer APBN dari Pemerintah Pusat', 'nilai' => 'Rp 303.093.000,00'],
+              ['label' => 'Alokasi Dana Desa (ADD - APBD Jombang)', 'sub' => 'Alokasi Dana Desa dari APBD Kabupaten Jombang', 'nilai' => 'Rp 376.615.000,00'],
+              ['label' => 'Bagi Hasil Pajak & Retribusi (PDRD)', 'sub' => 'Bagi Hasil Pajak Daerah dan Retribusi Daerah', 'nilai' => 'Rp 85.805.300,00'],
+              ['label' => 'Bantuan Keuangan (BK Provinsi/Kabupaten)', 'sub' => 'Bantuan Keuangan Khusus Provinsi & Kabupaten', 'nilai' => 'Rp 539.600.603,00'],
+              ['label' => 'Lain-Lain Pendapatan Desa Sah (DLL)', 'sub' => 'Penerimaan lain-lain desa yang sah', 'nilai' => 'Rp 127.755.900,00']
+          ],
+          'keterangan_pendapatan' => 'Sumber penerimaan APBDes 2026 berasal dari Pendapatan Asli Desa (PAD), Dana Desa (DD APBN Pusat), Alokasi Dana Desa (ADD APBD Kab. Jombang), Bagi Hasil Pajak & Retribusi Daerah (PDRD), Bantuan Keuangan (BK Provinsi/Kabupaten), serta Lain-Lain Pendapatan Desa Sah.',
+          'belanja_total' => 'Rp 1.676.895.127,92',
+          'belanja_items' => [
+              ['label' => 'Penyelenggaraan Pemerintahan Desa', 'sub' => 'Penghasilan tetap, operasional kantor desa, dan BPD', 'nilai' => 'Rp 866.594.524,92'],
+              ['label' => 'Pelaksanaan Pembangunan Desa', 'sub' => 'Pembangunan sarana prasarana, jalan usaha tani, dan drainase', 'nilai' => 'Rp 582.090.603,00'],
+              ['label' => 'Pembinaan Kemasyarakatan', 'sub' => 'Kegiatan kepemudaan, keagamaan, dan seni budaya', 'nilai' => 'Rp 42.450.000,00'],
+              ['label' => 'Pemberdayaan Masyarakat', 'sub' => 'Pelatihan kelompok tani, PKK, dan UMKM desa', 'nilai' => 'Rp 158.000.000,00'],
+              ['label' => 'Penanggulangan Bencana & Keadaan Darurat', 'sub' => 'Penanganan tanggap darurat dan kejadian mendesak', 'nilai' => 'Rp 27.760.000,00']
+          ],
+          'keterangan_belanja' => 'Pengalokasian anggaran belanja desa diprioritaskan untuk Penyelenggaraan Pemerintahan Desa, Pembangunan Sarana & Prasarana Desa, Pembinaan Kemasyarakatan, Pemberdayaan Masyarakat, serta Penanggulangan Bencana/Darurat.',
+          'pembiayaan_total' => 'Rp 13.265.324,92',
+          'pembiayaan_items' => [
+              ['label' => 'Penerimaan Pembiayaan (SiLPA)', 'sub' => 'Sisa Lebih Perhitungan Anggaran tahun anggaran sebelumnya', 'nilai' => 'Rp 13.265.324,92'],
+              ['label' => 'Pengeluaran Pembiayaan', 'sub' => 'Penyertaan modal BUMDes dan dana cadangan', 'nilai' => 'Rp 0,00']
+          ],
+          'keterangan_pembiayaan' => 'Penerimaan Pembiayaan Netto berasal dari Sisa Lebih Perhitungan Anggaran (SiLPA) tahun anggaran sebelumnya.'
+      ],
+      '2025' => [
+          'tahun' => '2025',
+          'status' => 'Laporan Realisasi / LPJ',
+          'pendapatan_total' => 'Rp 1.540.210.000,00',
+          'pendapatan_items' => [
+              ['label' => 'Pendapatan Asli Desa (PAD)', 'sub' => 'Realisasi Pendapatan Asli Desa', 'nilai' => 'Rp 210.500.000,00'],
+              ['label' => 'Dana Desa (DD - APBN Pusat)', 'sub' => 'Realisasi Dana Desa APBN', 'nilai' => 'Rp 295.000.000,00'],
+              ['label' => 'Alokasi Dana Desa (ADD - APBD Jombang)', 'sub' => 'Realisasi ADD Kabupaten Jombang', 'nilai' => 'Rp 360.200.000,00'],
+              ['label' => 'Bagi Hasil Pajak & Retribusi (PDRD)', 'sub' => 'Realisasi PDRD Daerah', 'nilai' => 'Rp 78.510.000,00'],
+              ['label' => 'Bantuan Keuangan (BK Provinsi/Kabupaten)', 'sub' => 'Realisasi Bantuan Keuangan', 'nilai' => 'Rp 480.000.000,00'],
+              ['label' => 'Lain-Lain Pendapatan Desa Sah (DLL)', 'sub' => 'Realisasi pendapatan sah lainnya', 'nilai' => 'Rp 116.000.000,00']
+          ],
+          'keterangan_pendapatan' => 'Realisasi penerimaan APBDes Tahun Anggaran 2025 dari seluruh pos pendapatan sah.',
+          'belanja_total' => 'Rp 1.535.100.000,00',
+          'belanja_items' => [
+              ['label' => 'Penyelenggaraan Pemerintahan Desa', 'sub' => 'Realisasi operasional dan aparatur desa', 'nilai' => 'Rp 790.000.000,00'],
+              ['label' => 'Pelaksanaan Pembangunan Desa', 'sub' => 'Realisasi infrastruktur & sarpras', 'nilai' => 'Rp 530.000.000,00'],
+              ['label' => 'Pembinaan Kemasyarakatan', 'sub' => 'Realisasi pembinaan kemasyarakatan', 'nilai' => 'Rp 38.500.000,00'],
+              ['label' => 'Pemberdayaan Masyarakat', 'sub' => 'Realisasi pemberdayaan warga & UMKM', 'nilai' => 'Rp 151.600.000,00'],
+              ['label' => 'Penanggulangan Bencana & Keadaan Darurat', 'sub' => 'Realisasi penanganan keadaan darurat', 'nilai' => 'Rp 25.000.000,00']
+          ],
+          'keterangan_belanja' => 'Realisasi belanja APBDes Tahun Anggaran 2025 untuk pembangunan dan pelayanan masyarakat.',
+          'pembiayaan_total' => 'Rp 5.110.000,00',
+          'pembiayaan_items' => [
+              ['label' => 'Penerimaan Pembiayaan (SiLPA)', 'sub' => 'Sisa Lebih Perhitungan Anggaran tahun 2024', 'nilai' => 'Rp 5.110.000,00'],
+              ['label' => 'Pengeluaran Pembiayaan', 'sub' => 'Pengeluaran pembiayaan modal desa', 'nilai' => 'Rp 0,00']
+          ],
+          'keterangan_pembiayaan' => 'Sisa Lebih Perhitungan Anggaran (SiLPA) Tahun Anggaran 2025.'
+      ]
+  ];
+
+  $default_demo_template = [
+      'pokok' => [
+          ['label' => 'Total Penduduk (Jiwa)', 'nilai' => '2.113'],
+          ['label' => 'Total Kepala Keluarga (KK)', 'nilai' => '761'],
+          ['label' => 'Penduduk Laki-Laki (Jiwa)', 'nilai' => '1.042'],
+          ['label' => 'Penduduk Perempuan (Jiwa)', 'nilai' => '1.071']
+      ],
+      'usia' => [
+          ['label' => 'Usia Balita (0 – 4 Tahun)', 'nilai' => '145 Orang'],
+          ['label' => 'Usia Anak-Anak (5 – 14 Tahun)', 'nilai' => '312 Orang'],
+          ['label' => 'Usia Produktif / Angkatan Kerja (15 – 55 Tahun)', 'nilai' => '1.169 Orang'],
+          ['label' => 'Usia Dewasa / Pra-Lansia (56 – 64 Tahun)', 'nilai' => '280 Orang'],
+          ['label' => 'Usia Lansia (65+ Tahun)', 'nilai' => '207 Orang']
+      ],
+      'pekerjaan' => [
+          ['label' => 'Petani Pemilik Lahan Utama', 'nilai' => '986 Orang'],
+          ['label' => 'Buruh Tani', 'nilai' => '457 Orang'],
+          ['label' => 'Total Angkatan Kerja Aktif (Usia 15-55 Thn)', 'nilai' => '1.169 Orang'],
+          ['label' => 'Belum / Dalam Pencarian Kerja', 'nilai' => '55 Orang']
+      ],
+      'kesejahteraan' => [
+          ['label' => 'Masyarakat Ekonomi Prasejahtera (Miskin)', 'nilai' => '450 KK'],
+          ['label' => 'Masyarakat Ekonomi Menengah (Sedang)', 'nilai' => '300 KK'],
+          ['label' => 'Masyarakat Ekonomi Sejahtera (Kaya)', 'nilai' => '11 KK']
+      ],
+      'pendidikan_ternak' => [
+          ['label' => 'Populasi Ternak Ayam & Itik', 'nilai' => '450 Ekor'],
+          ['label' => 'Populasi Ternak Kambing', 'nilai' => '170 Ekor'],
+          ['label' => 'Populasi Ternak Sapi', 'nilai' => '76 Ekor'],
+          ['label' => 'Agama Warga', 'nilai' => 'Islam (100% / 2.113 Orang)'],
+          ['label' => 'Rentang Pendidikan Tidak / Belum Tamat SD', 'nilai' => '542 Orang'],
+          ['label' => 'Lulusan Sarjana / Perguruan Tinggi (S-1)', 'nilai' => '40 Orang']
+      ]
+  ];
+
+  $ap_all = !empty($apbdes) ? $apbdes : $default_ap_template;
   if (isset($ap_all['pendapatan_total'])) {
       $ap_all = ['2026' => array_merge(['tahun' => '2026', 'status' => 'Murni (Tahun Berjalan)'], $ap_all)];
   }
-  $demo = $demografi ?? [];
+  $demo = !empty($demografi) ? $demografi : $default_demo_template;
 @endphp
 
 <!-- Modal Informasi Publik / Transparansi APBDes (Card 2) -->
