@@ -6,6 +6,7 @@
 <meta name="description" content="Profil pemerintahan, geografis, dan demografis Desa Munungkerep, Kecamatan Kabuh, Kabupaten Jombang.">
 <title>Profil Desa Munungkerep</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -21,9 +22,15 @@
     --ink-soft:#5B6B7A;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
-  html{ scroll-behavior:smooth; }
+  html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
   body{
-    font-family:'Plus Jakarta Sans',sans-serif; background:var(--paper); color:var(--ink);
+    font-family:'Plus Jakarta Sans',sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    text-rendering:optimizeLegibility;
     animation:fadeInPage .35s ease;
   }
   @keyframes fadeInPage{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }

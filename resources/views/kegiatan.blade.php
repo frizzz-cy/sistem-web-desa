@@ -6,6 +6,7 @@
 <meta name="description" content="Dokumentasi Kegiatan - Sistem Informasi Desa Munungkerep">
 <title>Dokumentasi Kegiatan — Desa Munungkerep</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -19,8 +20,9 @@
   }
   
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--teks); line-height: 1.5; }
-  img { max-width: 100%; display: block; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--teks); line-height: 1.5; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
+  img { max-width: 100%; height: auto; display: block; }
   a { color: inherit; text-decoration: none; }
 
   /* ============ LAYOUT UTAMA ============ */

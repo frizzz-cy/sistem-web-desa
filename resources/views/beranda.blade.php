@@ -6,6 +6,7 @@
 <meta name="description" content="Sistem Informasi Desa Munungkerep, Kecamatan Kabuh, Kabupaten Jombang — portal resmi pemerintah desa.">
 <title>Beranda — Sistem Informasi Desa Munungkerep</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -26,9 +27,9 @@
     --hijau-teks: #2E7D32;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
-  html{scroll-behavior:smooth;}
-  body{font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:var(--teks); line-height:1.5;}
-  img{max-width:100%; display:block;}
+  html{scroll-behavior:smooth; -webkit-text-size-adjust:100%;}
+  body{font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:var(--teks); line-height:1.5; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; text-rendering:optimizeLegibility;}
+  img{max-width:100%; height:auto; display:block;}
   a{color:inherit; text-decoration:none;}
 
   /* ============ HERO ============ */
@@ -179,10 +180,10 @@
   .bd-content img { max-width: 100%; height: auto; display: block; margin: 20px auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
 
   /* ============ MODAL LAYANAN ADMINISTRASI & INFORMASI PUBLIK ============ */
-  .modal-layanan-overlay, .modal-informasi-overlay{ display:none; position:fixed; inset:0; z-index:3000; background:rgba(11,40,63,0.78); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:20px; }
+  .modal-layanan-overlay, .modal-informasi-overlay{ display:none; position:fixed; inset:0; z-index:3000; background:rgba(11,40,63,0.78); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:20px; overscroll-behavior:contain; }
   .modal-layanan-overlay.show, .modal-informasi-overlay.show{display:flex !important; opacity:1 !important; visibility:visible !important; pointer-events:auto !important;}
-  .modal-layanan-box { background:#fff; border-radius:14px; max-width:680px; width:100%; max-height:88vh; overflow-y:auto; position:relative; padding:28px 24px; box-shadow:0 20px 40px rgba(0,0,0,0.25); }
-  .modal-informasi-box { background:#fff; border-radius:14px; max-width:820px; width:100%; max-height:85vh; overflow-y:auto; position:relative; padding:28px 24px 36px; box-shadow:0 20px 40px rgba(0,0,0,0.25); }
+  .modal-layanan-box { background:#fff; border-radius:14px; max-width:680px; width:100%; max-height:88vh; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; position:relative; padding:28px 24px; box-shadow:0 20px 40px rgba(0,0,0,0.25); }
+  .modal-informasi-box { background:#fff; border-radius:14px; max-width:820px; width:100%; max-height:85vh; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; position:relative; padding:28px 24px 36px; box-shadow:0 20px 40px rgba(0,0,0,0.25); }
   .modal-informasi-box::-webkit-scrollbar { width:6px; }
   .modal-informasi-box::-webkit-scrollbar-thumb { background:#CBD5E1; border-radius:4px; }
   .modal-layanan-close, .modal-informasi-close{ position:absolute; top:18px; right:18px; background:var(--biru-tua); color:#fff; border:none; width:32px; height:32px; border-radius:50%; cursor:pointer; font-size:15px; display:flex; align-items:center; justify-content:center; }
