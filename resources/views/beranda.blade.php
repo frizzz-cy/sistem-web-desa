@@ -358,6 +358,7 @@
     </div>
   </div>
 
+  @include('partials.footer')
 </main>
 
 <!-- ==================== HALAMAN DETAIL BERITA ==================== -->
@@ -851,8 +852,6 @@
     </div>
   </div>
 </div>
-
-@include('partials.footer')
 
 <script>
   // ================= LOGIKA BUKA/TUTUP HALAMAN BERITA =================
