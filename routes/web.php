@@ -58,9 +58,6 @@ Route::get('/', function () {
 
     return view('beranda', compact('beritas', 'hero_slides', 'tentang', 'layanan_cards', 'apbdes', 'demografi')); 
 });
-Route::get('/sertifikat', function () {
-    return view('sertifikat');
-});
 Route::get('/berita/{berita}/view', function (Berita $berita) {
     $berita->increment('views');
     return response()->json(['views' => $berita->views]);
