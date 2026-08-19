@@ -34,5 +34,10 @@ class DatabaseSeeder extends Seeder
                 'password' => \Illuminate\Support\Facades\Hash::make('operator123'),
             ]
         );
+
+        $this->call([
+            SettingSeeder::class,
+            BeritaSeeder::class,
+        ]);
     }
 }
