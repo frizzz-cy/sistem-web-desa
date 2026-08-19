@@ -298,7 +298,11 @@
         </button>
       @else
         <a href="{{ !empty($card['link']) ? $card['link'] : '#' }}" class="portal-card" 
-           @if(str_contains($link, '/kegiatan')) onclick="return pindahHalus(event, '/kegiatan')"
+           @if(str_contains($link, 'demografi') || str_contains($title, 'kependudukan') || str_contains($title, 'demografi')) onclick="bukaModalDemografi(); return false;"
+           @elseif(str_contains($link, 'kelembagaan') || str_contains($title, 'kelembagaan')) onclick="bukaModalKelembagaan(); return false;"
+           @elseif(str_contains($link, 'informasi') || str_contains($title, 'informasi') || str_contains($title, 'anggaran')) onclick="bukaModalInformasi(); return false;"
+           @elseif(str_contains($link, 'layanan') || str_contains($title, 'layanan')) onclick="bukaModalLayanan(); return false;"
+           @elseif(str_contains($link, '/kegiatan')) onclick="return pindahHalus(event, '/kegiatan')"
            @elseif(str_contains($link, 'profil')) onclick="return pindahHalus(event, '{{ $card['link'] }}')" @endif>
           <div class="p-badge">{!! $card['icon'] !!}</div>
           <h3>{{ $card['title'] }}</h3>
@@ -990,6 +994,26 @@
     if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-informasi-close')) return;
     document.getElementById('modal-kelembagaan-overlay').classList.remove('show');
   }
+
+  // Global listener pelindung modal
+  document.addEventListener('click', function(e) {
+    const el = e.target.closest('a, button');
+    if (!el) return;
+    const href = (el.getAttribute('href') || '').toLowerCase();
+    if (href === '#modal-demografi') {
+      e.preventDefault();
+      bukaModalDemografi();
+    } else if (href === '#modal-kelembagaan') {
+      e.preventDefault();
+      bukaModalKelembagaan();
+    } else if (href === '#modal-informasi' || href === '#modal-apbdes') {
+      e.preventDefault();
+      bukaModalInformasi();
+    } else if (href === '#modal-layanan') {
+      e.preventDefault();
+      bukaModalLayanan();
+    }
+  });
 
   // ================= MODAL ARSIP SEMUA BERITA DESA =================
   function bukaModalSemuaBerita(){
