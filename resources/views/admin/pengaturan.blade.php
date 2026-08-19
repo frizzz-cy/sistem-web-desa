@@ -300,10 +300,16 @@
                                 <div class="item-boxes-container" id="container-pendapatan-{{ $yearIdx }}" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
                                     @php $p_items = $ap['pendapatan_items'] ?? []; @endphp
                                     @foreach($p_items as $item)
-                                        <div class="dynamic-item-row" style="display:flex; align-items:center; gap:8px;">
-                                            <input type="text" name="apbdes_pendapatan_label_{{ $yearIdx }}[]" value="{{ $item['label'] ?? '' }}" placeholder="Kotak A: Nama Pos (misal: Pendapatan Asli Desa)" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px;" required>
-                                            <input type="text" name="apbdes_pendapatan_nilai_{{ $yearIdx }}[]" value="{{ $item['nilai'] ?? '' }}" placeholder="Kotak B: Nilai / Nominal (misal: Rp 230.760.000,00)" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
-                                            <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+                                        <div class="dynamic-item-row" style="background:#FFF; border:1px solid #E2E8F0; border-radius:8px; padding:10px 12px;">
+                                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                                                <input type="text" name="apbdes_pendapatan_label_{{ $yearIdx }}[]" value="{{ $item['label'] ?? '' }}" placeholder="Nama Pos Utama (Tulisan Besar)" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
+                                                <input type="text" name="apbdes_pendapatan_nilai_{{ $yearIdx }}[]" value="{{ $item['nilai'] ?? '' }}" placeholder="Nominal (misal: Rp 0,00)" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:700;" required>
+                                                <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+                                            </div>
+                                            <div style="display:flex; align-items:center; gap:6px;">
+                                                <span style="font-size:11px; color:#64748B; font-weight:700; white-space:nowrap;">↳ Sub-keterangan (opsional):</span>
+                                                <input type="text" name="apbdes_pendapatan_sub_{{ $yearIdx }}[]" value="{{ $item['sub'] ?? '' }}" placeholder="Tulisan kecil di bawah judul (opsional / boleh dikosongkan)" style="flex:1; font-size:11.5px; padding:5px 8px; border:1px dashed #CBD5E1; border-radius:4px; color:#475569; background:#FAFAFA;">
+                                            </div>
                                         </div>
                                     @endforeach
                                 </div>
@@ -331,10 +337,16 @@
                                 <div class="item-boxes-container" id="container-belanja-{{ $yearIdx }}" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
                                     @php $b_items = $ap['belanja_items'] ?? []; @endphp
                                     @foreach($b_items as $item)
-                                        <div class="dynamic-item-row" style="display:flex; align-items:center; gap:8px;">
-                                            <input type="text" name="apbdes_belanja_label_{{ $yearIdx }}[]" value="{{ $item['label'] ?? '' }}" placeholder="Kotak A: Nama Pos Belanja (misal: Pembangunan Desa)" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px;" required>
-                                            <input type="text" name="apbdes_belanja_nilai_{{ $yearIdx }}[]" value="{{ $item['nilai'] ?? '' }}" placeholder="Kotak B: Nilai / Nominal (misal: Rp 582.090.603,00)" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
-                                            <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+                                        <div class="dynamic-item-row" style="background:#FFF; border:1px solid #E2E8F0; border-radius:8px; padding:10px 12px;">
+                                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                                                <input type="text" name="apbdes_belanja_label_{{ $yearIdx }}[]" value="{{ $item['label'] ?? '' }}" placeholder="Nama Pos Belanja (Tulisan Besar)" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
+                                                <input type="text" name="apbdes_belanja_nilai_{{ $yearIdx }}[]" value="{{ $item['nilai'] ?? '' }}" placeholder="Nominal (misal: Rp 0,00)" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:700;" required>
+                                                <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+                                            </div>
+                                            <div style="display:flex; align-items:center; gap:6px;">
+                                                <span style="font-size:11px; color:#64748B; font-weight:700; white-space:nowrap;">↳ Sub-keterangan (opsional):</span>
+                                                <input type="text" name="apbdes_belanja_sub_{{ $yearIdx }}[]" value="{{ $item['sub'] ?? '' }}" placeholder="Tulisan kecil di bawah judul (opsional / boleh dikosongkan)" style="flex:1; font-size:11.5px; padding:5px 8px; border:1px dashed #CBD5E1; border-radius:4px; color:#475569; background:#FAFAFA;">
+                                            </div>
                                         </div>
                                     @endforeach
                                 </div>
@@ -362,10 +374,16 @@
                                 <div class="item-boxes-container" id="container-pembiayaan-{{ $yearIdx }}" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
                                     @php $pb_items = $ap['pembiayaan_items'] ?? []; @endphp
                                     @foreach($pb_items as $item)
-                                        <div class="dynamic-item-row" style="display:flex; align-items:center; gap:8px;">
-                                            <input type="text" name="apbdes_pembiayaan_label_{{ $yearIdx }}[]" value="{{ $item['label'] ?? '' }}" placeholder="Kotak A: Pos Pembiayaan (misal: Penerimaan SiLPA)" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px;" required>
-                                            <input type="text" name="apbdes_pembiayaan_nilai_{{ $yearIdx }}[]" value="{{ $item['nilai'] ?? '' }}" placeholder="Kotak B: Nilai / Nominal (misal: Rp 13.265.324,92)" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
-                                            <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+                                        <div class="dynamic-item-row" style="background:#FFF; border:1px solid #E2E8F0; border-radius:8px; padding:10px 12px;">
+                                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                                                <input type="text" name="apbdes_pembiayaan_label_{{ $yearIdx }}[]" value="{{ $item['label'] ?? '' }}" placeholder="Nama Pos Pembiayaan (Tulisan Besar)" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
+                                                <input type="text" name="apbdes_pembiayaan_nilai_{{ $yearIdx }}[]" value="{{ $item['nilai'] ?? '' }}" placeholder="Nominal (misal: Rp 0,00)" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:700;" required>
+                                                <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+                                            </div>
+                                            <div style="display:flex; align-items:center; gap:6px;">
+                                                <span style="font-size:11px; color:#64748B; font-weight:700; white-space:nowrap;">↳ Sub-keterangan (opsional):</span>
+                                                <input type="text" name="apbdes_pembiayaan_sub_{{ $yearIdx }}[]" value="{{ $item['sub'] ?? '' }}" placeholder="Tulisan kecil di bawah judul (opsional / boleh dikosongkan)" style="flex:1; font-size:11.5px; padding:5px 8px; border:1px dashed #CBD5E1; border-radius:4px; color:#475569; background:#FAFAFA;">
+                                            </div>
                                         </div>
                                     @endforeach
                                 </div>
@@ -513,23 +531,31 @@
             const container = document.getElementById(`container-${kategori}-${yearIdx}`);
             if (!container) return;
 
-            let placeholderA = "Kotak A: Nama Pos";
-            let placeholderB = "Kotak B: Nilai / Nominal (misal: Rp 0,00)";
+            let placeholderA = "Nama Pos Utama (Tulisan Besar)";
+            let placeholderB = "Nominal (misal: Rp 0,00)";
+            let placeholderSub = "Tulisan kecil di bawah judul (opsional / boleh dikosongkan)";
+            
             if (kategori === 'pendapatan') {
-                placeholderA = "Kotak A: Pos Pendapatan (misal: PAD, Dana Desa)";
+                placeholderA = "Nama Pos Pendapatan (Tulisan Besar)";
             } else if (kategori === 'belanja') {
-                placeholderA = "Kotak A: Pos Belanja (misal: Pelaksanaan Pembangunan)";
+                placeholderA = "Nama Pos Belanja (Tulisan Besar)";
             } else if (kategori === 'pembiayaan') {
-                placeholderA = "Kotak A: Pos Pembiayaan (misal: Penerimaan SiLPA)";
+                placeholderA = "Nama Pos Pembiayaan (Tulisan Besar)";
             }
 
             const row = document.createElement('div');
             row.className = 'dynamic-item-row';
-            row.style.cssText = 'display:flex; align-items:center; gap:8px;';
+            row.style.cssText = 'background:#FFF; border:1px solid #E2E8F0; border-radius:8px; padding:10px 12px;';
             row.innerHTML = `
-                <input type="text" name="apbdes_${kategori}_label_${yearIdx}[]" value="" placeholder="${placeholderA}" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px;" required>
-                <input type="text" name="apbdes_${kategori}_nilai_${yearIdx}[]" value="Rp 0,00" placeholder="${placeholderB}" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
-                <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                    <input type="text" name="apbdes_${kategori}_label_${yearIdx}[]" value="" placeholder="${placeholderA}" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
+                    <input type="text" name="apbdes_${kategori}_nilai_${yearIdx}[]" value="Rp 0,00" placeholder="${placeholderB}" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:700;" required>
+                    <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+                </div>
+                <div style="display:flex; align-items:center; gap:6px;">
+                    <span style="font-size:11px; color:#64748B; font-weight:700; white-space:nowrap;">↳ Sub-keterangan (opsional):</span>
+                    <input type="text" name="apbdes_${kategori}_sub_${yearIdx}[]" value="" placeholder="${placeholderSub}" style="flex:1; font-size:11.5px; padding:5px 8px; border:1px dashed #CBD5E1; border-radius:4px; color:#475569; background:#FAFAFA;">
+                </div>
             `;
             container.appendChild(row);
         }
@@ -614,10 +640,16 @@
                     </div>
 
                     <div class="item-boxes-container" id="container-pendapatan-${newYearIdx}" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
-                        <div class="dynamic-item-row" style="display:flex; align-items:center; gap:8px;">
-                            <input type="text" name="apbdes_pendapatan_label_${newYearIdx}[]" value="Pendapatan Asli Desa (PAD)" placeholder="Kotak A: Nama Pos" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px;" required>
-                            <input type="text" name="apbdes_pendapatan_nilai_${newYearIdx}[]" value="Rp 0,00" placeholder="Kotak B: Nilai / Nominal" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
-                            <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+                        <div class="dynamic-item-row" style="background:#FFF; border:1px solid #E2E8F0; border-radius:8px; padding:10px 12px;">
+                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                                <input type="text" name="apbdes_pendapatan_label_${newYearIdx}[]" value="Pendapatan Asli Desa (PAD)" placeholder="Nama Pos Pendapatan" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
+                                <input type="text" name="apbdes_pendapatan_nilai_${newYearIdx}[]" value="Rp 0,00" placeholder="Nominal" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:700;" required>
+                                <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <span style="font-size:11px; color:#64748B; font-weight:700; white-space:nowrap;">↳ Sub-keterangan (opsional):</span>
+                                <input type="text" name="apbdes_pendapatan_sub_${newYearIdx}[]" value="Hasil Usaha Desa, Tanah Kas Desa, dan Swadaya Masyarakat" placeholder="Tulisan kecil di bawah judul (opsional)" style="flex:1; font-size:11.5px; padding:5px 8px; border:1px dashed #CBD5E1; border-radius:4px; color:#475569; background:#FAFAFA;">
+                            </div>
                         </div>
                     </div>
 
@@ -642,10 +674,16 @@
                     </div>
 
                     <div class="item-boxes-container" id="container-belanja-${newYearIdx}" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
-                        <div class="dynamic-item-row" style="display:flex; align-items:center; gap:8px;">
-                            <input type="text" name="apbdes_belanja_label_${newYearIdx}[]" value="Penyelenggaraan Pemerintahan Desa" placeholder="Kotak A: Nama Pos Belanja" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px;" required>
-                            <input type="text" name="apbdes_belanja_nilai_${newYearIdx}[]" value="Rp 0,00" placeholder="Kotak B: Nilai / Nominal" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
-                            <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+                        <div class="dynamic-item-row" style="background:#FFF; border:1px solid #E2E8F0; border-radius:8px; padding:10px 12px;">
+                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                                <input type="text" name="apbdes_belanja_label_${newYearIdx}[]" value="Penyelenggaraan Pemerintahan Desa" placeholder="Nama Pos Belanja" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
+                                <input type="text" name="apbdes_belanja_nilai_${newYearIdx}[]" value="Rp 0,00" placeholder="Nominal" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:700;" required>
+                                <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <span style="font-size:11px; color:#64748B; font-weight:700; white-space:nowrap;">↳ Sub-keterangan (opsional):</span>
+                                <input type="text" name="apbdes_belanja_sub_${newYearIdx}[]" value="Penghasilan tetap, operasional kantor desa, dan BPD" placeholder="Tulisan kecil di bawah judul (opsional)" style="flex:1; font-size:11.5px; padding:5px 8px; border:1px dashed #CBD5E1; border-radius:4px; color:#475569; background:#FAFAFA;">
+                            </div>
                         </div>
                     </div>
 
@@ -670,10 +708,16 @@
                     </div>
 
                     <div class="item-boxes-container" id="container-pembiayaan-${newYearIdx}" style="display:flex; flex-direction:column; gap:8px; margin-bottom:12px;">
-                        <div class="dynamic-item-row" style="display:flex; align-items:center; gap:8px;">
-                            <input type="text" name="apbdes_pembiayaan_label_${newYearIdx}[]" value="Penerimaan Pembiayaan (SiLPA)" placeholder="Kotak A: Pos Pembiayaan" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px;" required>
-                            <input type="text" name="apbdes_pembiayaan_nilai_${newYearIdx}[]" value="Rp 0,00" placeholder="Kotak B: Nilai / Nominal" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
-                            <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+                        <div class="dynamic-item-row" style="background:#FFF; border:1px solid #E2E8F0; border-radius:8px; padding:10px 12px;">
+                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                                <input type="text" name="apbdes_pembiayaan_label_${newYearIdx}[]" value="Penerimaan Pembiayaan (SiLPA)" placeholder="Pos Pembiayaan" style="flex:2; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:600;" required>
+                                <input type="text" name="apbdes_pembiayaan_nilai_${newYearIdx}[]" value="Rp 0,00" placeholder="Nominal" style="flex:1.5; font-size:12.5px; padding:7px 10px; border:1px solid #CBD5E1; border-radius:6px; font-weight:700;" required>
+                                <button type="button" onclick="hapusItemBox(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; width:34px; height:34px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-weight:700;">✕</button>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <span style="font-size:11px; color:#64748B; font-weight:700; white-space:nowrap;">↳ Sub-keterangan (opsional):</span>
+                                <input type="text" name="apbdes_pembiayaan_sub_${newYearIdx}[]" value="Sisa Lebih Perhitungan Anggaran tahun anggaran sebelumnya" placeholder="Tulisan kecil di bawah judul (opsional)" style="flex:1; font-size:11.5px; padding:5px 8px; border:1px dashed #CBD5E1; border-radius:4px; color:#475569; background:#FAFAFA;">
+                            </div>
                         </div>
                     </div>
 

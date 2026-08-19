@@ -224,11 +224,12 @@
   .apbdes-head.belanja { background: var(--merah); }
   .apbdes-head.pembiayaan { background: #0F6B58; }
   .apbdes-head .total { background: rgba(255, 255, 255, 0.2); padding: 4px 10px; border-radius: 20px; font-size: 12.5px; letter-spacing: 0.02em; }
-  .apbdes-body { padding: 12px 16px; background: #FAFCFE; }
-  .apbdes-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px dashed #E2E8F0; font-size: 13px; }
+  .apbdes-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 8px 0; border-bottom: 1px dashed #E2E8F0; font-size: 13px; gap: 12px; }
   .apbdes-row:last-child { border-bottom: none; }
-  .apbdes-row .label { color: #4A5568; }
-  .apbdes-row .val { font-weight: 700; color: #1A202C; }
+  .apbdes-row .label-col { display: flex; flex-direction: column; }
+  .apbdes-row .label { color: #1E293B; font-weight: 600; line-height: 1.4; }
+  .apbdes-row .sub-label { font-size: 11.5px; color: #64748B; margin-top: 2px; line-height: 1.35; font-weight: 400; }
+  .apbdes-row .val { font-weight: 700; color: #0F172A; white-space: nowrap; margin-top: 1px; }
 </style>
 </head>
 <body>
@@ -471,15 +472,23 @@
           <div class="apbdes-body">
             @if(!empty($ap['pendapatan_items']))
               @foreach($ap['pendapatan_items'] as $item)
-                <div class="apbdes-row"><span class="label">{{ $item['label'] ?? '' }}</span><span class="val">{{ $item['nilai'] ?? '' }}</span></div>
+                <div class="apbdes-row">
+                  <div class="label-col">
+                    <span class="label">{{ $item['label'] ?? '' }}</span>
+                    @if(!empty($item['sub']))
+                      <span class="sub-label">{{ $item['sub'] }}</span>
+                    @endif
+                  </div>
+                  <span class="val">{{ $item['nilai'] ?? '' }}</span>
+                </div>
               @endforeach
             @else
-              <div class="apbdes-row"><span class="label">Pendapatan Asli Desa (PAD)</span><span class="val">{{ $ap['pad'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><span class="label">Dana Desa (DD - APBN Pusat)</span><span class="val">{{ $ap['dd'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><span class="label">Alokasi Dana Desa (ADD - APBD Jombang)</span><span class="val">{{ $ap['add'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><span class="label">Bagi Hasil Pajak &amp; Retribusi (PDRD)</span><span class="val">{{ $ap['pdrd'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><span class="label">Bantuan Keuangan (BK Provinsi/Kabupaten)</span><span class="val">{{ $ap['bk'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><span class="label">Lain-Lain Pendapatan Desa Sah (DLL)</span><span class="val">{{ $ap['dll'] ?? 'Rp 0,00' }}</span></div>
+              <div class="apbdes-row"><div class="label-col"><span class="label">Pendapatan Asli Desa (PAD)</span></div><span class="val">{{ $ap['pad'] ?? 'Rp 0,00' }}</span></div>
+              <div class="apbdes-row"><div class="label-col"><span class="label">Dana Desa (DD - APBN Pusat)</span></div><span class="val">{{ $ap['dd'] ?? 'Rp 0,00' }}</span></div>
+              <div class="apbdes-row"><div class="label-col"><span class="label">Alokasi Dana Desa (ADD - APBD Jombang)</span></div><span class="val">{{ $ap['add'] ?? 'Rp 0,00' }}</span></div>
+              <div class="apbdes-row"><div class="label-col"><span class="label">Bagi Hasil Pajak &amp; Retribusi (PDRD)</span></div><span class="val">{{ $ap['pdrd'] ?? 'Rp 0,00' }}</span></div>
+              <div class="apbdes-row"><div class="label-col"><span class="label">Bantuan Keuangan (BK Provinsi/Kabupaten)</span></div><span class="val">{{ $ap['bk'] ?? 'Rp 0,00' }}</span></div>
+              <div class="apbdes-row"><div class="label-col"><span class="label">Lain-Lain Pendapatan Desa Sah (DLL)</span></div><span class="val">{{ $ap['dll'] ?? 'Rp 0,00' }}</span></div>
             @endif
 
             @if(!empty($ap['keterangan_pendapatan']))
@@ -499,14 +508,22 @@
           <div class="apbdes-body">
             @if(!empty($ap['belanja_items']))
               @foreach($ap['belanja_items'] as $item)
-                <div class="apbdes-row"><span class="label">{{ $item['label'] ?? '' }}</span><span class="val">{{ $item['nilai'] ?? '' }}</span></div>
+                <div class="apbdes-row">
+                  <div class="label-col">
+                    <span class="label">{{ $item['label'] ?? '' }}</span>
+                    @if(!empty($item['sub']))
+                      <span class="sub-label">{{ $item['sub'] }}</span>
+                    @endif
+                  </div>
+                  <span class="val">{{ $item['nilai'] ?? '' }}</span>
+                </div>
               @endforeach
             @else
-              <div class="apbdes-row"><span class="label">Penyelenggaraan Pemerintahan Desa</span><span class="val">{{ $ap['belanja_pemerintahan'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><span class="label">Pelaksanaan Pembangunan Desa</span><span class="val">{{ $ap['belanja_pembangunan'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><span class="label">Pembinaan Kemasyarakatan</span><span class="val">{{ $ap['belanja_pembinaan'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><span class="label">Pemberdayaan Masyarakat</span><span class="val">{{ $ap['belanja_pemberdayaan'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><span class="label">Penanggulangan Bencana &amp; Keadaan Darurat</span><span class="val">{{ $ap['belanja_bencana'] ?? 'Rp 0,00' }}</span></div>
+              <div class="apbdes-row"><div class="label-col"><span class="label">Penyelenggaraan Pemerintahan Desa</span></div><span class="val">{{ $ap['belanja_pemerintahan'] ?? 'Rp 0,00' }}</span></div>
+              <div class="apbdes-row"><div class="label-col"><span class="label">Pelaksanaan Pembangunan Desa</span></div><span class="val">{{ $ap['belanja_pembangunan'] ?? 'Rp 0,00' }}</span></div>
+              <div class="apbdes-row"><div class="label-col"><span class="label">Pembinaan Kemasyarakatan</span></div><span class="val">{{ $ap['belanja_pembinaan'] ?? 'Rp 0,00' }}</span></div>
+              <div class="apbdes-row"><div class="label-col"><span class="label">Pemberdayaan Masyarakat</span></div><span class="val">{{ $ap['belanja_pemberdayaan'] ?? 'Rp 0,00' }}</span></div>
+              <div class="apbdes-row"><div class="label-col"><span class="label">Penanggulangan Bencana &amp; Keadaan Darurat</span></div><span class="val">{{ $ap['belanja_bencana'] ?? 'Rp 0,00' }}</span></div>
             @endif
 
             @if(!empty($ap['keterangan_belanja']))
@@ -526,11 +543,19 @@
           <div class="apbdes-body">
             @if(!empty($ap['pembiayaan_items']))
               @foreach($ap['pembiayaan_items'] as $item)
-                <div class="apbdes-row"><span class="label">{{ $item['label'] ?? '' }}</span><span class="val">{{ $item['nilai'] ?? '' }}</span></div>
+                <div class="apbdes-row">
+                  <div class="label-col">
+                    <span class="label">{{ $item['label'] ?? '' }}</span>
+                    @if(!empty($item['sub']))
+                      <span class="sub-label">{{ $item['sub'] }}</span>
+                    @endif
+                  </div>
+                  <span class="val">{{ $item['nilai'] ?? '' }}</span>
+                </div>
               @endforeach
             @else
-              <div class="apbdes-row"><span class="label">Penerimaan Pembiayaan (SiLPA)</span><span class="val">{{ $ap['penerimaan_pembiayaan'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><span class="label">Pengeluaran Pembiayaan</span><span class="val">{{ $ap['pengeluaran_pembiayaan'] ?? 'Rp 0,00' }}</span></div>
+              <div class="apbdes-row"><div class="label-col"><span class="label">Penerimaan Pembiayaan (SiLPA)</span></div><span class="val">{{ $ap['penerimaan_pembiayaan'] ?? 'Rp 0,00' }}</span></div>
+              <div class="apbdes-row"><div class="label-col"><span class="label">Pengeluaran Pembiayaan</span></div><span class="val">{{ $ap['pengeluaran_pembiayaan'] ?? 'Rp 0,00' }}</span></div>
             @endif
 
             @if(!empty($ap['keterangan_pembiayaan']))
