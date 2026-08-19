@@ -271,69 +271,61 @@
   <div class="portal-grid reveal">
     @foreach($layanan_cards as $index => $card)
       @php
-        $link = strtolower(trim($card['link'] ?? ''));
-        $title = strtolower(trim($card['title'] ?? ''));
         $card_title = $card['title'] ?? '';
         $card_desc = $card['desc'] ?? '';
         $card_icon = $card['icon'] ?? '';
+        $link = strtolower(trim($card['link'] ?? ''));
 
-        if ($card_title === 'Anggaran Desa' || ($index === 3 && (str_contains($title, 'anggaran') || empty($card_title)))) {
+        // Binding presisi 1-ke-1 untuk masing-masing posisi 6 kartu
+        if ($index === 0) {
+            $modal_action = 'modal-layanan';
+            $onclick = 'bukaModalLayanan()';
+            $link_text = 'Lihat Persyaratan';
+            $href = 'javascript:void(0)';
+        } elseif ($index === 1) {
+            $modal_action = 'modal-informasi';
+            $onclick = 'bukaModalInformasi()';
+            $link_text = 'Lihat Rincian';
+            $href = 'javascript:void(0)';
+            if (empty($card_title)) $card_title = 'Informasi Publik';
+            if (empty($card_desc)) $card_desc = 'Transparansi APBDes dan rincian anggaran.';
+        } elseif ($index === 2) {
+            $modal_action = '';
+            $onclick = "return pindahHalus(event, '/profil-desa#pemerintahan')";
+            $link_text = 'Lihat Detail';
+            $href = '/profil-desa#pemerintahan';
+        } elseif ($index === 3) {
+            $modal_action = 'modal-kelembagaan';
+            $onclick = 'bukaModalKelembagaan()';
+            $link_text = 'Lihat Detail';
+            $href = 'javascript:void(0)';
             $card_title = 'Kelembagaan Desa';
             $card_desc = 'Organisasi aktif kemasyarakatan — BPD, PKK Dharma Wanita, Karang Taruna, Remaja Masjid, hingga Posyandu.';
             $card_icon = '<svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>';
+        } elseif ($index === 4) {
+            $modal_action = 'modal-demografi';
+            $onclick = 'bukaModalDemografi()';
+            $link_text = 'Lihat Data';
+            $href = 'javascript:void(0)';
+        } elseif ($index === 5) {
+            $modal_action = '';
+            $onclick = "return pindahHalus(event, '/kegiatan')";
+            $link_text = 'Lihat Detail';
+            $href = '/kegiatan';
+        } else {
+            $modal_action = 'modal-kelembagaan';
+            $onclick = 'bukaModalKelembagaan()';
+            $link_text = 'Lihat Detail';
+            $href = 'javascript:void(0)';
         }
       @endphp
 
-      @if($index === 0 || str_contains($link, 'layanan') || str_contains($title, 'layanan'))
-        <a href="javascript:void(0)" class="portal-card" data-action="modal-layanan" onclick="bukaModalLayanan()">
-          <div class="p-badge">{!! $card_icon !!}</div>
-          <h3>{{ $card_title }}</h3>
-          <p>{{ $card_desc }}</p>
-          <div class="p-link">Lihat Persyaratan <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        </a>
-      @elseif($index === 1 || str_contains($link, 'informasi') || (str_contains($title, 'informasi') && !str_contains($title, 'kelembagaan')))
-        <a href="javascript:void(0)" class="portal-card" data-action="modal-informasi" onclick="bukaModalInformasi()">
-          <div class="p-badge">{!! $card_icon !!}</div>
-          <h3>{{ $card_title }}</h3>
-          <p>{{ $card_desc }}</p>
-          <div class="p-link">Lihat Rincian <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        </a>
-      @elseif($index === 2 || str_contains($link, 'pemerintahan') || str_contains($title, 'pemerintahan'))
-        <a href="/profil-desa#pemerintahan" class="portal-card" onclick="return pindahHalus(event, '/profil-desa#pemerintahan')">
-          <div class="p-badge">{!! $card_icon !!}</div>
-          <h3>{{ $card_title }}</h3>
-          <p>{{ $card_desc }}</p>
-          <div class="p-link">Lihat Detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        </a>
-      @elseif($index === 3 || str_contains($link, 'kelembagaan') || str_contains($title, 'kelembagaan') || str_contains($title, 'organisasi') || str_contains($title, 'anggaran'))
-        <a href="javascript:void(0)" class="portal-card" data-action="modal-kelembagaan" onclick="bukaModalKelembagaan()">
-          <div class="p-badge">{!! $card_icon !!}</div>
-          <h3>{{ $card_title }}</h3>
-          <p>{{ $card_desc }}</p>
-          <div class="p-link">Lihat Detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        </a>
-      @elseif($index === 4 || str_contains($link, 'demografi') || str_contains($title, 'kependudukan') || str_contains($title, 'demografi'))
-        <a href="javascript:void(0)" class="portal-card" data-action="modal-demografi" onclick="bukaModalDemografi()">
-          <div class="p-badge">{!! $card_icon !!}</div>
-          <h3>{{ $card_title }}</h3>
-          <p>{{ $card_desc }}</p>
-          <div class="p-link">Lihat Data <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        </a>
-      @elseif($index === 5 || str_contains($link, 'kegiatan') || str_contains($title, 'kegiatan') || str_contains($title, 'event'))
-        <a href="/kegiatan" class="portal-card" onclick="return pindahHalus(event, '/kegiatan')">
-          <div class="p-badge">{!! $card_icon !!}</div>
-          <h3>{{ $card_title }}</h3>
-          <p>{{ $card_desc }}</p>
-          <div class="p-link">Lihat Detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        </a>
-      @else
-        <a href="javascript:void(0)" class="portal-card" data-action="modal-kelembagaan" onclick="bukaModalKelembagaan()">
-          <div class="p-badge">{!! $card_icon !!}</div>
-          <h3>{{ $card_title }}</h3>
-          <p>{{ $card_desc }}</p>
-          <div class="p-link">Lihat Detail <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        </a>
-      @endif
+      <a href="{{ $href }}" class="portal-card" @if($modal_action) data-action="{{ $modal_action }}" @endif onclick="{{ $onclick }}">
+        <div class="p-badge">{!! $card_icon !!}</div>
+        <h3>{{ $card_title }}</h3>
+        <p>{{ $card_desc }}</p>
+        <div class="p-link">{{ $link_text }} <svg viewBox="0 0 12 12" fill="none"><path d="M4 2L9 6L4 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      </a>
     @endforeach
   </div>
 
