@@ -1,14 +1,16 @@
 <style>
-  /* ============ FOOTER ============ */
+  /* ============ FOOTER ELEGAN & MODERN ============ */
   footer {
-    background: #111723;
-    color: #B8B8B8;
+    background: #0B1320;
+    color: #94A3B8;
     font-family: 'Plus Jakarta Sans', sans-serif;
+    border-top: 3px solid #1668A3;
+    position: relative;
   }
   .footer-inner {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 48px 20px 24px;
+    padding: 50px 20px 30px;
     display: grid;
     grid-template-columns: 1fr;
     gap: 32px;
@@ -16,14 +18,17 @@
   @media (min-width: 640px) {
     .footer-inner {
       grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
     }
   }
   @media (min-width: 1024px) {
     .footer-inner {
-      grid-template-columns: 1.3fr 1fr 1fr 0.9fr 0.8fr;
+      grid-template-columns: 1.4fr 1.1fr 1.2fr 0.9fr 1fr;
+      gap: 32px;
     }
   }
 
+  /* Brand Desa */
   .footer-brand {
     display: flex;
     flex-direction: column;
@@ -35,77 +40,104 @@
     gap: 14px;
   }
   .footer-logo {
-    width: 80px;            /* Lebar logo agar proporsional */
-    height: auto;           /* Tinggi otomatis mengikuti rasio gambar */
+    width: 58px;
+    height: 58px;
     flex-shrink: 0;
-    overflow: visible;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 6px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
   .footer-logo img {
     width: 100%;
-    height: auto;
+    height: 100%;
     object-fit: contain;
-    padding: 0;             /* Menghilangkan padding agar logo full */
   }
   .footer-brand .nama-desa {
-    color: #fff;
-    font-size: 18px;
+    color: #FFFFFF;
+    font-size: 17px;
     font-weight: 800;
+    line-height: 1.25;
   }
   .footer-brand .sub-desa {
-    font-size: 12px;
-    color: #8A8A8A;
-    margin-top: 2px;
+    font-size: 11.5px;
+    color: #38BDF8;
+    font-weight: 600;
+    margin-top: 3px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
   }
   .footer-brand p {
     font-size: 12.5px;
-    color: #9A9A9A;
-    line-height: 1.75;
-    max-width: 320px;
+    color: #94A3B8;
+    line-height: 1.7;
+    margin: 0;
   }
 
+  /* Kolom Footer */
   .footer-col h4 {
-    color: #fff;
+    color: #FFFFFF;
     font-size: 13px;
-    font-weight: 700;
-    margin-bottom: 14px;
+    font-weight: 800;
+    margin: 0 0 16px 0;
     text-transform: uppercase;
-    letter-spacing: .05em;
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
   }
-  .footer-col p, .footer-col a {
+  .footer-col h4::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 14px;
+    background: #38BDF8;
+    border-radius: 2px;
+  }
+  .footer-col a {
     font-size: 13px;
-    color: #9A9A9A;
-    line-height: 1.85;
-    display: block;
+    color: #94A3B8;
+    line-height: 1.8;
+    display: flex;
+    align-items: center;
     text-decoration: none;
+    transition: all 0.2s ease;
+    padding: 3px 0;
   }
   .footer-col a:hover {
-    color: #fff;
+    color: #38BDF8;
+    transform: translateX(4px);
   }
 
+  /* Jam Pelayanan */
   .jam-pelayanan {
-    background: rgba(22, 104, 163, 0.12);
-    border: 1px solid rgba(22, 104, 163, 0.25);
+    background: rgba(56, 189, 248, 0.08);
+    border: 1px solid rgba(56, 189, 248, 0.2);
     border-radius: 8px;
     padding: 10px 12px;
     margin-bottom: 14px;
   }
   .jam-pelayanan .jam-title {
-    font-size: 11.5px;
+    font-size: 11px;
     font-weight: 700;
-    color: #4CB5FF;
+    color: #38BDF8;
     display: flex;
     align-items: center;
     gap: 6px;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
   }
   .jam-pelayanan .jam-waktu {
     font-size: 12px;
-    color: #D8D8D8;
+    font-weight: 600;
+    color: #E2E8F0;
   }
 
+  /* Kontak & Pengaduan */
   .kontak-item {
     display: flex;
     align-items: flex-start;
@@ -113,65 +145,82 @@
     margin-bottom: 12px;
   }
   .kontak-icon {
-    width: 30px;
-    height: 30px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
     flex-shrink: 0;
-    margin-top: 2px;
     font-size: 13px;
   }
   .kontak-info {
     display: flex;
     flex-direction: column;
+    gap: 2px;
   }
   .kontak-label {
     font-size: 10.5px;
-    color: #7A7A7A;
-    line-height: 1.3;
+    color: #64748B;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
   }
   .kontak-val {
-    color: #D8D8D8;
+    color: #E2E8F0;
     font-size: 12.5px;
     font-weight: 600;
     text-decoration: none;
+    transition: color 0.15s ease;
   }
   .kontak-val:hover {
-    color: #fff;
+    color: #38BDF8;
   }
 
+  /* Detail Wilayah */
   .footer-wilayah {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    padding: 10px 12px;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 6px;
   }
   .footer-wilayah .baris {
     display: flex;
     justify-content: space-between;
-    gap: 10px;
-    font-size: 12.5px;
+    align-items: center;
+    font-size: 12px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
+  }
+  .footer-wilayah .baris:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
   }
   .footer-wilayah .label {
-    color: #7A7A7A;
+    color: #64748B;
+    font-weight: 500;
   }
   .footer-wilayah .nilai {
-    color: #D8D8D8;
-    font-weight: 600;
+    color: #F1F5F9;
+    font-weight: 700;
     text-align: right;
   }
 
+  /* Copyright Bawah */
   .footer-bottom {
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    background: #070D17;
     text-align: center;
     padding: 18px 20px;
     font-size: 12px;
-    color: #7A7A7A;
-    max-width: 1200px;
-    margin: 0 auto;
+    color: #64748B;
+    font-weight: 500;
+  }
+  .footer-bottom strong {
+    color: #94A3B8;
   }
 </style>
 
@@ -179,7 +228,7 @@
 
 <footer>
   <div class="footer-inner">
-    <!-- BRAND DESA -->
+    <!-- 1. IDENTITAS BRAND DESA -->
     <div class="footer-brand">
       <div class="baris-logo">
         <div class="footer-logo">
@@ -190,65 +239,58 @@
           <div class="sub-desa">Sistem Informasi Desa</div>
         </div>
       </div>
-      <p>Portal resmi Desa Munungkerep untuk transparansi informasi, peta wilayah, dan pelayanan publik bagi seluruh warga dan masyarakat umum.</p>
+      <p>Portal resmi Desa Munungkerep untuk transparansi informasi publik, peta potensi wilayah, dan pelayanan administrasi bagi seluruh warga dan masyarakat umum.</p>
     </div>
 
-    <!-- INFORMASI LAYANAN -->
+    <!-- 2. INFORMASI LAYANAN -->
     <div class="footer-col">
       <h4>Informasi Layanan</h4>
       <div class="jam-pelayanan">
-        <div class="jam-title"><i class="fas fa-clock"></i> Jam Kantor Balai Desa:</div>
+        <div class="jam-title"><i class="fas fa-clock"></i> Jam Kantor Balai Desa</div>
         <div class="jam-waktu">Senin – Jumat: 08.00 – 15.00 WIB</div>
       </div>
-      <a href="javascript:void(0)" onclick="if(typeof bukaModalLayanan === 'function'){ bukaModalLayanan(); } else { window.location.href='/#modal-layanan'; }"><i class="fas fa-file-signature" style="margin-right:6px; font-size:11px;"></i> Surat Administrasi</a>
-      <a href="javascript:void(0)" onclick="if(typeof bukaModalDemografi === 'function'){ bukaModalDemografi(); } else { window.location.href='/#modal-demografi'; }"><i class="fas fa-id-card" style="margin-right:6px; font-size:11px;"></i> Pelayanan Kependudukan</a>
-      <a href="/peta"><i class="fas fa-map-marked-alt" style="margin-right:6px; font-size:11px;"></i> Peta Interaktif &amp; Potensi</a>
-      <a href="javascript:void(0)" onclick="if(typeof bukaModalInformasi === 'function'){ bukaModalInformasi(); } else { window.location.href='/#modal-informasi'; }"><i class="fas fa-chart-pie" style="margin-right:6px; font-size:11px;"></i> Transparansi APBDes</a>
+      <a href="javascript:void(0)" onclick="if(typeof bukaModalLayanan === 'function'){ bukaModalLayanan(); } else { window.location.href='/#modal-layanan'; }"><i class="fas fa-file-lines" style="margin-right:8px; font-size:12px; color:#38BDF8;"></i> Surat Administrasi</a>
+      <a href="javascript:void(0)" onclick="if(typeof bukaModalDemografi === 'function'){ bukaModalDemografi(); } else { window.location.href='/#modal-demografi'; }"><i class="fas fa-id-card" style="margin-right:8px; font-size:12px; color:#38BDF8;"></i> Pelayanan Kependudukan</a>
+      <a href="/peta"><i class="fas fa-map-location-dot" style="margin-right:8px; font-size:12px; color:#38BDF8;"></i> Peta Interaktif &amp; Potensi</a>
+      <a href="javascript:void(0)" onclick="if(typeof bukaModalInformasi === 'function'){ bukaModalInformasi('apbdes'); } else { window.location.href='/#modal-informasi'; }"><i class="fas fa-chart-pie" style="margin-right:8px; font-size:12px; color:#38BDF8;"></i> Transparansi APBDes</a>
     </div>
 
-    <!-- INFORMASI PENGADUAN & CALL CENTER -->
+    <!-- 3. PENGADUAN & KONTAK -->
     <div class="footer-col">
-      <h4>Pengaduan &amp; Informasi</h4>
+      <h4>Pengaduan &amp; Kontak</h4>
       <div class="kontak-item">
         <div class="kontak-icon" style="background: rgba(37, 211, 102, 0.15); color: #25D366;"><i class="fab fa-whatsapp"></i></div>
         <div class="kontak-info">
-          <span class="kontak-label">Pengaduan &amp; Call Center:</span>
+          <span class="kontak-label">WhatsApp Call Center</span>
           <a href="https://wa.me/6281234922365" target="_blank" class="kontak-val">0812-3492-2365</a>
         </div>
       </div> 
       <div class="kontak-item">
-        <div class="kontak-icon" style="background: rgba(212, 160, 23, 0.15); color: #D4A017;"><i class="fas fa-headset"></i></div>
+        <div class="kontak-icon" style="background: rgba(56, 189, 248, 0.15); color: #38BDF8;"><i class="fas fa-envelope"></i></div>
         <div class="kontak-info">
-          <span class="kontak-label">Khusus Layanan Informasi:</span>
-          <a href="https://wa.me/6281234922365" target="_blank" class="kontak-val">0812-3492-2365</a>
-        </div>
-      </div>
-      <div class="kontak-item">
-        <div class="kontak-icon" style="background: rgba(22, 104, 163, 0.15); color: #4CB5FF;"><i class="fas fa-envelope"></i></div>
-        <div class="kontak-info">
-          <span class="kontak-label">Email Resmi Desa:</span>
+          <span class="kontak-label">Email Resmi Desa</span>
           <a href="mailto:munungkerep11@gmail.com" class="kontak-val">munungkerep11@gmail.com</a>
         </div>
       </div>
       <div class="kontak-item">
-        <div class="kontak-icon" style="background: rgba(198, 40, 40, 0.15); color: #ef5350;"><i class="fas fa-box-archive"></i></div>
+        <div class="kontak-icon" style="background: rgba(239, 68, 68, 0.15); color: #F87171;"><i class="fas fa-building-columns"></i></div>
         <div class="kontak-info">
-          <span class="kontak-label">Kotak Aspirasi Warga:</span>
-          <span class="kontak-val" style="font-weight: 500; font-size: 12px;">Balai Desa Munungkerep</span>
+          <span class="kontak-label">Kotak Aspirasi Warga</span>
+          <span class="kontak-val" style="font-size: 12px; color: #CBD5E1;">Balai Desa Munungkerep</span>
         </div>
       </div>
     </div>
 
-    <!-- TAUTAN CEPAK -->
+    <!-- 4. TAUTAN CEPAT -->
     <div class="footer-col">
       <h4>Tautan Cepat</h4>
-      <a href="/">Beranda</a>
-      <a href="/peta">Peta &amp; Potensi</a>
-      <a href="/profil-desa">Profil Desa</a>
-      <a href="/kegiatan">Event &amp; Kegiatan</a>
+      <a href="/"><i class="fas fa-angle-right" style="margin-right:8px; font-size:11px; color:#64748B;"></i> Beranda</a>
+      <a href="/peta"><i class="fas fa-angle-right" style="margin-right:8px; font-size:11px; color:#64748B;"></i> Peta &amp; Potensi</a>
+      <a href="/profil-desa"><i class="fas fa-angle-right" style="margin-right:8px; font-size:11px; color:#64748B;"></i> Profil Desa</a>
+      <a href="/kegiatan"><i class="fas fa-angle-right" style="margin-right:8px; font-size:11px; color:#64748B;"></i> Event &amp; Kegiatan</a>
     </div>
 
-    <!-- DETAIL WILAYAH -->
+    <!-- 5. DETAIL WILAYAH -->
     <div class="footer-col">
       <h4>Detail Wilayah</h4>
       <div class="footer-wilayah">
@@ -262,6 +304,6 @@
   </div>
 
   <div class="footer-bottom">
-    © 2026 Pemerintah Desa Munungkerep — Disusun oleh Tim KKN 2026. Seluruh hak dilindungi.
+    &copy; 2026 <strong>Pemerintah Desa Munungkerep</strong> — Disusun oleh Tim KKN 2026. Seluruh hak dilindungi.
   </div>
 </footer>
