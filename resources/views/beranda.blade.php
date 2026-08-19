@@ -940,7 +940,7 @@
       var el = document.getElementById(id);
       if (el) {
         el.classList.remove('show');
-        el.style.display = 'none';
+        el.style.setProperty('display', 'none', 'important');
       }
     });
   }
@@ -961,7 +961,9 @@
     { nama: 'Surat Keterangan Tidak Mampu', syarat: ['Fotocopy KK', 'Data sekolah'], keterangan: 'Untuk keringanan biaya sekolah & beasiswa' }
   ];
 
-  function bukaModalLayanan(){
+  window.bukaModalLayanan = function(e){
+    if (e && e.preventDefault) e.preventDefault();
+    if (e && e.stopPropagation) e.stopPropagation();
     tutupSemuaModal();
     const wadah = document.getElementById('daftar-surat');
     if (wadah) {
@@ -981,84 +983,100 @@
     var el = document.getElementById('modal-layanan-overlay');
     if (el) {
       el.classList.add('show');
-      el.style.display = 'flex';
+      el.style.setProperty('display', 'flex', 'important');
+      el.style.setProperty('z-index', '99999', 'important');
     }
-  }
+  };
 
-  function tutupModalLayanan(event){
+  window.tutupModalLayanan = function(event){
     if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-layanan-close')) return;
     var el = document.getElementById('modal-layanan-overlay');
     if (el) {
       el.classList.remove('show');
-      el.style.display = 'none';
+      el.style.setProperty('display', 'none', 'important');
     }
-  }
+  };
 
   // ================= MODAL INFORMASI PUBLIK & APBDES =================
-  function switchInfoTab(tabId, btn) {
+  window.switchInfoTab = function(tabId, btn) {
     document.querySelectorAll('.info-tab-content').forEach(el => el.style.display = 'none');
     document.querySelectorAll('.info-tab-btn').forEach(b => b.classList.remove('active'));
     
     const target = document.getElementById('infotab-' + tabId);
     if (target) target.style.display = 'block';
-    if (btn) btn.classList.add('active');
-  }
+    if (btn) {
+      btn.classList.add('active');
+    } else {
+      const defaultBtn = document.querySelector(`.info-tab-btn[onclick*="${tabId}"]`);
+      if (defaultBtn) defaultBtn.classList.add('active');
+    }
+  };
 
-  function bukaModalInformasi(){
+  window.bukaModalInformasi = function(tab, e){
+    if (e && e.preventDefault) e.preventDefault();
+    if (e && e.stopPropagation) e.stopPropagation();
     tutupSemuaModal();
+    if (tab) window.switchInfoTab(tab);
     var el = document.getElementById('modal-informasi-overlay');
     if (el) {
       el.classList.add('show');
-      el.style.display = 'flex';
+      el.style.setProperty('display', 'flex', 'important');
+      el.style.setProperty('z-index', '99999', 'important');
     }
-  }
+  };
 
-  function tutupModalInformasi(event){
+  window.tutupModalInformasi = function(event){
     if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-informasi-close')) return;
     var el = document.getElementById('modal-informasi-overlay');
     if (el) {
       el.classList.remove('show');
-      el.style.display = 'none';
+      el.style.setProperty('display', 'none', 'important');
     }
-  }
+  };
 
   // ================= MODAL DATA KEPENDUDUKAN (DEMOGRAFI) =================
-  function bukaModalDemografi(){
+  window.bukaModalDemografi = function(e){
+    if (e && e.preventDefault) e.preventDefault();
+    if (e && e.stopPropagation) e.stopPropagation();
     tutupSemuaModal();
     var el = document.getElementById('modal-demografi-overlay');
     if (el) {
       el.classList.add('show');
-      el.style.display = 'flex';
+      el.style.setProperty('display', 'flex', 'important');
+      el.style.setProperty('z-index', '99999', 'important');
     }
-  }
+  };
 
-  function tutupModalDemografi(event){
+  window.tutupModalDemografi = function(event){
     if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-informasi-close')) return;
     var el = document.getElementById('modal-demografi-overlay');
     if (el) {
       el.classList.remove('show');
-      el.style.display = 'none';
+      el.style.setProperty('display', 'none', 'important');
     }
-  }
+  };
 
   // ================= MODAL KELEMBAGAAN DESA =================
-  function bukaModalKelembagaan(){
+  window.bukaModalKelembagaan = function(e){
+    if (e && e.preventDefault) e.preventDefault();
+    if (e && e.stopPropagation) e.stopPropagation();
     tutupSemuaModal();
     var el = document.getElementById('modal-kelembagaan-overlay');
     if (el) {
       el.classList.add('show');
-      el.style.display = 'flex';
+      el.style.setProperty('display', 'flex', 'important');
+      el.style.setProperty('z-index', '99999', 'important');
     }
-  }
+  };
 
-  function tutupModalKelembagaan(event){
+  window.tutupModalKelembagaan = function(event){
     if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-informasi-close')) return;
     var el = document.getElementById('modal-kelembagaan-overlay');
     if (el) {
       el.classList.remove('show');
-      el.style.display = 'none';
+      el.style.setProperty('display', 'none', 'important');
     }
-  }
+  };
 
   // Global listener pelindung modal
   document.addEventListener('click', function(e) {
@@ -1069,18 +1087,35 @@
     
     if (action === 'modal-kelembagaan' || href === '#modal-kelembagaan') {
       e.preventDefault();
-      bukaModalKelembagaan();
+      bukaModalKelembagaan(e);
     } else if (action === 'modal-demografi' || href === '#modal-demografi') {
       e.preventDefault();
-      bukaModalDemografi();
+      bukaModalDemografi(e);
     } else if (action === 'modal-informasi' || href === '#modal-informasi' || href === '#modal-apbdes') {
       e.preventDefault();
-      bukaModalInformasi();
+      bukaModalInformasi(null, e);
     } else if (action === 'modal-layanan' || href === '#modal-layanan') {
       e.preventDefault();
-      bukaModalLayanan();
+      bukaModalLayanan(e);
     }
   });
+
+  // URL Hash Auto-Open Listener (misal: /#modal-kelembagaan atau /#modal-demografi)
+  function checkUrlHash() {
+    const hash = (window.location.hash || '').toLowerCase();
+    if (hash === '#modal-demografi') {
+      bukaModalDemografi();
+    } else if (hash === '#modal-kelembagaan') {
+      bukaModalKelembagaan();
+    } else if (hash === '#modal-informasi' || hash === '#modal-apbdes') {
+      bukaModalInformasi();
+    } else if (hash === '#modal-layanan') {
+      bukaModalLayanan();
+    }
+  }
+  window.addEventListener('hashchange', checkUrlHash);
+  document.addEventListener('DOMContentLoaded', checkUrlHash);
+  checkUrlHash();
 
   // ================= MODAL ARSIP SEMUA BERITA DESA =================
   function bukaModalSemuaBerita(){
