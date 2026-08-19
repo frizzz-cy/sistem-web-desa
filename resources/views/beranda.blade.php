@@ -528,18 +528,27 @@
 
     <!-- TAB 3: DEMOGRAFI -->
     <div class="info-tab-content" id="infotab-demografi" style="display:none;">
-      <div class="apbdes-section">
-        <div class="apbdes-head" style="background:#1668A3;">
-          <span><i class="fas fa-users" style="margin-right:6px;"></i> DATA DEMOGRAFI &amp; KEPENDUDUKAN</span>
-          <span class="total">{{ $demo['total_penduduk'] ?? '2.113' }} Jiwa</span>
+      <!-- HIGHLIGHT STATS GRID (4 KARTU ANGKA) -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 20px;">
+        <div style="background: linear-gradient(135deg, #0B3B60, #1668A3); color: #fff; padding: 12px 14px; border-radius: 10px; text-align: center;">
+          <div style="font-size: 22px; font-weight: 800;">{{ $demo['total_penduduk'] ?? '2.113' }}</div>
+          <div style="font-size: 11px; opacity: 0.9; font-weight: 600;">Total Penduduk (Jiwa)</div>
         </div>
-        <div class="apbdes-body">
-          <div class="apbdes-row"><span class="label">Total Penduduk</span><span class="val">{{ $demo['total_penduduk'] ?? '2.113' }} Orang</span></div>
-          <div class="apbdes-row"><span class="label">Penduduk Laki-Laki</span><span class="val">{{ $demo['laki_laki'] ?? '1.042' }} Orang</span></div>
-          <div class="apbdes-row"><span class="label">Penduduk Perempuan</span><span class="val">{{ $demo['perempuan'] ?? '1.071' }} Orang</span></div>
-          <div class="apbdes-row"><span class="label">Total Kepala Keluarga (KK)</span><span class="val">{{ $demo['total_kk'] ?? '761' }} KK</span></div>
-          <div class="apbdes-row"><span class="label">Agama Mayoritas</span><span class="val">Islam (100%)</span></div>
+        <div style="background: linear-gradient(135deg, #0F6B58, #15803D); color: #fff; padding: 12px 14px; border-radius: 10px; text-align: center;">
+          <div style="font-size: 22px; font-weight: 800;">{{ $demo['total_kk'] ?? '761' }}</div>
+          <div style="font-size: 11px; opacity: 0.9; font-weight: 600;">Kepala Keluarga (KK)</div>
         </div>
+        <div style="background: linear-gradient(135deg, #0284C7, #0369A1); color: #fff; padding: 12px 14px; border-radius: 10px; text-align: center;">
+          <div style="font-size: 22px; font-weight: 800;">{{ $demo['laki_laki'] ?? '1.042' }}</div>
+          <div style="font-size: 11px; opacity: 0.9; font-weight: 600;">Laki-Laki</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #DB2777, #BE185D); color: #fff; padding: 12px 14px; border-radius: 10px; text-align: center;">
+          <div style="font-size: 22px; font-weight: 800;">{{ $demo['perempuan'] ?? '1.071' }}</div>
+          <div style="font-size: 11px; opacity: 0.9; font-weight: 600;">Perempuan</div>
+        </div>
+      </div>
+
+      <!-- SEKSI 1: KOMPOSISI KELOMPOK USIA PENDUDUK -->
       <div class="apbdes-section">
         <div class="apbdes-head" style="background:#0B3B60;">
           <span><i class="fas fa-child" style="margin-right:6px;"></i> KOMPOSISI KELOMPOK USIA PENDUDUK</span>
@@ -554,23 +563,61 @@
         </div>
       </div>
 
+      <!-- SEKSI 2: MATA PENCAHARIAN & KETENAGAKERJAAN -->
       <div class="apbdes-section">
-        <div class="apbdes-head" style="background:#D4A017;">
-          <span><i class="fas fa-briefcase" style="margin-right:6px;"></i> MATA PENCAHARIAN &amp; KESEJAHTERAAN</span>
+        <div class="apbdes-head" style="background:#1668A3;">
+          <span><i class="fas fa-briefcase" style="margin-right:6px;"></i> MATA PENCAHARIAN &amp; KETENAGAKERJAAN</span>
           <span class="total">Mayoritas Tani</span>
         </div>
         <div class="apbdes-body">
-          <div class="apbdes-row"><span class="label">Petani Utama / Pemilik Lahan</span><span class="val">{{ $demo['petani_utama'] ?? '986' }} Orang</span></div>
+          <div class="apbdes-row"><span class="label">Petani Pemilik Lahan Utama</span><span class="val">{{ $demo['petani_utama'] ?? '986' }} Orang</span></div>
           <div class="apbdes-row"><span class="label">Buruh Tani</span><span class="val">{{ $demo['buruh_tani'] ?? '457' }} Orang</span></div>
-          <div class="apbdes-row"><span class="label">Total Angkatan Kerja (15-55 Thn)</span><span class="val">{{ $demo['angkatan_kerja'] ?? '1.169' }} Orang</span></div>
-          <div class="apbdes-row"><span class="label">Tingkat Kesejahteraan Miskin</span><span class="val">{{ $demo['kk_miskin'] ?? '450' }} KK</span></div>
-          <div class="apbdes-row"><span class="label">Tingkat Kesejahteraan Sedang</span><span class="val">{{ $demo['kk_sedang'] ?? '300' }} KK</span></div>
-          <div class="apbdes-row"><span class="label">Tingkat Kesejahteraan Kaya</span><span class="val">{{ $demo['kk_kaya'] ?? '11' }} KK</span></div>
+          <div class="apbdes-row"><span class="label">Total Angkatan Kerja Aktif (Usia 15-55 Thn)</span><span class="val">{{ $demo['angkatan_kerja'] ?? '1.169' }} Orang</span></div>
+          <div class="apbdes-row"><span class="label">Belum / Dalam Pencarian Kerja</span><span class="val">{{ $demo['belum_kerja'] ?? '55' }} Orang</span></div>
         </div>
       </div>
 
+      <!-- SEKSI 3: TINGKAT KESEJAHTERAAN EKONOMI -->
+      <div class="apbdes-section">
+        <div class="apbdes-head" style="background:#D4A017;">
+          <span><i class="fas fa-chart-line" style="margin-right:6px;"></i> TINGKAT KESEJAHTERAAN KELUARGA (KK)</span>
+          <span class="total">{{ $demo['total_kk'] ?? '761' }} KK Total</span>
+        </div>
+        <div class="apbdes-body">
+          <div class="apbdes-row"><span class="label">Masyarakat Ekonomi Prasejahtera (Miskin)</span><span class="val">{{ $demo['kk_miskin'] ?? '450' }} KK</span></div>
+          <div class="apbdes-row"><span class="label">Masyarakat Ekonomi Menengah (Sedang)</span><span class="val">{{ $demo['kk_sedang'] ?? '300' }} KK</span></div>
+          <div class="apbdes-row"><span class="label">Masyarakat Ekonomi Sejahtera (Kaya)</span><span class="val">{{ $demo['kk_kaya'] ?? '11' }} KK</span></div>
+        </div>
+      </div>
+
+      <!-- SEKSI 4: PENDIDIKAN & AGAMA -->
       <div class="apbdes-section">
         <div class="apbdes-head" style="background:#0F6B58;">
+          <span><i class="fas fa-graduation-cap" style="margin-right:6px;"></i> PENDIDIKAN &amp; AGAMA WARGA</span>
+          <span class="total">100% Islam</span>
+        </div>
+        <div class="apbdes-body">
+          <div class="apbdes-row"><span class="label">Agama Warga</span><span class="val">Islam (100% / {{ $demo['agama_islam'] ?? '2.113' }} Orang)</span></div>
+          <div class="apbdes-row"><span class="label">Rentang Pendidikan Tidak / Belum Tamat SD</span><span class="val">{{ $demo['pendidikan_sd'] ?? '542' }} Orang</span></div>
+          <div class="apbdes-row"><span class="label">Lulusan Sarjana / Perguruan Tinggi (S-1)</span><span class="val">{{ $demo['pendidikan_s1'] ?? '40' }} Orang</span></div>
+        </div>
+      </div>
+
+      <!-- SEKSI 5: PETERNAKAN WARGA -->
+      <div class="apbdes-section">
+        <div class="apbdes-head" style="background:#854D0E;">
+          <span><i class="fas fa-paw" style="margin-right:6px;"></i> POPULASI PETERNAKAN WARGA</span>
+        </div>
+        <div class="apbdes-body">
+          <div class="apbdes-row"><span class="label">Populasi Ternak Ayam &amp; Itik</span><span class="val">{{ $demo['ternak_ayam'] ?? '450' }} Ekor</span></div>
+          <div class="apbdes-row"><span class="label">Populasi Ternak Kambing</span><span class="val">{{ $demo['ternak_kambing'] ?? '170' }} Ekor</span></div>
+          <div class="apbdes-row"><span class="label">Populasi Ternak Sapi</span><span class="val">{{ $demo['ternak_sapi'] ?? '76' }} Ekor</span></div>
+        </div>
+      </div>
+
+      <!-- SEKSI 6: ASAL USUL DESA -->
+      <div class="apbdes-section">
+        <div class="apbdes-head" style="background:#475569;">
           <span><i class="fas fa-book" style="margin-right:6px;"></i> ASAL USUL NAMA MUNUNGKEREP</span>
         </div>
         <div class="apbdes-body" style="font-size:13px; color:var(--teks); line-height:1.6;">
@@ -612,201 +659,65 @@
 
     <!-- TAB 5: KELEMBAGAAN DESA -->
     <div class="info-tab-content" id="infotab-kelembagaan" style="display:none;">
-      <div class="apbdes-section">
-        <div class="apbdes-head" style="background:#1668A3;">
-          <span><i class="fas fa-hands-helping" style="margin-right:6px;"></i> KELEMBAGAAN &amp; ORGANISASI DESA</span>
-        </div>
-        <div class="apbdes-body">
-          <div style="font-size: 13px; color: var(--teks); line-height: 1.6; margin-bottom: 12px;">
-            Desa Munungkerep memiliki berbagai kelembagaan dan organisasi kemasyarakatan yang aktif:
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+        <!-- BPD -->
+        <div style="background: #F8FAFC; border: 1.5px solid #CBD5E1; padding: 14px; border-radius: 10px;">
+          <div style="font-size: 14px; font-weight: 800; color: var(--biru-tua); margin-bottom: 4px;">
+            🏛️ BPD (Badan Permusyawaratan Desa)
           </div>
-          <div style="display: flex; flex-direction: column; gap: 8px;">
-            <div style="background:#F8FAFC; border:1px solid #E2E8F0; padding:8px 12px; border-radius:6px; font-size:12.5px;">
-              <strong>🏛️ BPD (Badan Permusyawaratan Desa)</strong><br>
-              <span style="color:var(--teks-muted);">Perwujudan demokrasi desa untuk menetapkan Perdes dan menampung aspirasi warga.</span>
-            </div>
-            <div style="background:#F8FAFC; border:1px solid #E2E8F0; padding:8px 12px; border-radius:6px; font-size:12.5px;">
-              <strong>🌺 PKK &amp; Dharma Wanita</strong><br>
-              <span style="color:var(--teks-muted);">Pemberdayaan kesejahteraan keluarga dan kegiatan kemasyarakatan wanita desa.</span>
-            </div>
-            <div style="background:#F8FAFC; border:1px solid #E2E8F0; padding:8px 12px; border-radius:6px; font-size:12.5px;">
-              <strong>⚡ Karang Taruna &amp; Remaja Masjid</strong><br>
-              <span style="color:var(--teks-muted);">Wadah pembinaan dan kegiatan kepemudaan, sosial, serta keagamaan.</span>
-            </div>
-            <div style="background:#F8FAFC; border:1px solid #E2E8F0; padding:8px 12px; border-radius:6px; font-size:12.5px;">
-              <strong>📖 Jamiyah Yasin, Tahlil &amp; Kelompok Arisan</strong><br>
-              <span style="color:var(--teks-muted);">Kegiatan rutin keagamaan dan kebersamaan warga di 7 dusun.</span>
-            </div>
+          <div style="font-size: 12.5px; color: var(--teks-muted); line-height: 1.55;">
+            Bertindak sebagai perwujudan demokrasi desa untuk menetapkan Peraturan Desa bersama Kepala Desa dan menampung aspirasi masyarakat.
           </div>
         </div>
-      </div>
-    </div>
 
-  </div>
-</div>
-
-<!-- Modal Data Kependudukan (Demografi) -->
-<div class="modal-informasi-overlay" id="modal-demografi-overlay" onclick="tutupModalDemografi(event)">
-  <div class="modal-informasi-box" style="max-width:760px;">
-    <button class="modal-informasi-close" onclick="tutupModalDemografi()">✕</button>
-    <h3>Statistik &amp; Data Kependudukan Desa</h3>
-    <div class="sub">Data Monografi &amp; Profil Kependudukan Desa Munungkerep</div>
-
-    <!-- HIGHLIGHT STATS GRID (4 KARTU ANGKAN) -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 20px;">
-      <div style="background: linear-gradient(135deg, #0B3B60, #1668A3); color: #fff; padding: 12px 14px; border-radius: 10px; text-align: center;">
-        <div style="font-size: 22px; font-weight: 800;">{{ $demo['total_penduduk'] ?? '2.113' }}</div>
-        <div style="font-size: 11px; opacity: 0.9; font-weight: 600;">Total Penduduk (Jiwa)</div>
-      </div>
-      <div style="background: linear-gradient(135deg, #0F6B58, #15803D); color: #fff; padding: 12px 14px; border-radius: 10px; text-align: center;">
-        <div style="font-size: 22px; font-weight: 800;">{{ $demo['total_kk'] ?? '761' }}</div>
-        <div style="font-size: 11px; opacity: 0.9; font-weight: 600;">Kepala Keluarga (KK)</div>
-      </div>
-      <div style="background: linear-gradient(135deg, #0284C7, #0369A1); color: #fff; padding: 12px 14px; border-radius: 10px; text-align: center;">
-        <div style="font-size: 22px; font-weight: 800;">{{ $demo['laki_laki'] ?? '1.042' }}</div>
-        <div style="font-size: 11px; opacity: 0.9; font-weight: 600;">Laki-Laki</div>
-      </div>
-      <div style="background: linear-gradient(135deg, #DB2777, #BE185D); color: #fff; padding: 12px 14px; border-radius: 10px; text-align: center;">
-        <div style="font-size: 22px; font-weight: 800;">{{ $demo['perempuan'] ?? '1.071' }}</div>
-        <div style="font-size: 11px; opacity: 0.9; font-weight: 600;">Perempuan</div>
-      </div>
-    </div>
-
-    <!-- SEKSI KELOMPOK USIA PENDUDUK -->
-    <div class="apbdes-section">
-      <div class="apbdes-head" style="background:#0B3B60;">
-        <span><i class="fas fa-child" style="margin-right:6px;"></i> KOMPOSISI KELOMPOK USIA PENDUDUK</span>
-        <span class="total">Demografi Usia</span>
-      </div>
-      <div class="apbdes-body">
-        <div class="apbdes-row"><span class="label">Usia Balita (0 – 4 Tahun)</span><span class="val">{{ $demo['usia_balita'] ?? '145' }} Orang</span></div>
-        <div class="apbdes-row"><span class="label">Usia Anak-Anak (5 – 14 Tahun)</span><span class="val">{{ $demo['usia_anak'] ?? '312' }} Orang</span></div>
-        <div class="apbdes-row"><span class="label">Usia Produktif / Angkatan Kerja (15 – 55 Tahun)</span><span class="val">{{ $demo['usia_produktif'] ?? '1.169' }} Orang</span></div>
-        <div class="apbdes-row"><span class="label">Usia Dewasa / Pra-Lansia (56 – 64 Tahun)</span><span class="val">{{ $demo['usia_pralansia'] ?? '280' }} Orang</span></div>
-        <div class="apbdes-row"><span class="label">Usia Lansia (65+ Tahun)</span><span class="val">{{ $demo['usia_lansia'] ?? '207' }} Orang</span></div>
-      </div>
-    </div>
-
-    <!-- SEKSI 1: MATA PENCAHARIAN & KETENAGAKERJAAN -->
-    <div class="apbdes-section">
-      <div class="apbdes-head" style="background:#1668A3;">
-        <span><i class="fas fa-briefcase" style="margin-right:6px;"></i> MATA PENCAHARIAN &amp; KETENAGAKERJAAN</span>
-        <span class="total">Mayoritas Tani</span>
-      </div>
-      <div class="apbdes-body">
-        <div class="apbdes-row"><span class="label">Petani Pemilik Lahan Utama</span><span class="val">{{ $demo['petani_utama'] ?? '986' }} Orang</span></div>
-        <div class="apbdes-row"><span class="label">Buruh Tani</span><span class="val">{{ $demo['buruh_tani'] ?? '457' }} Orang</span></div>
-        <div class="apbdes-row"><span class="label">Total Angkatan Kerja Aktif (Usia 15-55 Thn)</span><span class="val">{{ $demo['angkatan_kerja'] ?? '1.169' }} Orang</span></div>
-        <div class="apbdes-row"><span class="label">Belum / Dalam Pencarian Kerja</span><span class="val">{{ $demo['belum_kerja'] ?? '55' }} Orang</span></div>
-      </div>
-    </div>
-
-    <!-- SEKSI 2: TINGKAT KESEJAHTERAAN EKONOMI -->
-    <div class="apbdes-section">
-      <div class="apbdes-head" style="background:#D4A017;">
-        <span><i class="fas fa-chart-line" style="margin-right:6px;"></i> TINGKAT KESEJAHTERAAN KELUARGA (KK)</span>
-        <span class="total">{{ $demo['total_kk'] ?? '761' }} KK Total</span>
-      </div>
-      <div class="apbdes-body">
-        <div class="apbdes-row"><span class="label">Masyarakat Ekonomi Prasejahtera (Miskin)</span><span class="val">{{ $demo['kk_miskin'] ?? '450' }} KK</span></div>
-        <div class="apbdes-row"><span class="label">Masyarakat Ekonomi Menengah (Sedang)</span><span class="val">{{ $demo['kk_sedang'] ?? '300' }} KK</span></div>
-        <div class="apbdes-row"><span class="label">Masyarakat Ekonomi Sejahtera (Kaya)</span><span class="val">{{ $demo['kk_kaya'] ?? '11' }} KK</span></div>
-      </div>
-    </div>
-
-    <!-- SEKSI 3: PENDIDIKAN & AGAMA -->
-    <div class="apbdes-section">
-      <div class="apbdes-head" style="background:#0F6B58;">
-        <span><i class="fas fa-graduation-cap" style="margin-right:6px;"></i> PENDIDIKAN &amp; AGAMA WARGA</span>
-        <span class="total">100% Islam</span>
-      </div>
-      <div class="apbdes-body">
-        <div class="apbdes-row"><span class="label">Agama Warga</span><span class="val">Islam (100% / {{ $demo['agama_islam'] ?? '2.113' }} Orang)</span></div>
-        <div class="apbdes-row"><span class="label">Rentang Pendidikan Tidak / Belum Tamat SD</span><span class="val">{{ $demo['pendidikan_sd'] ?? '542' }} Orang</span></div>
-        <div class="apbdes-row"><span class="label">Lulusan Sarjana / Perguruan Tinggi (S-1)</span><span class="val">{{ $demo['pendidikan_s1'] ?? '40' }} Orang</span></div>
-      </div>
-    </div>
-
-    <!-- SEKSI 4: PETERNAKAN WARGA -->
-    <div class="apbdes-section">
-      <div class="apbdes-head" style="background:#854D0E;">
-        <span><i class="fas fa-paw" style="margin-right:6px;"></i> POPULASI PETERNAKAN WARGA</span>
-      </div>
-      <div class="apbdes-body">
-        <div class="apbdes-row"><span class="label">Populasi Ternak Ayam &amp; Itik</span><span class="val">{{ $demo['ternak_ayam'] ?? '450' }} Ekor</span></div>
-        <div class="apbdes-row"><span class="label">Populasi Ternak Kambing</span><span class="val">{{ $demo['ternak_kambing'] ?? '170' }} Ekor</span></div>
-        <div class="apbdes-row"><span class="label">Populasi Ternak Sapi</span><span class="val">{{ $demo['ternak_sapi'] ?? '76' }} Ekor</span></div>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<!-- Modal Kelembagaan Desa -->
-<div class="modal-informasi-overlay" id="modal-kelembagaan-overlay" onclick="tutupModalKelembagaan(event)">
-  <div class="modal-informasi-box" style="max-width:720px;">
-    <button class="modal-informasi-close" onclick="tutupModalKelembagaan()">✕</button>
-    <h3>Kelembagaan &amp; Organisasi Desa</h3>
-    <div class="sub">Daftar Kelembagaan Resmi &amp; Organisasi Kemasyarakatan Desa Munungkerep</div>
-
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
-      <!-- BPD -->
-      <div style="background: #F8FAFC; border: 1.5px solid #CBD5E1; padding: 14px; border-radius: 10px;">
-        <div style="font-size: 14px; font-weight: 800; color: var(--biru-tua); margin-bottom: 4px;">
-          🏛️ BPD (Badan Permusyawaratan Desa)
+        <!-- PKK DHARMA WANITA -->
+        <div style="background: #F8FAFC; border: 1.5px solid #CBD5E1; padding: 14px; border-radius: 10px;">
+          <div style="font-size: 14px; font-weight: 800; color: #DB2777; margin-bottom: 4px;">
+            🌺 PKK &amp; Dharma Wanita Desa
+          </div>
+          <div style="font-size: 12.5px; color: var(--teks-muted); line-height: 1.55;">
+            Pemberdayaan kesejahteraan keluarga, kegiatan sosial, dan kemasyarakatan wanita Desa Munungkerep.
+          </div>
         </div>
-        <div style="font-size: 12.5px; color: var(--teks-muted); line-height: 1.55;">
-          Bertindak sebagai perwujudan demokrasi desa untuk menetapkan Peraturan Desa bersama Kepala Desa dan menampung aspirasi masyarakat.
-        </div>
-      </div>
 
-      <!-- PKK DHARMA WANITA -->
-      <div style="background: #F8FAFC; border: 1.5px solid #CBD5E1; padding: 14px; border-radius: 10px;">
-        <div style="font-size: 14px; font-weight: 800; color: #DB2777; margin-bottom: 4px;">
-          🌺 PKK &amp; Dharma Wanita Desa
+        <!-- KARANG TARUNA -->
+        <div style="background: #F8FAFC; border: 1.5px solid #CBD5E1; padding: 14px; border-radius: 10px;">
+          <div style="font-size: 14px; font-weight: 800; color: #0284C7; margin-bottom: 4px;">
+            ⚡ Karang Taruna Desa
+          </div>
+          <div style="font-size: 12.5px; color: var(--teks-muted); line-height: 1.55;">
+            Wadah pembinaan kepemudaan, olah raga, kreativitas sosial, dan kegiatan gotong royong pemuda desa.
+          </div>
         </div>
-        <div style="font-size: 12.5px; color: var(--teks-muted); line-height: 1.55;">
-          Pemberdayaan kesejahteraan keluarga, kegiatan sosial, dan kemasyarakatan wanita Desa Munungkerep.
-        </div>
-      </div>
 
-      <!-- KARANG TARUNA -->
-      <div style="background: #F8FAFC; border: 1.5px solid #CBD5E1; padding: 14px; border-radius: 10px;">
-        <div style="font-size: 14px; font-weight: 800; color: #0284C7; margin-bottom: 4px;">
-          ⚡ Karang Taruna Desa
+        <!-- REMAJA MASJID & JAMIYAH -->
+        <div style="background: #F8FAFC; border: 1.5px solid #CBD5E1; padding: 14px; border-radius: 10px;">
+          <div style="font-size: 14px; font-weight: 800; color: #0F6B58; margin-bottom: 4px;">
+            🕌 Remaja Masjid &amp; Jamiyah Yasin Tahlil
+          </div>
+          <div style="font-size: 12.5px; color: var(--teks-muted); line-height: 1.55;">
+            Wadah pembinaan kerohanian Islam, pengajian rutin, dan kebersamaan warga di 7 dusun.
+          </div>
         </div>
-        <div style="font-size: 12.5px; color: var(--teks-muted); line-height: 1.55;">
-          Wadah pembinaan kepemudaan, olah raga, kreativitas sosial, dan kegiatan gotong royong pemuda desa.
-        </div>
-      </div>
 
-      <!-- REMAJA MASJID & JAMIYAH -->
-      <div style="background: #F8FAFC; border: 1.5px solid #CBD5E1; padding: 14px; border-radius: 10px;">
-        <div style="font-size: 14px; font-weight: 800; color: #0F6B58; margin-bottom: 4px;">
-          🕌 Remaja Masjid &amp; Jamiyah Yasin Tahlil
+        <!-- POSYANDU BALITA & LANSIA -->
+        <div style="background: #F8FAFC; border: 1.5px solid #CBD5E1; padding: 14px; border-radius: 10px;">
+          <div style="font-size: 14px; font-weight: 800; color: #1668A3; margin-bottom: 4px;">
+            🏥 Posyandu Balita &amp; Lansia (7 Unit)
+          </div>
+          <div style="font-size: 12.5px; color: var(--teks-muted); line-height: 1.55;">
+            Pelayanan kesehatan dasar ibu, balita, dan lansia terpadu di 7 dusun Desa Munungkerep.
+          </div>
         </div>
-        <div style="font-size: 12.5px; color: var(--teks-muted); line-height: 1.55;">
-          Wadah pembinaan kerohanian Islam, pengajian rutin, dan kebersamaan warga di 7 dusun.
-        </div>
-      </div>
 
-      <!-- POSYANDU BALITA & LANSIA -->
-      <div style="background: #F8FAFC; border: 1.5px solid #CBD5E1; padding: 14px; border-radius: 10px;">
-        <div style="font-size: 14px; font-weight: 800; color: #1668A3; margin-bottom: 4px;">
-          🏥 Posyandu Balita &amp; Lansia (7 Unit)
-        </div>
-        <div style="font-size: 12.5px; color: var(--teks-muted); line-height: 1.55;">
-          Pelayanan kesehatan dasar ibu, balita, dan lansia terpadu di 7 dusun Desa Munungkerep.
-        </div>
-      </div>
-
-      <!-- KELOMPOK ARISAN -->
-      <div style="background: #F8FAFC; border: 1.5px solid #CBD5E1; padding: 14px; border-radius: 10px;">
-        <div style="font-size: 14px; font-weight: 800; color: #D4A017; margin-bottom: 4px;">
-          🤝 Kelompok Arisan &amp; Kemasyarakatan
-        </div>
-        <div style="font-size: 12.5px; color: var(--teks-muted); line-height: 1.55;">
-          Wadah silaturahmi, gotong royong, dan arisan warga desa di tingkat RT dan RW.
+        <!-- KELOMPOK ARISAN -->
+        <div style="background: #F8FAFC; border: 1.5px solid #CBD5E1; padding: 14px; border-radius: 10px;">
+          <div style="font-size: 14px; font-weight: 800; color: #D4A017; margin-bottom: 4px;">
+            🤝 Kelompok Arisan &amp; Kemasyarakatan
+          </div>
+          <div style="font-size: 12.5px; color: var(--teks-muted); line-height: 1.55;">
+            Wadah silaturahmi, gotong royong, dan arisan warga desa di tingkat RT dan RW.
+          </div>
         </div>
       </div>
     </div>
@@ -1036,46 +947,20 @@
 
   // ================= MODAL DATA KEPENDUDUKAN (DEMOGRAFI) =================
   window.bukaModalDemografi = function(e){
-    if (e && e.preventDefault) e.preventDefault();
-    if (e && e.stopPropagation) e.stopPropagation();
-    tutupSemuaModal();
-    var el = document.getElementById('modal-demografi-overlay');
-    if (el) {
-      el.classList.add('show');
-      el.style.setProperty('display', 'flex', 'important');
-      el.style.setProperty('z-index', '99999', 'important');
-    }
+    window.bukaModalInformasi('demografi', e);
   };
 
   window.tutupModalDemografi = function(event){
-    if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-informasi-close')) return;
-    var el = document.getElementById('modal-demografi-overlay');
-    if (el) {
-      el.classList.remove('show');
-      el.style.setProperty('display', 'none', 'important');
-    }
+    window.tutupModalInformasi(event);
   };
 
   // ================= MODAL KELEMBAGAAN DESA =================
   window.bukaModalKelembagaan = function(e){
-    if (e && e.preventDefault) e.preventDefault();
-    if (e && e.stopPropagation) e.stopPropagation();
-    tutupSemuaModal();
-    var el = document.getElementById('modal-kelembagaan-overlay');
-    if (el) {
-      el.classList.add('show');
-      el.style.setProperty('display', 'flex', 'important');
-      el.style.setProperty('z-index', '99999', 'important');
-    }
+    window.bukaModalInformasi('kelembagaan', e);
   };
 
   window.tutupModalKelembagaan = function(event){
-    if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-informasi-close')) return;
-    var el = document.getElementById('modal-kelembagaan-overlay');
-    if (el) {
-      el.classList.remove('show');
-      el.style.setProperty('display', 'none', 'important');
-    }
+    window.tutupModalInformasi(event);
   };
 
   // Global listener pelindung modal
