@@ -524,6 +524,317 @@
             });
         });
     </script>
+
+    <!-- ========================================================================= -->
+    <!-- GLOBAL UNIVERSAL MEDIA PICKER MODAL -->
+    <!-- ========================================================================= -->
+    <style>
+        .gmp-modal-overlay {
+            position: fixed; inset: 0; background: rgba(11, 40, 63, 0.65);
+            backdrop-filter: blur(4px); z-index: 99999;
+            display: flex; align-items: center; justify-content: center; padding: 20px;
+            animation: gmpFadeIn 0.2s ease;
+        }
+        @keyframes gmpFadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .gmp-modal-box {
+            background: #FFFFFF; border-radius: 14px; width: 100%; max-width: 900px;
+            max-height: 88vh; display: flex; flex-direction: column;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.25); overflow: hidden;
+            animation: gmpScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes gmpScaleUp { from { transform: scale(0.95) translateY(10px); } to { transform: scale(1) translateY(0); } }
+        .gmp-modal-header {
+            padding: 16px 24px; border-bottom: 1px solid #E2E8F0;
+            display: flex; justify-content: space-between; align-items: center; background: #F8FAFC;
+        }
+        .gmp-close-btn {
+            background: none; border: none; font-size: 24px; line-height: 1;
+            color: #64748B; cursor: pointer; padding: 4px 8px; border-radius: 6px;
+        }
+        .gmp-close-btn:hover { background: #E2E8F0; color: #0F172A; }
+        .gmp-modal-toolbar {
+            padding: 12px 24px; border-bottom: 1px solid #E2E8F0; background: #FFFFFF;
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+        }
+        .gmp-filter-tabs {
+            display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none;
+        }
+        .gmp-filter-tabs::-webkit-scrollbar { display: none; }
+        .gmp-tab {
+            padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;
+            color: #64748B; background: #F1F5F9; border: none; cursor: pointer;
+            white-space: nowrap; transition: all 0.15s;
+        }
+        .gmp-tab:hover { background: #E2E8F0; color: #1E293B; }
+        .gmp-tab.aktif { background: var(--biru-muda, #1668A3); color: #FFFFFF; }
+        .gmp-search-input {
+            padding: 7px 12px; border: 1.5px solid #CBD5E1; border-radius: 6px;
+            font-size: 12.5px; width: 180px; outline: none; font-family: inherit;
+        }
+        .gmp-search-input:focus { border-color: var(--biru-muda, #1668A3); }
+        .gmp-modal-body {
+            padding: 20px 24px; flex-grow: 1; overflow-y: auto; background: #F8FAFC;
+            min-height: 280px; max-height: 480px;
+        }
+        .gmp-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(135px, 1fr)); gap: 14px;
+        }
+        .gmp-item {
+            background: #FFFFFF; border: 2px solid #E2E8F0; border-radius: 8px;
+            overflow: hidden; cursor: pointer; transition: all 0.15s; position: relative;
+            display: flex; flex-direction: column;
+        }
+        .gmp-item:hover {
+            border-color: #93C5FD; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+        }
+        .gmp-item.selected {
+            border-color: #2563EB; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+        }
+        .gmp-item.selected::after {
+            content: '✓'; position: absolute; top: 6px; right: 6px;
+            background: #2563EB; color: #fff; width: 20px; height: 20px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 900;
+        }
+        .gmp-img-wrap {
+            width: 100%; aspect-ratio: 1/1; background: #E2E8F0;
+            display: flex; align-items: center; justify-content: center; overflow: hidden;
+        }
+        .gmp-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+        .gmp-item-info {
+            padding: 6px 8px; font-size: 11px;
+        }
+        .gmp-item-title {
+            font-weight: 700; color: #1E293B; overflow: hidden;
+            text-overflow: ellipsis; white-space: nowrap; display: block;
+        }
+        .gmp-item-sub { color: #64748B; font-size: 10px; margin-top: 2px; }
+        .gmp-modal-footer {
+            padding: 14px 24px; border-top: 1px solid #E2E8F0; background: #FFFFFF;
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+        }
+    </style>
+
+    <div id="global-media-picker-modal" class="gmp-modal-overlay" style="display:none;" onclick="if(event.target===this) closeMediaPicker();">
+        <div class="gmp-modal-box">
+            <div class="gmp-modal-header">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 22px;">🖼️</span>
+                    <div>
+                        <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: var(--biru-tua);">Pustaka Media Server</h3>
+                        <div style="font-size: 11.5px; color: var(--teks-muted);">Pilih gambar yang tersimpan di server atau unggah baru</div>
+                    </div>
+                </div>
+                <button type="button" class="gmp-close-btn" onclick="closeMediaPicker()">&times;</button>
+            </div>
+
+            <div class="gmp-modal-toolbar">
+                <div class="gmp-filter-tabs">
+                    <button type="button" class="gmp-tab aktif" onclick="filterGmpTab('all', this)">Semua (<span id="gmp-total-count">0</span>)</button>
+                    <button type="button" class="gmp-tab" onclick="filterGmpTab('uploads', this)">Umum</button>
+                    <button type="button" class="gmp-tab" onclick="filterGmpTab('berita_images', this)">Banner Berita</button>
+                    <button type="button" class="gmp-tab" onclick="filterGmpTab('berita_content', this)">Gambar Berita</button>
+                    <button type="button" class="gmp-tab" onclick="filterGmpTab('produk_images', this)">Produk</button>
+                    <button type="button" class="gmp-tab" onclick="filterGmpTab('kegiatan_images', this)">Kegiatan</button>
+                    <button type="button" class="gmp-tab" onclick="filterGmpTab('slider', this)">Slider</button>
+                </div>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="text" id="gmp-search-input" placeholder="Cari nama..." oninput="filterGmpSearch(this.value)" class="gmp-search-input">
+                    <label class="btn btn-primary" style="font-size: 11.5px; padding: 6px 12px; cursor: pointer; white-space: nowrap; margin: 0; display: inline-flex; align-items: center; gap: 5px;" id="gmp-upload-btn-label">
+                        <span>+ Unggah Baru</span>
+                        <input type="file" id="gmp-quick-upload-input" accept="image/*" style="display: none;" onchange="handleGmpQuickUpload(this)">
+                    </label>
+                </div>
+            </div>
+
+            <div class="gmp-modal-body" id="gmp-modal-body-container">
+                <div id="gmp-media-grid" class="gmp-grid">
+                    <div style="grid-column: 1/-1; text-align: center; color: var(--teks-muted); padding: 40px 0;">Memuat daftar gambar...</div>
+                </div>
+            </div>
+
+            <div class="gmp-modal-footer">
+                <div id="gmp-selected-info" style="font-size: 12.5px; color: var(--teks-muted); display: flex; align-items: center; gap: 8px;">
+                    <span>Belum ada gambar yang dipilih.</span>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button type="button" class="btn btn-secondary" onclick="closeMediaPicker()" style="font-size: 13px; padding: 8px 16px;">Batal</button>
+                    <button type="button" class="btn btn-primary" id="gmp-confirm-btn" onclick="confirmMediaSelection()" disabled style="font-size: 13px; padding: 8px 20px;">
+                        Gunakan Gambar Ini
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let gmpMediaList = [];
+        let gmpSelectedMedia = null;
+        let gmpActiveCallback = null;
+        let gmpCurrentFilter = 'all';
+        let gmpSearchQuery = '';
+
+        window.openMediaPicker = function(options) {
+            if (typeof options === 'function') {
+                gmpActiveCallback = options;
+            } else if (options && typeof options.onSelect === 'function') {
+                gmpActiveCallback = options.onSelect;
+            } else {
+                gmpActiveCallback = null;
+            }
+
+            gmpSelectedMedia = null;
+            updateGmpFooterInfo();
+
+            const modal = document.getElementById('global-media-picker-modal');
+            if (modal) modal.style.display = 'flex';
+
+            loadGmpMediaList();
+        };
+
+        window.closeMediaPicker = function() {
+            const modal = document.getElementById('global-media-picker-modal');
+            if (modal) modal.style.display = 'none';
+        };
+
+        async function loadGmpMediaList() {
+            const grid = document.getElementById('gmp-media-grid');
+            if (!grid) return;
+
+            try {
+                const response = await fetch('/admin/media/api', {
+                    headers: { 'Accept': 'application/json' }
+                });
+                const res = await response.json();
+                if (res.status === 'success') {
+                    gmpMediaList = res.data || [];
+                    document.getElementById('gmp-total-count').textContent = gmpMediaList.length;
+                    renderGmpGrid();
+                }
+            } catch (err) {
+                console.error('Failed to load media list:', err);
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: #EF4444; padding: 30px 0;">Gagal memuat media. Pastikan Anda telah login.</div>';
+            }
+        }
+
+        function renderGmpGrid() {
+            const grid = document.getElementById('gmp-media-grid');
+            if (!grid) return;
+
+            const filtered = gmpMediaList.filter(item => {
+                const matchFolder = (gmpCurrentFilter === 'all' || item.folder === gmpCurrentFilter);
+                const matchSearch = (!gmpSearchQuery || item.name.toLowerCase().includes(gmpSearchQuery.toLowerCase()));
+                return matchFolder && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--teks-muted); padding: 40px 0;">Tidak ada gambar yang sesuai.</div>';
+                return;
+            }
+
+            grid.innerHTML = filtered.map(item => {
+                const isSel = (gmpSelectedMedia && gmpSelectedMedia.path === item.path);
+                return `
+                    <div class="gmp-item ${isSel ? 'selected' : ''}" onclick="selectGmpItem('${encodeURIComponent(JSON.stringify(item))}')" ondblclick="quickSelectGmpItem('${encodeURIComponent(JSON.stringify(item))}')">
+                        <div class="gmp-img-wrap">
+                            <img src="${item.url}" alt="${item.name}" loading="lazy">
+                        </div>
+                        <div class="gmp-item-info">
+                            <span class="gmp-item-title" title="${item.name}">${item.name}</span>
+                            <div class="gmp-item-sub">${item.size} &bull; ${item.folder}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterGmpTab(folder, btn) {
+            gmpCurrentFilter = folder;
+            document.querySelectorAll('.gmp-tab').forEach(t => t.classList.remove('aktif'));
+            if (btn) btn.classList.add('aktif');
+            renderGmpGrid();
+        }
+
+        function filterGmpSearch(val) {
+            gmpSearchQuery = val;
+            renderGmpGrid();
+        }
+
+        function selectGmpItem(encodedJson) {
+            const item = JSON.parse(decodeURIComponent(encodedJson));
+            gmpSelectedMedia = item;
+            updateGmpFooterInfo();
+            renderGmpGrid();
+        }
+
+        function quickSelectGmpItem(encodedJson) {
+            selectGmpItem(encodedJson);
+            confirmMediaSelection();
+        }
+
+        function updateGmpFooterInfo() {
+            const infoEl = document.getElementById('gmp-selected-info');
+            const confirmBtn = document.getElementById('gmp-confirm-btn');
+
+            if (gmpSelectedMedia) {
+                infoEl.innerHTML = `
+                    <img src="${gmpSelectedMedia.url}" style="width: 28px; height: 28px; border-radius: 4px; object-fit: cover; border: 1px solid #CBD5E1;">
+                    <span style="color: var(--biru-tua); font-weight: 700;">${gmpSelectedMedia.name}</span>
+                    <span style="color: #64748B;">(${gmpSelectedMedia.size})</span>
+                `;
+                confirmBtn.removeAttribute('disabled');
+            } else {
+                infoEl.innerHTML = '<span>Belum ada gambar yang dipilih.</span>';
+                confirmBtn.setAttribute('disabled', 'true');
+            }
+        }
+
+        function confirmMediaSelection() {
+            if (!gmpSelectedMedia) return;
+            if (typeof gmpActiveCallback === 'function') {
+                gmpActiveCallback(gmpSelectedMedia);
+            }
+            closeMediaPicker();
+        }
+
+        async function handleGmpQuickUpload(fileInput) {
+            if (!fileInput.files || !fileInput.files[0]) return;
+            const file = fileInput.files[0];
+            const label = document.getElementById('gmp-upload-btn-label');
+            const originalLabelHtml = label.innerHTML;
+
+            label.innerHTML = '<span>Mengunggah...</span>';
+            label.style.opacity = '0.7';
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('_token', '{{ csrf_token() }}');
+
+            try {
+                const response = await fetch('/admin/media', {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' }
+                });
+                const res = await response.json();
+                if (res.status === 'success') {
+                    await loadGmpMediaList();
+                    gmpSelectedMedia = res.data;
+                    updateGmpFooterInfo();
+                    renderGmpGrid();
+                } else {
+                    alert(res.message || 'Gagal mengunggah file.');
+                }
+            } catch (err) {
+                console.error('Upload failed:', err);
+                alert('Gagal mengunggah file ke server.');
+            } finally {
+                label.innerHTML = originalLabelHtml;
+                label.style.opacity = '1';
+                fileInput.value = '';
+            }
+        }
+    </script>
     
     @yield('scripts')
 </body>

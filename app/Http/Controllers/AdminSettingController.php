@@ -345,12 +345,16 @@ class AdminSettingController extends Controller
                 // Kelola foto
                 $foto_arr = $existing_potensi[$key]['foto'] ?? [];
                 $fileFieldName = "potensi_foto_" . $key;
+                $mediaFieldName = "potensi_foto_media_" . $key;
+
                 if ($request->hasFile($fileFieldName)) {
                     $file = $request->file($fileFieldName);
                     $path = ImageHelper::uploadAndCompress($file, 'potensi');
                     if ($path) {
                         $foto_arr[0] = asset('storage/' . $path);
                     }
+                } elseif ($request->filled($mediaFieldName)) {
+                    $foto_arr[0] = $request->input($mediaFieldName);
                 }
 
                 $new_potensi[$key] = [
@@ -404,12 +408,16 @@ class AdminSettingController extends Controller
             foreach ($perangkat_keys as $idx => $key) {
                 $foto_path = $existing_perangkat[$key]['foto'] ?? '/images/perangkat/avatar.png';
                 $fileFieldName = "perangkat_foto_" . $key;
+                $mediaFieldName = "perangkat_foto_media_" . $key;
+
                 if ($request->hasFile($fileFieldName)) {
                     $file = $request->file($fileFieldName);
                     $path = ImageHelper::uploadAndCompress($file, 'perangkat');
                     if ($path) {
                         $foto_path = asset('storage/' . $path);
                     }
+                } elseif ($request->filled($mediaFieldName)) {
+                    $foto_path = $request->input($mediaFieldName);
                 }
 
                 $new_perangkat[$key] = [

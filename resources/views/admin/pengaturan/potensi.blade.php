@@ -77,12 +77,18 @@
                         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:16px; margin-bottom:14px;">
                             <div class="form-group" style="margin-bottom:0;">
                                 <label style="font-size:12.5px;">Upload Foto Komoditas (Opsional)</label>
-                                <input type="file" name="potensi_foto_{{ $key }}" accept="image/*" style="font-size:12px;">
-                                @if(!empty($item['foto'][0]))
-                                    <div style="margin-top:6px; font-size:11.5px; color:var(--teks-muted);">
+                                <div style="display: flex; gap: 8px; align-items: center;">
+                                    <input type="file" name="potensi_foto_{{ $key }}" accept="image/*" style="font-size:12px; flex:1;">
+                                    <button type="button" class="btn btn-secondary" onclick="pilihFotoPotensiDariMedia('{{ $key }}', this)" style="font-size: 11px; padding: 6px 10px; white-space: nowrap;">
+                                        📁 Media
+                                    </button>
+                                </div>
+                                <input type="hidden" name="potensi_foto_media_{{ $key }}" id="potensi_media_{{ $key }}">
+                                <div id="preview_box_{{ $key }}" style="margin-top:6px; font-size:11.5px; color:var(--teks-muted);">
+                                    @if(!empty($item['foto'][0]))
                                         Foto saat ini: <a href="{{ $item['foto'][0] }}" target="_blank" style="color:var(--biru); text-decoration:underline; font-weight:600;">Lihat Foto ↗</a>
-                                    </div>
-                                @endif
+                                    @endif
+                                </div>
                             </div>
                             <div class="form-group" style="margin-bottom:0;">
                                 <label style="font-size:12.5px;">Catatan Data Tambahan (Opsional)</label>
@@ -123,4 +129,22 @@
             </div>
         </form>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        function pilihFotoPotensiDariMedia(key, btn) {
+            window.openMediaPicker({
+                onSelect: function(item) {
+                    document.getElementById('potensi_media_' + key).value = item.url;
+                    const previewBox = document.getElementById('preview_box_' + key);
+                    if (previewBox) {
+                        previewBox.innerHTML = `<span style="color: #16A34A; font-weight:700;">✓ Terpilih:</span> <a href="${item.url}" target="_blank" style="color:var(--biru); text-decoration:underline;">${item.name} ↗</a>`;
+                    }
+                    const fileInput = btn.parentElement.querySelector('input[type="file"]');
+                    if (fileInput) fileInput.value = '';
+                }
+            });
+        }
+    </script>
 @endsection

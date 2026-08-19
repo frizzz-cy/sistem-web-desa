@@ -80,8 +80,14 @@
                             </div>
 
                             <div class="form-group" style="margin-bottom:10px;">
-                                <label style="font-size:12px;">Upload Foto Pejabat (Opsional)</label>
-                                <input type="file" name="perangkat_foto_{{ $key }}" accept="image/*" style="font-size:12px;">
+                                <label style="font-size:12px;">Foto Pejabat</label>
+                                <div style="display:flex; gap:6px; align-items:center;">
+                                    <input type="file" name="perangkat_foto_{{ $key }}" accept="image/*" style="font-size:12px; flex:1;" onchange="previewPerangkatLocal(this)">
+                                    <button type="button" class="btn btn-secondary" onclick="pilihFotoPerangkatDariMedia('{{ $key }}', this)" style="font-size: 11px; padding: 6px 10px; white-space: nowrap;">
+                                        📁 Media
+                                    </button>
+                                </div>
+                                <input type="hidden" name="perangkat_foto_media_{{ $key }}" id="perangkat_media_{{ $key }}">
                             </div>
 
                             <div class="form-group" style="margin-bottom:0;">
@@ -102,4 +108,35 @@
             </div>
         </form>
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        function pilihFotoPerangkatDariMedia(key, btn) {
+            const card = btn.closest('.perangkat-card');
+            const avatarImg = card.querySelector('img');
+            const hiddenMediaInput = document.getElementById('perangkat_media_' + key);
+            const fileInput = card.querySelector('input[type="file"]');
+
+            window.openMediaPicker({
+                onSelect: function(item) {
+                    if (avatarImg) avatarImg.src = item.url;
+                    if (hiddenMediaInput) hiddenMediaInput.value = item.url;
+                    if (fileInput) fileInput.value = '';
+                }
+            });
+        }
+
+        function previewPerangkatLocal(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                const card = input.closest('.perangkat-card');
+                const avatarImg = card.querySelector('img');
+                reader.onload = function(e) {
+                    if (avatarImg) avatarImg.src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
 @endsection

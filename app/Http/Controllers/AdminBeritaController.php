@@ -26,17 +26,21 @@ class AdminBeritaController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'judul'    => 'required|string|max:255',
-            'kategori' => 'required|string',
-            'tanggal'  => 'required|date',
-            'isi'      => 'required|string',
-            'foto'     => 'nullable|image|mimes:jpeg,png,jpg|max:15360',
+            'judul'      => 'required|string|max:255',
+            'kategori'   => 'required|string',
+            'tanggal'    => 'required|date',
+            'isi'        => 'required|string',
+            'foto'       => 'nullable|image|mimes:jpeg,png,jpg|max:15360',
+            'foto_media' => 'nullable|string',
         ]);
 
         if ($request->hasFile('foto')) {
             $data['foto'] = ImageHelper::uploadAndCompress($request->file('foto'), 'berita_images');
+        } elseif ($request->filled('foto_media')) {
+            $data['foto'] = $request->input('foto_media');
         }
 
+        unset($data['foto_media']);
         Berita::create($data);
         return redirect('/admin/berita')->with('success', 'Berita berhasil ditambahkan!');
     }
@@ -51,11 +55,12 @@ class AdminBeritaController extends Controller
     public function update(Request $request, Berita $berita)
     {
         $data = $request->validate([
-            'judul'    => 'required|string|max:255',
-            'kategori' => 'required|string',
-            'tanggal'  => 'required|date',
-            'isi'      => 'required|string',
-            'foto'     => 'nullable|image|mimes:jpeg,png,jpg|max:15360',
+            'judul'      => 'required|string|max:255',
+            'kategori'   => 'required|string',
+            'tanggal'    => 'required|date',
+            'isi'        => 'required|string',
+            'foto'       => 'nullable|image|mimes:jpeg,png,jpg|max:15360',
+            'foto_media' => 'nullable|string',
         ]);
 
         if ($request->remove_foto == '1') {
@@ -68,8 +73,11 @@ class AdminBeritaController extends Controller
                 Storage::disk('public')->delete($berita->foto);
             }
             $data['foto'] = ImageHelper::uploadAndCompress($request->file('foto'), 'berita_images');
+        } elseif ($request->filled('foto_media')) {
+            $data['foto'] = $request->input('foto_media');
         }
 
+        unset($data['foto_media']);
         $berita->update($data);
         return redirect('/admin/berita')->with('success', 'Berita berhasil diperbarui!');
     }

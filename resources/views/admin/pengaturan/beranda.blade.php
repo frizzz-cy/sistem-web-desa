@@ -188,7 +188,12 @@ $actionOptions = [
 
                             <div style="margin-top: 8px;">
                                 <label style="font-size: 11.5px; font-weight: 600; color: var(--teks-muted); display: block; margin-bottom: 4px;">Ganti Foto Slide:</label>
-                                <input type="file" name="slide_file_{{ $index }}" accept="image/*" style="font-size:12px; width: 100%;" onchange="previewSlideImage(this)">
+                                <div style="display: flex; gap: 6px; align-items: center;">
+                                    <input type="file" name="slide_file_{{ $index }}" accept="image/*" style="font-size:12px; flex: 1;" onchange="previewSlideImage(this)">
+                                    <button type="button" class="btn btn-secondary" onclick="pilihSlideDariMedia(this)" style="font-size: 11px; padding: 5px 8px; white-space: nowrap;" title="Pilih dari Pustaka Media">
+                                        📁 Media
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     @endforeach
@@ -381,12 +386,35 @@ $actionOptions = [
 
                 <div style="margin-top: 8px;">
                     <label style="font-size: 11.5px; font-weight: 600; color: #0284C7; display: block; margin-bottom: 4px;">Pilih Gambar Baru:</label>
-                    <input type="file" name="slide_file_${uniqueId}" accept="image/*" style="font-size:12px; width: 100%;" onchange="previewSlideImage(this)" required>
+                    <div style="display: flex; gap: 6px; align-items: center;">
+                        <input type="file" name="slide_file_${uniqueId}" accept="image/*" style="font-size:12px; flex: 1;" onchange="previewSlideImage(this)">
+                        <button type="button" class="btn btn-secondary" onclick="pilihSlideDariMedia(this)" style="font-size: 11px; padding: 5px 8px; white-space: nowrap;" title="Pilih dari Pustaka Media">
+                            📁 Media
+                        </button>
+                    </div>
                 </div>
             `;
 
             container.appendChild(card);
             updateSlideNumbering();
+        }
+
+        function pilihSlideDariMedia(btn) {
+            const card = btn.closest('.slide-card');
+            const previewImg = card.querySelector('.slide-img-preview');
+            const existingInput = card.querySelector('input[name="slide_existing[]"]');
+            const fileInput = card.querySelector('input[type="file"]');
+
+            window.openMediaPicker({
+                onSelect: function(item) {
+                    if (previewImg) previewImg.src = item.url;
+                    if (existingInput) existingInput.value = item.url;
+                    if (fileInput) {
+                        fileInput.value = '';
+                        fileInput.removeAttribute('required');
+                    }
+                }
+            });
         }
 
         // ================= PORTAL CARDS ICON & ACTION HANDLERS =================
