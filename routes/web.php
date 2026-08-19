@@ -16,6 +16,14 @@ use App\Models\Setting;
 
 // Halaman Publik
 Route::get('/', function () { 
+    try {
+        if (\App\Models\Berita::count() < 8) {
+            (new \Database\Seeders\BeritaSeeder())->run();
+        }
+    } catch (\Throwable $e) {
+        // Abaikan jika database belum siap
+    }
+
     $beritas = Berita::latest()->get();
     
     $hero_slides = [
