@@ -528,12 +528,85 @@
   $demo = !empty($demografi) ? $demografi : $default_demo_template;
 @endphp
 
-<!-- Modal Informasi Publik / Transparansi APBDes (Card 2) -->
+<!-- Modal 1: Informasi Publik Desa (Card 2) -->
 <div class="modal-informasi-overlay" id="modal-informasi-overlay" onclick="tutupModalInformasi(event)">
-  <div class="modal-informasi-box" style="max-width:840px;">
+  <div class="modal-informasi-box" style="max-width:780px;">
     <button class="modal-informasi-close" onclick="tutupModalInformasi()">✕</button>
-    <h3 style="margin-bottom:4px;">Informasi Publik &amp; Transparansi APBDes</h3>
-    <div class="sub" style="margin-bottom:16px;">Transparansi APBDes dan rincian anggaran Desa Munungkerep</div>
+    <h3 style="margin-bottom:4px;">🏛️ Informasi Publik Desa</h3>
+    <div class="sub" style="margin-bottom:18px;">Pusat Layanan Keterbukaan Informasi Publik, Regulasi, dan Maklumat Desa Munungkerep</div>
+
+    <!-- BANNER KHUSUS: TRANSPARANSI KEUANGAN DESA (APBDes) -->
+    <div style="background:linear-gradient(135deg, #0B3B60 0%, #1668A3 100%); color:#fff; border-radius:12px; padding:18px 20px; margin-bottom:20px; box-shadow:0 8px 20px rgba(11,59,96,0.18); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;">
+      <div style="max-width:480px;">
+        <div style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.8px; color:#93C5FD; margin-bottom:4px;">Laporan Akuntabilitas Desa</div>
+        <div style="font-size:16px; font-weight:800; margin-bottom:4px;">📊 Transparansi Keuangan Desa (APBDes)</div>
+        <div style="font-size:12.5px; color:#E0F2FE; line-height:1.5;">Akses rincian pendapatan desa (PAD, Dana Desa, ADD), realisasi belanja, dan pembiayaan APBDes tahun berjalan serta rekap jejak tahunan.</div>
+      </div>
+      <button type="button" onclick="bukaModalApbdes()" style="background:#F59E0B; color:#0F172A; border:none; padding:10px 18px; border-radius:8px; font-weight:800; font-size:13px; cursor:pointer; display:inline-flex; align-items:center; gap:8px; box-shadow:0 4px 12px rgba(0,0,0,0.15); transition:all 0.2s ease;">
+        Buka Transparansi APBDes
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+
+    <!-- DAFTAR INFORMASI PUBLIK & REGULASI DESA -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:14px;">
+      <!-- Regulasi & Perdes -->
+      <div style="background:#F8FAFC; border:1.5px solid #CBD5E1; padding:16px; border-radius:10px;">
+        <div style="font-size:14px; font-weight:800; color:var(--biru-tua); margin-bottom:6px; display:flex; align-items:center; gap:8px;">
+          📜 <span>Regulasi &amp; Peraturan Desa (Perdes)</span>
+        </div>
+        <div style="font-size:12.5px; color:var(--teks-muted); line-height:1.55;">
+          Kumpulan peraturan desa, tata tertib lingkungan, dan Surat Keputusan (SK) Kepala Desa untuk ketertiban masyarakat dan tata kelola desa.
+        </div>
+      </div>
+
+      <!-- Hak Akses Informasi Publik -->
+      <div style="background:#F8FAFC; border:1.5px solid #CBD5E1; padding:16px; border-radius:10px;">
+        <div style="font-size:14px; font-weight:800; color:#0369A1; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
+          ⚖️ <span>Hak Akses Informasi (UU KIP)</span>
+        </div>
+        <div style="font-size:12.5px; color:var(--teks-muted); line-height:1.55;">
+          Berdasarkan UU No. 14 Tahun 2008, setiap warga berhak mengakses dokumen publik desa secara transparan, mudah, dan akuntabel di Balai Desa.
+        </div>
+      </div>
+
+      <!-- Maklumat Pelayanan Publik -->
+      <div style="background:#F8FAFC; border:1.5px solid #CBD5E1; padding:16px; border-radius:10px;">
+        <div style="font-size:14px; font-weight:800; color:#047857; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
+          📋 <span>Maklumat Pelayanan Desa</span>
+        </div>
+        <div style="font-size:12.5px; color:var(--teks-muted); line-height:1.55;">
+          Pemerintah Desa Munungkerep berkomitmen memberikan pelayanan surat-menyurat dan administrasi yang cepat, tepat, ramah, dan bebas biaya/pungli.
+        </div>
+      </div>
+
+      <!-- Saluran Pengaduan & Aspirasi -->
+      <div style="background:#F8FAFC; border:1.5px solid #CBD5E1; padding:16px; border-radius:10px;">
+        <div style="font-size:14px; font-weight:800; color:#B45309; margin-bottom:6px; display:flex; align-items:center; gap:8px;">
+          📢 <span>Saluran Pengaduan &amp; Aspirasi</span>
+        </div>
+        <div style="font-size:12.5px; color:var(--teks-muted); line-height:1.55;">
+          Masyarakat dapat menyampaikan saran, kritik membangun, atau pengaduan secara langsung melalui musyawarah dusun atau Kantor Sekretariat Desa.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal 2: Pop-Up Khusus Transparansi Keuangan Desa (APBDes) -->
+<div class="modal-informasi-overlay" id="modal-apbdes-overlay" onclick="tutupModalApbdes(event)">
+  <div class="modal-informasi-box" style="max-width:840px;">
+    <button class="modal-informasi-close" onclick="tutupModalApbdes()">✕</button>
+    
+    <div style="margin-bottom:12px;">
+      <button type="button" onclick="kembaliKeInformasiPublik()" style="background:#F1F5F9; color:var(--biru-tua); border:1px solid #CBD5E1; padding:6px 14px; border-radius:6px; font-weight:700; font-size:12px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Kembali ke Informasi Publik
+      </button>
+    </div>
+
+    <h3 style="margin-bottom:4px;">📊 Transparansi Keuangan Desa (APBDes)</h3>
+    <div class="sub" style="margin-bottom:16px;">Rincian Anggaran Pendapatan, Belanja, dan Pembiayaan Desa Munungkerep</div>
 
     <!-- TAHUN SELECTOR & REKAP TABS -->
     <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:20px; background:#F1F5F9; padding:8px 12px; border-radius:10px; border:1px solid #CBD5E1;">
@@ -1112,7 +1185,7 @@
 
   // ================= PENGELOLA MODAL (SINGLE ACTIVE MODAL) =================
   function tutupSemuaModal() {
-    ['modal-layanan-overlay', 'modal-informasi-overlay', 'modal-demografi-overlay', 'modal-kelembagaan-overlay', 'modal-semua-berita-overlay'].forEach(id => {
+    ['modal-layanan-overlay', 'modal-informasi-overlay', 'modal-apbdes-overlay', 'modal-demografi-overlay', 'modal-kelembagaan-overlay', 'modal-semua-berita-overlay'].forEach(id => {
       var el = document.getElementById(id);
       if (el) {
         el.classList.remove('show');
@@ -1184,7 +1257,7 @@
     }
   };
 
-  // ================= MODAL INFORMASI PUBLIK (TRANSPARANSI APBDES) =================
+  // ================= MODAL INFORMASI PUBLIK & APBDES =================
   window.gantiTahunApbdes = function(tahunKey, btnEl) {
     document.querySelectorAll('.btn-tab-apbdes').forEach(btn => btn.classList.remove('aktif'));
     if (btnEl) btnEl.classList.add('aktif');
@@ -1213,6 +1286,34 @@
       el.classList.remove('show');
       el.style.setProperty('display', 'none', 'important');
     }
+  };
+
+  // Pop-Up Khusus Transparansi Keuangan (APBDes)
+  window.bukaModalApbdes = function(e){
+    if (e && e.preventDefault) e.preventDefault();
+    if (e && e.stopPropagation) e.stopPropagation();
+    tutupSemuaModal();
+    var el = document.getElementById('modal-apbdes-overlay');
+    if (el) {
+      el.classList.add('show');
+      el.style.setProperty('display', 'flex', 'important');
+      el.style.setProperty('z-index', '99999', 'important');
+    }
+  };
+
+  window.tutupModalApbdes = function(event){
+    if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-informasi-close')) return;
+    var el = document.getElementById('modal-apbdes-overlay');
+    if (el) {
+      el.classList.remove('show');
+      el.style.setProperty('display', 'none', 'important');
+    }
+  };
+
+  window.kembaliKeInformasiPublik = function(e){
+    if (e && e.preventDefault) e.preventDefault();
+    tutupSemuaModal();
+    window.bukaModalInformasi();
   };
 
   // ================= MODAL DATA KEPENDUDUKAN (DEMOGRAFI & USIA) =================
@@ -1272,9 +1373,12 @@
     } else if (action === 'modal-demografi' || href === '#modal-demografi') {
       e.preventDefault();
       bukaModalDemografi(e);
-    } else if (action === 'modal-informasi' || href === '#modal-informasi' || href === '#modal-apbdes') {
+    } else if (action === 'modal-apbdes' || href === '#modal-apbdes' || href === '#modal-keuangan') {
       e.preventDefault();
-      bukaModalInformasi(null, e);
+      bukaModalApbdes(e);
+    } else if (action === 'modal-informasi' || href === '#modal-informasi') {
+      e.preventDefault();
+      bukaModalInformasi(e);
     } else if (action === 'modal-layanan' || href === '#modal-layanan') {
       e.preventDefault();
       bukaModalLayanan(e);
@@ -1288,7 +1392,9 @@
       bukaModalDemografi();
     } else if (hash === '#modal-kelembagaan') {
       bukaModalKelembagaan();
-    } else if (hash === '#modal-informasi' || hash === '#modal-apbdes') {
+    } else if (hash === '#modal-apbdes' || hash === '#modal-keuangan') {
+      bukaModalApbdes();
+    } else if (hash === '#modal-informasi') {
       bukaModalInformasi();
     } else if (hash === '#modal-layanan') {
       bukaModalLayanan();
