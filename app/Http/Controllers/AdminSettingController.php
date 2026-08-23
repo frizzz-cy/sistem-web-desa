@@ -555,7 +555,6 @@ class AdminSettingController extends Controller
                 ]
             ]
         ];
->>>>>>> origin/refactor-admin-dashboard
     }
 
     private function getDefaultApbdes()
