@@ -548,6 +548,97 @@
       </button>
     </div>
 
+    <!-- SECTION: POSTER PERLOMBAAN & AGENDA BULAN INI -->
+    <div style="margin-bottom:24px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+        <h4 style="margin:0; font-size:15px; font-weight:800; color:var(--biru-tua); display:flex; align-items:center; gap:6px;">
+          🎉 <span>Poster Perlombaan &amp; Agenda Kegiatan Bulan Ini</span>
+        </h4>
+        <span style="font-size:11px; font-weight:700; background:#DCFCE7; color:#15803D; padding:3px 10px; border-radius:12px;">
+          Agustus 2026
+        </span>
+      </div>
+
+      <!-- GRID POSTER KEGIATAN & PERLOMBAAN -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:16px;">
+        
+        <!-- POSTER 1: SEMARAK LOMBA KEMERDEKAAN -->
+        <div style="background:#FFF; border:1.5px solid #E2E8F0; border-radius:12px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,0.06); transition:transform 0.2s ease;">
+          <div style="background:linear-gradient(135deg, #B91C1C 0%, #DC2626 100%); color:#FFF; padding:14px 16px; position:relative;">
+            <span style="font-size:10px; font-weight:800; background:#FEF2F2; color:#B91C1C; padding:3px 8px; border-radius:10px; text-transform:uppercase; letter-spacing:0.5px;">🏆 Perlombaan Desa</span>
+            <h5 style="margin:8px 0 2px; font-size:15px; font-weight:800;">Semarak Lomba Kemerdekaan RI Ke-81</h5>
+            <div style="font-size:11.5px; opacity:0.9;">Pemerintah Desa &amp; Karang Taruna Munungkerep</div>
+          </div>
+          
+          <div style="padding:14px 16px;">
+            <div style="display:grid; grid-template-columns:auto 1fr; gap:6px 10px; font-size:12.5px; margin-bottom:12px; line-height:1.5;">
+              <span style="color:#64748B; font-weight:600;">📅 Hari / Tgl:</span>
+              <strong style="color:var(--biru-tua);">Sabtu – Minggu, 22 – 23 Agustus 2026</strong>
+              
+              <span style="color:#64748B; font-weight:600;">⏰ Waktu:</span>
+              <strong style="color:var(--biru-tua);">08.00 WIB s/d Selesai</strong>
+              
+              <span style="color:#64748B; font-weight:600;">📍 Lokasi:</span>
+              <strong style="color:var(--biru-tua);">Lapangan &amp; Halaman Balai Desa</strong>
+            </div>
+
+            <div style="background:#F8FAFC; border:1px dashed #CBD5E1; padding:10px 12px; border-radius:8px; font-size:12px; color:var(--teks); margin-bottom:12px;">
+              <strong>🎯 Cabang Lomba:</strong>
+              <div style="margin-top:4px; color:#475569; line-height:1.6;">
+                • Gerak Jalan Kreasi Antar RT/RW<br>
+                • Lomba Tarik Tambang Antar Dusun<br>
+                • Balap Karung Helm &amp; Estafet Air<br>
+                • Lomba Mading &amp; Mewarnai Anak SD/TK
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; background:#FEF3C7; color:#92400E; padding:6px 12px; border-radius:6px; font-weight:700;">
+              <span>🎁 Total Hadiah: Piala &amp; Uang Pembinaan</span>
+              <span>Gratis Terbuka</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- POSTER 2: PELAYANAN POSYANDU & KESEHATAN -->
+        <div style="background:#FFF; border:1.5px solid #E2E8F0; border-radius:12px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,0.06); transition:transform 0.2s ease;">
+          <div style="background:linear-gradient(135deg, #047857 0%, #059669 100%); color:#FFF; padding:14px 16px; position:relative;">
+            <span style="font-size:10px; font-weight:800; background:#ECFDF5; color:#047857; padding:3px 8px; border-radius:10px; text-transform:uppercase; letter-spacing:0.5px;">🩺 Layanan Kesehatan</span>
+            <h5 style="margin:8px 0 2px; font-size:15px; font-weight:800;">Posyandu Balita &amp; Cek Kesehatan Lansia</h5>
+            <div style="font-size:11.5px; opacity:0.9;">Puskesmas Kabuh &amp; Kader Kesehatan Desa</div>
+          </div>
+          
+          <div style="padding:14px 16px;">
+            <div style="display:grid; grid-template-columns:auto 1fr; gap:6px 10px; font-size:12.5px; margin-bottom:12px; line-height:1.5;">
+              <span style="color:#64748B; font-weight:600;">📅 Hari / Tgl:</span>
+              <strong style="color:var(--biru-tua);">Kamis, 27 Agustus 2026</strong>
+              
+              <span style="color:#64748B; font-weight:600;">⏰ Waktu:</span>
+              <strong style="color:var(--biru-tua);">08.30 – 11.30 WIB</strong>
+              
+              <span style="color:#64748B; font-weight:600;">📍 Lokasi:</span>
+              <strong style="color:var(--biru-tua);">Pos Kesehatan Dusun Karang Gebang</strong>
+            </div>
+
+            <div style="background:#F8FAFC; border:1px dashed #CBD5E1; padding:10px 12px; border-radius:8px; font-size:12px; color:var(--teks); margin-bottom:12px;">
+              <strong>💉 Fasilitas &amp; Layanan:</strong>
+              <div style="margin-top:4px; color:#475569; line-height:1.6;">
+                • Penimbangan Berat &amp; Tinggi Balita<br>
+                • Pembagian Makanan Tambahan (PMT)<br>
+                • Pemeriksaan Tekanan Darah &amp; Gula Darah<br>
+                • Konsultasi Gizi &amp; Tumbuh Kembang Anak
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; background:#DCFCE7; color:#166534; padding:6px 12px; border-radius:6px; font-weight:700;">
+              <span>✅ Wajib Bawa Buku KIA / KMS</span>
+              <span>100% Gratis</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
     <!-- DAFTAR INFORMASI PUBLIK & REGULASI DESA -->
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:14px;">
       <!-- Regulasi & Perdes -->
@@ -1068,79 +1159,17 @@
     const contentDiv = document.getElementById('detail-bd-content');
     contentDiv.innerHTML = isi;
     
-    // Hapus banner arsip jika ada dari sesi sebelumnya
-    const oldNotice = document.getElementById('berita-archived-notice');
-    if (oldNotice) oldNotice.remove();
-
-    // Hentikan timer polling sebelumnya
-    if (window.activeBeritaPollTimer) {
-      clearInterval(window.activeBeritaPollTimer);
-      window.activeBeritaPollTimer = null;
-    }
-
     // Kirim request AJAX (fetch) untuk menambah jumlah tayang secara asinkronus
     if (id) {
       fetch(`/berita/${id}/view`)
-        .then(response => {
-          if (response.status === 403) {
-            throw new Error('ARCHIVED');
-          }
-          return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
-          if (data.is_hidden) {
-            throw new Error('ARCHIVED');
-          }
           // Perbarui teks tayangan di halaman detail
           document.getElementById('detail-bd-views').textContent = `Dilihat: ${data.views}x`;
           // Perbarui nilai data-views pada kartu berita agar jika diklik ulang datanya sinkron
           link.setAttribute('data-views', data.views);
-
-          // Mulai background polling untuk memantau jika admin menyembunyikan berita saat sedang dibaca
-          window.activeBeritaPollTimer = setInterval(() => {
-            fetch(`/berita/${id}/status`)
-              .then(res => res.json())
-              .then(statusData => {
-                if (statusData && statusData.is_hidden) {
-                  clearInterval(window.activeBeritaPollTimer);
-                  window.activeBeritaPollTimer = null;
-                  
-                  // Tampilkan banner pemberitahuan di atas artikel
-                  const card = document.querySelector('.berita-detail-card');
-                  if (card && !document.getElementById('berita-archived-notice')) {
-                    const notice = document.createElement('div');
-                    notice.id = 'berita-archived-notice';
-                    notice.style.cssText = 'background:#FEF2F2; border:1.5px solid #F87171; color:#991B1B; padding:14px 18px; border-radius:10px; margin-bottom:20px; font-size:13.5px; font-weight:700; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; box-shadow:0 4px 12px rgba(220,38,38,0.15);';
-                    notice.innerHTML = `
-                      <div style="display:flex; align-items:center; gap:8px;">
-                        <span style="font-size:18px;">⚠️</span>
-                        <span>Pemberitahuan: Berita ini baru saja diarsipkan oleh Administrator Desa dan tidak lagi dipublikasikan.</span>
-                      </div>
-                      <button type="button" onclick="tutupBerita()" style="background:#DC2626; color:#fff; border:none; padding:7px 14px; border-radius:6px; font-weight:800; cursor:pointer; font-size:12.5px;">Tutup & Kembali</button>
-                    `;
-                    card.insertBefore(notice, card.firstChild);
-                    
-                    // Otomatis kembali ke beranda setelah 4 detik
-                    setTimeout(() => {
-                      if (document.getElementById('berita-detail-container').style.display === 'block') {
-                        tutupBerita();
-                      }
-                    }, 4500);
-                  }
-                }
-              })
-              .catch(() => {});
-          }, 8000);
         })
-        .catch(err => {
-          if (err.message === 'ARCHIVED') {
-            alert('Pemberitahuan: Berita ini sedang diarsipkan oleh Administrator Desa dan tidak lagi tersedia.');
-            tutupBerita();
-            if (link && link.closest('.kartu-berita, .modal-semua-berita-item')) {
-              link.closest('.kartu-berita, .modal-semua-berita-item').remove();
-            }
-          }
-        });
+        .catch(err => console.error('Gagal memperbarui jumlah tayangan:', err));
     }
     
     // Tutup modal semua berita jika sedang terbuka
@@ -1161,15 +1190,6 @@
   }
 
   function tutupBerita() {
-    // Hentikan timer polling berita aktif
-    if (window.activeBeritaPollTimer) {
-      clearInterval(window.activeBeritaPollTimer);
-      window.activeBeritaPollTimer = null;
-    }
-
-    const oldNotice = document.getElementById('berita-archived-notice');
-    if (oldNotice) oldNotice.remove();
-
     // Sembunyikan Halaman Detail Berita
     document.getElementById('berita-detail-container').style.display = 'none';
     
@@ -1202,7 +1222,13 @@
   });
 
   // ================= MODAL LAYANAN =================
-  const DATA_SURAT = @json($data_layanan_surat ?? []);
+  const DATA_SURAT = [
+    { nama: 'Surat Keterangan Domisili', syarat: ['Fotocopy KTP', 'Fotocopy KK', 'Pas foto 3x4 (2 lembar)', 'Surat pengantar RT/RW'], keterangan: 'Berlaku selama 6 bulan' },
+    { nama: 'Surat Keterangan Usaha', syarat: ['Fotocopy KTP', 'Fotocopy KK', 'Pas foto 3x4 (2 lembar)', 'Surat keterangan usaha dari RT/RW'], keterangan: 'Untuk keperluan kredit atau izin usaha' },
+    { nama: 'Surat Pengantar KTP', syarat: ['Fotocopy KK', 'Pas foto 4x6 (2 lembar)', 'Formulir permohonan'], keterangan: 'Untuk pembuatan KTP baru atau perpanjangan' },
+    { nama: 'Surat Pengantar Kartu Keluarga', syarat: ['Fotocopy KTP kepala keluarga', 'Fotocopy KK lama (jika ada)', 'Akta kelahiran/nikah/cerai', 'Formulir permohonan'], keterangan: 'Untuk pembuatan KK baru atau perubahan' },
+    { nama: 'Surat Keterangan Tidak Mampu', syarat: ['Fotocopy KK', 'Data sekolah'], keterangan: 'Untuk keringanan biaya sekolah & beasiswa' }
+  ];
 
   window.bukaModalLayanan = function(e){
     if (e && e.preventDefault) e.preventDefault();
@@ -1211,34 +1237,17 @@
     const wadah = document.getElementById('daftar-surat');
     if (wadah) {
       wadah.innerHTML = '';
-      if (Array.isArray(DATA_SURAT) && DATA_SURAT.length > 0) {
-        DATA_SURAT.forEach(surat => {
-          const detail = document.createElement('details'); detail.className = 'surat-item';
-          const summary = document.createElement('summary'); summary.textContent = surat.nama; detail.appendChild(summary);
-          const isi = document.createElement('div'); isi.className = 'isi-surat';
-          const labelSyarat = document.createElement('span'); labelSyarat.className = 'label-kecil'; labelSyarat.textContent = 'Persyaratan'; isi.appendChild(labelSyarat);
-          const ul = document.createElement('ul');
-          const syaratArr = Array.isArray(surat.syarat) ? surat.syarat : [];
-          syaratArr.forEach(s => { 
-            if (s && s.trim()) {
-              const li = document.createElement('li'); 
-              li.textContent = s; 
-              ul.appendChild(li); 
-            }
-          });
-          isi.appendChild(ul);
-          if (surat.keterangan && surat.keterangan.trim()) {
-            const ket = document.createElement('div'); 
-            ket.className = 'ket'; 
-            ket.textContent = '📌 ' + surat.keterangan; 
-            isi.appendChild(ket);
-          }
-          detail.appendChild(isi); 
-          wadah.appendChild(detail);
-        });
-      } else {
-        wadah.innerHTML = '<div style="text-align:center; color:#64748B; padding:20px; font-size:13px;">Belum ada data persyaratan layanan surat.</div>';
-      }
+      DATA_SURAT.forEach(surat => {
+        const detail = document.createElement('details'); detail.className = 'surat-item';
+        const summary = document.createElement('summary'); summary.textContent = surat.nama; detail.appendChild(summary);
+        const isi = document.createElement('div'); isi.className = 'isi-surat';
+        const labelSyarat = document.createElement('span'); labelSyarat.className = 'label-kecil'; labelSyarat.textContent = 'Persyaratan'; isi.appendChild(labelSyarat);
+        const ul = document.createElement('ul');
+        surat.syarat.forEach(s => { const li = document.createElement('li'); li.textContent = s; ul.appendChild(li); });
+        isi.appendChild(ul);
+        const ket = document.createElement('div'); ket.className = 'ket'; ket.textContent = '📌 ' + surat.keterangan; isi.appendChild(ket);
+        detail.appendChild(isi); wadah.appendChild(detail);
+      });
     }
     var el = document.getElementById('modal-layanan-overlay');
     if (el) {
