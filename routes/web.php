@@ -370,4 +370,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
     Route::get('pengaturan/perangkat', [AdminSettingController::class, 'perangkat'])->name('admin.pengaturan.perangkat');
     Route::post('pengaturan/perangkat', [AdminSettingController::class, 'updatePerangkat']);
+
+    Route::get('pengaturan/poster', [AdminSettingController::class, 'poster'])->name('admin.pengaturan.poster');
+    Route::post('pengaturan/poster', [AdminSettingController::class, 'updatePoster']);
 });

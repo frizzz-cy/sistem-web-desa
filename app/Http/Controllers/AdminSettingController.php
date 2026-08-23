@@ -482,6 +482,65 @@ class AdminSettingController extends Controller
     }
 
     // =========================================================================
+    // 6. MODUL POSTER PERLOMBAAN & AGENDA INFORMASI PUBLIK
+    // =========================================================================
+    public function poster()
+    {
+        $poster_agendas_raw = Setting::get('poster_agendas');
+        $poster_agendas = $poster_agendas_raw ? json_decode($poster_agendas_raw, true) : [];
+
+        return view('admin.pengaturan.poster', compact('poster_agendas'));
+    }
+
+    public function updatePoster(Request $request)
+    {
+        if ($request->has('poster_keys')) {
+            $existing_posters_json = Setting::get('poster_agendas');
+            $existing_posters = $existing_posters_json ? json_decode($existing_posters_json, true) : [];
+
+            $poster_keys = $request->input('poster_keys', []);
+            $poster_judul = $request->input('poster_judul', []);
+            $poster_kategori = $request->input('poster_kategori', []);
+            $poster_tanggal = $request->input('poster_tanggal', []);
+            $poster_waktu = $request->input('poster_waktu', []);
+            $poster_lokasi = $request->input('poster_lokasi', []);
+            $poster_rincian = $request->input('poster_rincian', []);
+            $poster_hadiah = $request->input('poster_hadiah', []);
+
+            $new_posters = [];
+
+            foreach ($poster_keys as $idx => $key) {
+                if (empty($poster_judul[$idx]) && empty($key)) continue;
+                
+                $foto_path = $existing_posters[$key]['foto'] ?? '';
+                $fileFieldName = "poster_foto_" . $key;
+                if ($request->hasFile($fileFieldName)) {
+                    $file = $request->file($fileFieldName);
+                    $path = ImageHelper::uploadAndCompress($file, 'posters');
+                    if ($path) {
+                        $foto_path = asset('storage/' . $path);
+                    }
+                }
+
+                $new_posters[$key] = [
+                    'judul' => $poster_judul[$idx] ?? '',
+                    'kategori' => $poster_kategori[$idx] ?? '🏆 Perlombaan Desa',
+                    'tanggal' => $poster_tanggal[$idx] ?? '',
+                    'waktu' => $poster_waktu[$idx] ?? '',
+                    'lokasi' => $poster_lokasi[$idx] ?? '',
+                    'rincian' => $poster_rincian[$idx] ?? '',
+                    'hadiah' => $poster_hadiah[$idx] ?? '',
+                    'foto' => $foto_path
+                ];
+            }
+
+            Setting::set('poster_agendas', json_encode($new_posters));
+        }
+
+        return redirect('/admin/pengaturan/poster')->with('success', 'Data Poster Perlombaan & Agenda Informasi Publik berhasil disimpan!');
+    }
+
+    // =========================================================================
     // HELPER DATA BAWAAN (DEFAULT SEEDERS)
     // =========================================================================
 
