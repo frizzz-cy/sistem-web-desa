@@ -699,120 +699,218 @@
       </button>
     </div>
 
-    <!-- KONTEN RINCIAN PER TAHUN -->
+    <!-- KONTEN RINCIAN PER TAHUN (MODEL BALIHO RESMI INFOGRAFIS APBDES SEPERTI FOTO) -->
     @foreach($ap_all as $tKey => $ap)
+      @php
+        // Normalisasi data pos pendapatan
+        $padVal = $ap['pad'] ?? ($ap['pendapatan_items'][0]['nilai'] ?? 'Rp 230.760.000,00');
+        $ddVal  = $ap['dd'] ?? ($ap['pendapatan_items'][1]['nilai'] ?? 'Rp 303.093.000,00');
+        $addVal = $ap['add'] ?? ($ap['pendapatan_items'][2]['nilai'] ?? 'Rp 376.615.000,00');
+        $pdrdVal = $ap['pdrd'] ?? ($ap['pendapatan_items'][3]['nilai'] ?? 'Rp 85.805.300,00');
+        $bkVal  = $ap['bk'] ?? ($ap['pendapatan_items'][4]['nilai'] ?? 'Rp 539.600.603,00');
+        $dllVal = $ap['dll'] ?? ($ap['pendapatan_items'][5]['nilai'] ?? 'Rp 127.755.900,00');
+
+        // Normalisasi data belanja 5 bidang
+        $b_pem = $ap['belanja_pemerintahan'] ?? ($ap['belanja_items'][0]['nilai'] ?? 'Rp 866.594.524,92');
+        $b_bang = $ap['belanja_pembangunan'] ?? ($ap['belanja_items'][1]['nilai'] ?? 'Rp 582.090.603,00');
+        $b_bina = $ap['belanja_pembinaan'] ?? ($ap['belanja_items'][2]['nilai'] ?? 'Rp 42.450.000,00');
+        $b_daya = $ap['belanja_pemberdayaan'] ?? ($ap['belanja_items'][3]['nilai'] ?? 'Rp 158.000.000,00');
+        $b_bencana = $ap['belanja_bencana'] ?? ($ap['belanja_items'][4]['nilai'] ?? 'Rp 27.760.000,00');
+
+        // Normalisasi pembiayaan
+        $terimaVal = $ap['penerimaan_pembiayaan'] ?? ($ap['pembiayaan_items'][0]['nilai'] ?? 'Rp 13.265.324,92');
+        $keluarVal = $ap['pengeluaran_pembiayaan'] ?? ($ap['pembiayaan_items'][1]['nilai'] ?? 'Rp 0,00');
+      @endphp
+
       <div id="apbdes-content-{{ $tKey }}" class="apbdes-year-content" style="{{ $loop->first ? 'display:block;' : 'display:none;' }}">
-        <!-- Label Status APBDes -->
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; background:#FFF; border:1px solid #E2E8F0; padding:8px 14px; border-radius:8px;">
-          <span style="font-size:13px; font-weight:800; color:var(--biru-tua);">
-            📅 APBDes Tahun Anggaran {{ $ap['tahun'] ?? $tKey }}
-          </span>
-          <span style="font-size:11.5px; font-weight:700; background:#E0F2FE; color:#0369A1; padding:3px 10px; border-radius:12px;">
-            {{ $ap['status'] ?? 'Murni (Tahun Berjalan)' }}
-          </span>
-        </div>
-
-        <!-- 1. PENDAPATAN DESA -->
-        <div class="apbdes-section">
-          <div class="apbdes-head">
-            <span><i class="fas fa-wallet" style="margin-right:6px;"></i> PENDAPATAN DESA</span>
-            <span class="total">{{ $ap['pendapatan_total'] ?? 'Rp 0,00' }}</span>
+        
+        <!-- BALIHO KONTEN UTAMA -->
+        <div style="background:#FFF; border:2px solid #0369A1; border-radius:14px; padding:18px; box-shadow:0 8px 24px rgba(0,0,0,0.08); position:relative; overflow:hidden;">
+          
+          <!-- HEADER TAHUN & DESA -->
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:16px; border-bottom:2px dashed #CBD5E1; padding-bottom:12px;">
+            <div>
+              <div style="font-size:11px; font-weight:800; color:#0369A1; text-transform:uppercase; letter-spacing:0.5px;">PEMERINTAH DESA MUNUNGKEREP</div>
+              <div style="font-size:16px; font-weight:900; color:var(--biru-tua);">LAPORAN TRANSPARANSI APBDES {{ $ap['tahun'] ?? $tKey }}</div>
+            </div>
+            <span style="font-size:11px; font-weight:800; background:#DCFCE7; color:#15803D; padding:4px 12px; border-radius:12px; border:1px solid #BBF7D0;">
+              {{ $ap['status'] ?? 'Murni (Tahun Berjalan)' }}
+            </span>
           </div>
-          <div class="apbdes-body">
-            @if(!empty($ap['pendapatan_items']))
-              @foreach($ap['pendapatan_items'] as $item)
-                <div class="apbdes-row">
-                  <div class="label-col">
-                    <span class="label">{{ $item['label'] ?? '' }}</span>
-                    @if(!empty($item['sub']))
-                      <span class="sub-label">{{ $item['sub'] }}</span>
-                    @endif
-                  </div>
-                  <span class="val">{{ $item['nilai'] ?? '' }}</span>
-                </div>
-              @endforeach
-            @else
-              <div class="apbdes-row"><div class="label-col"><span class="label">Pendapatan Asli Desa (PAD)</span></div><span class="val">{{ $ap['pad'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><div class="label-col"><span class="label">Dana Desa (DD - APBN Pusat)</span></div><span class="val">{{ $ap['dd'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><div class="label-col"><span class="label">Alokasi Dana Desa (ADD - APBD Jombang)</span></div><span class="val">{{ $ap['add'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><div class="label-col"><span class="label">Bagi Hasil Pajak &amp; Retribusi (PDRD)</span></div><span class="val">{{ $ap['pdrd'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><div class="label-col"><span class="label">Bantuan Keuangan (BK Provinsi/Kabupaten)</span></div><span class="val">{{ $ap['bk'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><div class="label-col"><span class="label">Lain-Lain Pendapatan Desa Sah (DLL)</span></div><span class="val">{{ $ap['dll'] ?? 'Rp 0,00' }}</span></div>
-            @endif
 
-            @if(!empty($ap['keterangan_pendapatan']))
-              <div style="background:#E0F2FE; border-left:3px solid #0284C7; padding:8px 12px; margin-top:10px; border-radius:4px; font-size:12px; color:#0369A1; line-height:1.5;">
-                <strong>ℹ️ Rincian Sumber Dana:</strong> {{ $ap['keterangan_pendapatan'] }}
+          <!-- ================= 1. PENDAPATAN DESA ================= -->
+          <div style="background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:10px; padding:14px; margin-bottom:18px;">
+            <!-- Ribbon Banner Pendapatan -->
+            <div style="background:linear-gradient(135deg, #DC2626 0%, #B91C1C 100%); color:#FFF; text-align:center; font-weight:900; font-size:14px; letter-spacing:1px; padding:7px 12px; border-radius:6px; margin-bottom:12px; text-transform:uppercase; box-shadow:0 3px 8px rgba(220,38,38,0.25);">
+              PENDAPATAN DESA
+            </div>
+
+            <!-- 6 Kotak Pos Pendapatan -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:10px; margin-bottom:12px;">
+              <!-- PAD -->
+              <div style="background:#FFF; border:1.5px solid #DC2626; border-radius:8px; overflow:hidden; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
+                <div style="background:#DC2626; color:#FFF; font-size:11px; font-weight:900; padding:3px 6px;">PAD</div>
+                <div style="padding:6px 4px; font-size:12px; font-weight:800; color:#1E293B;">{{ $padVal }}</div>
               </div>
-            @endif
-          </div>
-        </div>
-
-        <!-- 2. BELANJA DESA -->
-        <div class="apbdes-section">
-          <div class="apbdes-head belanja">
-            <span><i class="fas fa-shopping-bag" style="margin-right:6px;"></i> BELANJA DESA</span>
-            <span class="total">{{ $ap['belanja_total'] ?? 'Rp 0,00' }}</span>
-          </div>
-          <div class="apbdes-body">
-            @if(!empty($ap['belanja_items']))
-              @foreach($ap['belanja_items'] as $item)
-                <div class="apbdes-row">
-                  <div class="label-col">
-                    <span class="label">{{ $item['label'] ?? '' }}</span>
-                    @if(!empty($item['sub']))
-                      <span class="sub-label">{{ $item['sub'] }}</span>
-                    @endif
-                  </div>
-                  <span class="val">{{ $item['nilai'] ?? '' }}</span>
-                </div>
-              @endforeach
-            @else
-              <div class="apbdes-row"><div class="label-col"><span class="label">Penyelenggaraan Pemerintahan Desa</span></div><span class="val">{{ $ap['belanja_pemerintahan'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><div class="label-col"><span class="label">Pelaksanaan Pembangunan Desa</span></div><span class="val">{{ $ap['belanja_pembangunan'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><div class="label-col"><span class="label">Pembinaan Kemasyarakatan</span></div><span class="val">{{ $ap['belanja_pembinaan'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><div class="label-col"><span class="label">Pemberdayaan Masyarakat</span></div><span class="val">{{ $ap['belanja_pemberdayaan'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><div class="label-col"><span class="label">Penanggulangan Bencana &amp; Keadaan Darurat</span></div><span class="val">{{ $ap['belanja_bencana'] ?? 'Rp 0,00' }}</span></div>
-            @endif
-
-            @if(!empty($ap['keterangan_belanja']))
-              <div style="background:#FEF2F2; border-left:3px solid #EF4444; padding:8px 12px; margin-top:10px; border-radius:4px; font-size:12px; color:#B91C1C; line-height:1.5;">
-                <strong>📌 Prioritas Alokasi Belanja:</strong> {{ $ap['keterangan_belanja'] }}
+              <!-- DD -->
+              <div style="background:#FFF; border:1.5px solid #2563EB; border-radius:8px; overflow:hidden; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
+                <div style="background:#2563EB; color:#FFF; font-size:11px; font-weight:900; padding:3px 6px;">DD</div>
+                <div style="padding:6px 4px; font-size:12px; font-weight:800; color:#1E293B;">{{ $ddVal }}</div>
               </div>
-            @endif
-          </div>
-        </div>
-
-        <!-- 3. PEMBIAYAAN DESA -->
-        <div class="apbdes-section">
-          <div class="apbdes-head pembiayaan">
-            <span><i class="fas fa-coins" style="margin-right:6px;"></i> PEMBIAYAAN DESA (NETTO)</span>
-            <span class="total">{{ $ap['pembiayaan_total'] ?? 'Rp 0,00' }}</span>
-          </div>
-          <div class="apbdes-body">
-            @if(!empty($ap['pembiayaan_items']))
-              @foreach($ap['pembiayaan_items'] as $item)
-                <div class="apbdes-row">
-                  <div class="label-col">
-                    <span class="label">{{ $item['label'] ?? '' }}</span>
-                    @if(!empty($item['sub']))
-                      <span class="sub-label">{{ $item['sub'] }}</span>
-                    @endif
-                  </div>
-                  <span class="val">{{ $item['nilai'] ?? '' }}</span>
-                </div>
-              @endforeach
-            @else
-              <div class="apbdes-row"><div class="label-col"><span class="label">Penerimaan Pembiayaan (SiLPA)</span></div><span class="val">{{ $ap['penerimaan_pembiayaan'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><div class="label-col"><span class="label">Pengeluaran Pembiayaan</span></div><span class="val">{{ $ap['pengeluaran_pembiayaan'] ?? 'Rp 0,00' }}</span></div>
-            @endif
-
-            @if(!empty($ap['keterangan_pembiayaan']))
-              <div style="background:#ECFDF5; border-left:3px solid #10B981; padding:8px 12px; margin-top:10px; border-radius:4px; font-size:12px; color:#047857; line-height:1.5;">
-                <strong>💡 Keterangan Pembiayaan:</strong> {{ $ap['keterangan_pembiayaan'] }}
+              <!-- ADD -->
+              <div style="background:#FFF; border:1.5px solid #16A34A; border-radius:8px; overflow:hidden; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
+                <div style="background:#16A34A; color:#FFF; font-size:11px; font-weight:900; padding:3px 6px;">ADD</div>
+                <div style="padding:6px 4px; font-size:12px; font-weight:800; color:#1E293B;">{{ $addVal }}</div>
               </div>
-            @endif
+              <!-- PDRD -->
+              <div style="background:#FFF; border:1.5px solid #EA580C; border-radius:8px; overflow:hidden; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
+                <div style="background:#EA580C; color:#FFF; font-size:11px; font-weight:900; padding:3px 6px;">PDRD</div>
+                <div style="padding:6px 4px; font-size:12px; font-weight:800; color:#1E293B;">{{ $pdrdVal }}</div>
+              </div>
+              <!-- BK -->
+              <div style="background:#FFF; border:1.5px solid #0F766E; border-radius:8px; overflow:hidden; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
+                <div style="background:#0F766E; color:#FFF; font-size:11px; font-weight:900; padding:3px 6px;">BK</div>
+                <div style="padding:6px 4px; font-size:12px; font-weight:800; color:#1E293B;">{{ $bkVal }}</div>
+              </div>
+              <!-- DLL -->
+              <div style="background:#FFF; border:1.5px solid #C026D3; border-radius:8px; overflow:hidden; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
+                <div style="background:#C026D3; color:#FFF; font-size:11px; font-weight:900; padding:3px 6px;">DLL</div>
+                <div style="padding:6px 4px; font-size:12px; font-weight:800; color:#1E293B;">{{ $dllVal }}</div>
+              </div>
+            </div>
+
+            <!-- Ribbon Total Pendapatan -->
+            <div style="background:linear-gradient(90deg, #DC2626 0%, #B91C1C 100%); color:#FFF; padding:8px 14px; border-radius:6px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+              <span style="font-size:12px; font-weight:800; letter-spacing:0.5px;">JUMLAH PENDAPATAN :</span>
+              <span style="font-size:15px; font-weight:900; color:#FEF08A;">{{ $ap['pendapatan_total'] ?? 'Rp 0,00' }}</span>
+            </div>
           </div>
+
+          <!-- ================= 2. BELANJA DESA ================= -->
+          <div style="background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:10px; padding:14px; margin-bottom:18px;">
+            <!-- Ribbon Banner Belanja -->
+            <div style="background:linear-gradient(135deg, #DC2626 0%, #B91C1C 100%); color:#FFF; text-align:center; font-weight:900; font-size:14px; letter-spacing:1px; padding:7px 12px; border-radius:6px; margin-bottom:14px; text-transform:uppercase; box-shadow:0 3px 8px rgba(220,38,38,0.25);">
+              BELANJA DESA
+            </div>
+
+            <!-- Grid 5 Bidang & Logo Kemendes -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px; align-items:center;">
+              <!-- Kolom Kiri: 5 Pill Bidang Belanja -->
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <!-- Bidang 1: Penyelenggaraan Pemerintahan (Hijau) -->
+                <div style="display:flex; align-items:center; background:#FFF; border:1.5px solid #10B981; border-radius:30px; padding:4px 12px 4px 6px; box-shadow:0 2px 6px rgba(16,185,129,0.15);">
+                  <div style="width:34px; height:34px; border-radius:50%; background:#10B981; color:#FFF; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; margin-right:8px;">
+                    🏛️
+                  </div>
+                  <div style="flex:1; min-width:0;">
+                    <div style="font-size:10.5px; font-weight:800; color:#065F46; text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Penyelenggaraan Pemerintahan</div>
+                    <div style="font-size:12.5px; font-weight:800; color:#1E293B;">{{ $b_pem }}</div>
+                  </div>
+                </div>
+
+                <!-- Bidang 2: Pelaksanaan Pembangunan (Merah) -->
+                <div style="display:flex; align-items:center; background:#FFF; border:1.5px solid #EF4444; border-radius:30px; padding:4px 12px 4px 6px; box-shadow:0 2px 6px rgba(239,68,68,0.15);">
+                  <div style="width:34px; height:34px; border-radius:50%; background:#EF4444; color:#FFF; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; margin-right:8px;">
+                    🏗️
+                  </div>
+                  <div style="flex:1; min-width:0;">
+                    <div style="font-size:10.5px; font-weight:800; color:#991B1B; text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Pelaksanaan Pembangunan Desa</div>
+                    <div style="font-size:12.5px; font-weight:800; color:#1E293B;">{{ $b_bang }}</div>
+                  </div>
+                </div>
+
+                <!-- Bidang 3: Pembinaan Kemasyarakatan (Ungu/Magenta) -->
+                <div style="display:flex; align-items:center; background:#FFF; border:1.5px solid #D946EF; border-radius:30px; padding:4px 12px 4px 6px; box-shadow:0 2px 6px rgba(217,70,239,0.15);">
+                  <div style="width:34px; height:34px; border-radius:50%; background:#D946EF; color:#FFF; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; margin-right:8px;">
+                    👥
+                  </div>
+                  <div style="flex:1; min-width:0;">
+                    <div style="font-size:10.5px; font-weight:800; color:#86198F; text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Pembinaan Kemasyarakatan</div>
+                    <div style="font-size:12.5px; font-weight:800; color:#1E293B;">{{ $b_bina }}</div>
+                  </div>
+                </div>
+
+                <!-- Bidang 4: Pemberdayaan Masyarakat (Biru) -->
+                <div style="display:flex; align-items:center; background:#FFF; border:1.5px solid #0284C7; border-radius:30px; padding:4px 12px 4px 6px; box-shadow:0 2px 6px rgba(2,132,199,0.15);">
+                  <div style="width:34px; height:34px; border-radius:50%; background:#0284C7; color:#FFF; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; margin-right:8px;">
+                    🤝
+                  </div>
+                  <div style="flex:1; min-width:0;">
+                    <div style="font-size:10.5px; font-weight:800; color:#075985; text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Pemberdayaan Masyarakat</div>
+                    <div style="font-size:12.5px; font-weight:800; color:#1E293B;">{{ $b_daya }}</div>
+                  </div>
+                </div>
+
+                <!-- Bidang 5: Penanggulangan Bencana (Pink/Rose) -->
+                <div style="display:flex; align-items:center; background:#FFF; border:1.5px solid #F43F5E; border-radius:30px; padding:4px 12px 4px 6px; box-shadow:0 2px 6px rgba(244,63,94,0.15);">
+                  <div style="width:34px; height:34px; border-radius:50%; background:#F43F5E; color:#FFF; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; margin-right:8px;">
+                    🚑
+                  </div>
+                  <div style="flex:1; min-width:0;">
+                    <div style="font-size:10.5px; font-weight:800; color:#9F1239; text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Penanggulangan Bencana</div>
+                    <div style="font-size:12.5px; font-weight:800; color:#1E293B;">{{ $b_bencana }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Kolom Kanan: Total Belanja + Logo Resmi Kemendes PDTT -->
+              <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:10px;">
+                <!-- Ribbon Total Belanja -->
+                <div style="background:linear-gradient(90deg, #DC2626 0%, #B91C1C 100%); color:#FFF; padding:8px 16px; border-radius:6px; width:100%; margin-bottom:16px; box-shadow:0 3px 8px rgba(220,38,38,0.25);">
+                  <div style="font-size:11px; font-weight:800; letter-spacing:0.5px;">JUMLAH BELANJA :</div>
+                  <div style="font-size:16px; font-weight:900; color:#FEF08A;">{{ $ap['belanja_total'] ?? 'Rp 0,00' }}</div>
+                </div>
+
+                <!-- Emblem Infografis Kemendes PDTT -->
+                <div style="width:140px; height:140px; border-radius:50%; background:#FFF; border:3px solid #0369A1; box-shadow:0 6px 18px rgba(3,105,161,0.2); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px; position:relative;">
+                  <!-- SVG Emblem Kemendes -->
+                  <svg viewBox="0 0 100 100" style="width:75px; height:75px;">
+                    <!-- Atap Rumah Merah -->
+                    <polygon points="50,15 22,38 78,38" fill="#DC2626" />
+                    <rect x="32" y="38" width="36" height="6" fill="#DC2626" />
+                    <!-- Hamparan Sawah Hijau -->
+                    <path d="M20,62 Q50,42 80,62 Q50,78 20,62 Z" fill="#16A34A" />
+                    <path d="M26,56 Q50,46 74,56" stroke="#FFF" stroke-width="2" fill="none" />
+                    <!-- Tangan Menopang Biru/Ungu -->
+                    <path d="M28,68 Q50,88 72,68 Q50,78 28,68 Z" fill="#2563EB" />
+                  </svg>
+                  <span style="font-size:7.5px; font-weight:800; color:#0369A1; text-transform:uppercase; line-height:1.1; margin-top:4px;">
+                    KEMENDES PDTT
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================= 3. PEMBIAYAAN DESA ================= -->
+          <div style="background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:10px; padding:14px;">
+            <!-- Ribbon Banner Pembiayaan -->
+            <div style="background:linear-gradient(135deg, #DC2626 0%, #B91C1C 100%); color:#FFF; text-align:center; font-weight:900; font-size:14px; letter-spacing:1px; padding:7px 12px; border-radius:6px; margin-bottom:12px; text-transform:uppercase; box-shadow:0 3px 8px rgba(220,38,38,0.25);">
+              PEMBIAYAAN DESA
+            </div>
+
+            <!-- 2 Kotak Pos Pembiayaan -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+              <!-- PENERIMAAN -->
+              <div style="background:#FFF; border:1.5px solid #2563EB; border-radius:8px; overflow:hidden; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
+                <div style="background:#2563EB; color:#FFF; font-size:11px; font-weight:900; padding:3px 6px;">PENERIMAAN</div>
+                <div style="padding:6px 4px; font-size:12.5px; font-weight:800; color:#1E293B;">{{ $terimaVal }}</div>
+              </div>
+
+              <!-- PENGELUARAN -->
+              <div style="background:#FFF; border:1.5px solid #DC2626; border-radius:8px; overflow:hidden; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
+                <div style="background:#DC2626; color:#FFF; font-size:11px; font-weight:900; padding:3px 6px;">PENGELUARAN</div>
+                <div style="padding:6px 4px; font-size:12.5px; font-weight:800; color:#1E293B;">{{ $keluarVal }}</div>
+              </div>
+            </div>
+
+            <!-- Ribbon SILPA / Pembiayaan Netto -->
+            <div style="background:linear-gradient(90deg, #DC2626 0%, #B91C1C 100%); color:#FFF; padding:8px 14px; border-radius:6px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+              <span style="font-size:12px; font-weight:800; letter-spacing:0.5px;">SILPA TAHUN BERJALAN :</span>
+              <span style="font-size:15px; font-weight:900; color:#FEF08A;">{{ $ap['pembiayaan_total'] ?? 'Rp 13.265.324,92' }}</span>
+            </div>
+          </div>
+
         </div>
       </div>
     @endforeach
