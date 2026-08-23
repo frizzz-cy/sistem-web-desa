@@ -36,8 +36,12 @@ graph TD
     %% Helper
     AdminSetting & AdminMedia & AdminBerita & AdminKegiatan --> ImageHelper[App/Helpers/ImageHelper.php]
     
-    %% Views (CMS)
-    AdminSetting --> PengaturanBlade[views/admin/pengaturan.blade.php]
+    %% Modular Settings Views (CMS)
+    AdminSetting --> BerandaSetting[views/admin/pengaturan/beranda.blade.php]
+    AdminSetting --> ApbdesSetting[views/admin/pengaturan/apbdes.blade.php]
+    AdminSetting --> DemografiSetting[views/admin/pengaturan/demografi.blade.php]
+    AdminSetting --> PotensiSetting[views/admin/pengaturan/potensi.blade.php]
+    AdminSetting --> PerangkatSetting[views/admin/pengaturan/perangkat.blade.php]
     AdminMedia --> MediaBlade[views/admin/media.blade.php]
     AdminDashboard --> DashboardBlade[views/admin/dashboard.blade.php]
     

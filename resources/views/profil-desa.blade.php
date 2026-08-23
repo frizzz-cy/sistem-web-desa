@@ -735,7 +735,7 @@
               <div style="font-size: 9.5px; font-weight: 800; text-transform: uppercase; color: var(--amber); letter-spacing: 0.05em; margin-bottom: 2px;">{{ $kades['jabatan'] }}</div>
               <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
                 <div style="width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--amber); overflow: hidden; background: #fff; flex-shrink: 0;">
-                  <img src="{{ $kades['foto'] }}" alt="{{ $kades['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                  <img src="{{ $kades['foto'] }}" alt="{{ $kades['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()" loading="lazy" decoding="async">
                 </div>
                 <div style="text-align: left;">
                   <div style="font-size: 13.5px; font-weight: 800; color: #fff;">{{ $kades['nama'] }}</div>
@@ -781,7 +781,7 @@
               <!-- Kasi Kesra -->
               <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('{{ addslashes($kasi_kesra['jabatan']) }}', '{{ addslashes($kasi_kesra['nama']) }}', '{{ addslashes($kasi_kesra['foto']) }}', '{{ addslashes($kasi_kesra['note']) }}')" class="org-subcard bagan-sub-card">
                 <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #1668A3; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
-                  <img src="{{ $kasi_kesra['foto'] }}" alt="{{ $kasi_kesra['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                  <img src="{{ $kasi_kesra['foto'] }}" alt="{{ $kasi_kesra['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()" loading="lazy" decoding="async">
                 </div>
                 <div style="font-size: 10px; font-weight: 800; color: #1668A3; line-height: 1.2;">{{ $kasi_kesra['jabatan'] }}</div>
                 <div style="font-size: 10px; font-weight: 700; color: var(--ink);">{{ $kasi_kesra['nama'] }}</div>
@@ -790,7 +790,7 @@
               <!-- Kasi Pelayanan -->
               <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('{{ addslashes($kasi_pelayanan['jabatan']) }}', '{{ addslashes($kasi_pelayanan['nama']) }}', '{{ addslashes($kasi_pelayanan['foto']) }}', '{{ addslashes($kasi_pelayanan['note']) }}')" class="org-subcard bagan-sub-card">
                 <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #1668A3; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
-                  <img src="{{ $kasi_pelayanan['foto'] }}" alt="{{ $kasi_pelayanan['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                  <img src="{{ $kasi_pelayanan['foto'] }}" alt="{{ $kasi_pelayanan['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()" loading="lazy" decoding="async">
                 </div>
                 <div style="font-size: 10px; font-weight: 800; color: #1668A3; line-height: 1.2;">{{ $kasi_pelayanan['jabatan'] }}</div>
                 <div style="font-size: 10px; font-weight: 700; color: var(--ink);">{{ $kasi_pelayanan['nama'] }}</div>
@@ -799,7 +799,7 @@
               <!-- Kasi Pemerintahan -->
               <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('{{ addslashes($kasi_pemerintahan['jabatan']) }}', '{{ addslashes($kasi_pemerintahan['nama']) }}', '{{ addslashes($kasi_pemerintahan['foto']) }}', '{{ addslashes($kasi_pemerintahan['note']) }}')" class="org-subcard bagan-sub-card">
                 <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #1668A3; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
-                  <img src="{{ $kasi_pemerintahan['foto'] }}" alt="{{ $kasi_pemerintahan['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                  <img src="{{ $kasi_pemerintahan['foto'] }}" alt="{{ $kasi_pemerintahan['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()" loading="lazy" decoding="async">
                 </div>
                 <div style="font-size: 10px; font-weight: 800; color: #1668A3; line-height: 1.2;">{{ $kasi_pemerintahan['jabatan'] }}</div>
                 <div style="font-size: 10px; font-weight: 700; color: var(--ink);">{{ $kasi_pemerintahan['nama'] }}</div>
@@ -813,7 +813,7 @@
             <div style="width: 100%; max-width: 200px; margin: 0 auto; background: #fff; border: 2px solid #0B3B60; border-radius: 6px; padding: 5px 8px; font-weight: 800; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.04);" onclick="bukaPopupOrang('{{ addslashes($sekdes['jabatan']) }}', '{{ addslashes($sekdes['nama']) }}', '{{ addslashes($sekdes['foto']) }}', '{{ addslashes($sekdes['note']) }}')" class="org-subcard bagan-sub-card">
               <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
                 <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #1668A3; overflow: hidden; background: #F4F6F8; flex-shrink: 0;">
-                  <img src="{{ $sekdes['foto'] }}" alt="{{ $sekdes['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                  <img src="{{ $sekdes['foto'] }}" alt="{{ $sekdes['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()" loading="lazy" decoding="async">
                 </div>
                 <div style="text-align: left;">
                   <div style="font-size: 11px; font-weight: 800; color: var(--ink); line-height: 1.1;">{{ $sekdes['jabatan'] }}</div>
@@ -836,7 +836,7 @@
               <!-- Kaur TU & Umum -->
               <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('{{ addslashes($kaur_tu['jabatan']) }}', '{{ addslashes($kaur_tu['nama']) }}', '{{ addslashes($kaur_tu['foto']) }}', '{{ addslashes($kaur_tu['note']) }}')" class="org-subcard bagan-sub-card">
                 <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #1668A3; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
-                  <img src="{{ $kaur_tu['foto'] }}" alt="{{ $kaur_tu['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                  <img src="{{ $kaur_tu['foto'] }}" alt="{{ $kaur_tu['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()" loading="lazy" decoding="async">
                 </div>
                 <div style="font-size: 10px; font-weight: 800; color: var(--ink); line-height: 1.2;">{{ $kaur_tu['jabatan'] }}</div>
                 <div style="font-size: 10px; font-weight: 700; color: var(--ink-soft);">{{ $kaur_tu['nama'] }}</div>
@@ -845,7 +845,7 @@
               <!-- Kaur Keuangan -->
               <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('{{ addslashes($kaur_keuangan['jabatan']) }}', '{{ addslashes($kaur_keuangan['nama']) }}', '{{ addslashes($kaur_keuangan['foto']) }}', '{{ addslashes($kaur_keuangan['note']) }}')" class="org-subcard bagan-sub-card">
                 <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #1668A3; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
-                  <img src="{{ $kaur_keuangan['foto'] }}" alt="{{ $kaur_keuangan['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                  <img src="{{ $kaur_keuangan['foto'] }}" alt="{{ $kaur_keuangan['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()" loading="lazy" decoding="async">
                 </div>
                 <div style="font-size: 10px; font-weight: 800; color: var(--ink); line-height: 1.2;">{{ $kaur_keuangan['jabatan'] }}</div>
                 <div style="font-size: 10px; font-weight: 700; color: var(--ink-soft);">{{ $kaur_keuangan['nama'] }}</div>
@@ -854,7 +854,7 @@
               <!-- Kaur Perencanaan -->
               <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('{{ addslashes($kaur_perencanaan['jabatan']) }}', '{{ addslashes($kaur_perencanaan['nama']) }}', '{{ addslashes($kaur_perencanaan['foto']) }}', '{{ addslashes($kaur_perencanaan['note']) }}')" class="org-subcard bagan-sub-card">
                 <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #1668A3; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
-                  <img src="{{ $kaur_perencanaan['foto'] }}" alt="{{ $kaur_perencanaan['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                  <img src="{{ $kaur_perencanaan['foto'] }}" alt="{{ $kaur_perencanaan['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()" loading="lazy" decoding="async">
                 </div>
                 <div style="font-size: 10px; font-weight: 800; color: var(--ink); line-height: 1.2;">{{ $kaur_perencanaan['jabatan'] }}</div>
                 <div style="font-size: 10px; font-weight: 700; color: var(--ink-soft);">{{ $kaur_perencanaan['nama'] }}</div>
@@ -880,7 +880,7 @@
             <!-- Kasun 1 -->
             <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('{{ addslashes($kasun_1['jabatan']) }}', '{{ addslashes($kasun_1['nama']) }}', '{{ addslashes($kasun_1['foto']) }}', '{{ addslashes($kasun_1['note']) }}')" class="org-subcard bagan-sub-card">
               <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #52633B; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
-                <img src="{{ $kasun_1['foto'] }}" alt="{{ $kasun_1['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                <img src="{{ $kasun_1['foto'] }}" alt="{{ $kasun_1['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()" loading="lazy" decoding="async">
               </div>
               <div style="font-size: 10.5px; font-weight: 800; color: var(--ink);">KASUN</div>
               <div style="font-size: 10px; color: var(--ink-soft); font-weight: 600;">{{ $kasun_1['nama'] }}</div>
@@ -890,7 +890,7 @@
             <!-- Kasun 2 -->
             <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('{{ addslashes($kasun_2['jabatan']) }}', '{{ addslashes($kasun_2['nama']) }}', '{{ addslashes($kasun_2['foto']) }}', '{{ addslashes($kasun_2['note']) }}')" class="org-subcard bagan-sub-card">
               <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #52633B; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
-                <img src="{{ $kasun_2['foto'] }}" alt="{{ $kasun_2['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                <img src="{{ $kasun_2['foto'] }}" alt="{{ $kasun_2['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()" loading="lazy" decoding="async">
               </div>
               <div style="font-size: 10.5px; font-weight: 800; color: var(--ink);">KASUN</div>
               <div style="font-size: 10px; color: var(--ink-soft); font-weight: 600;">{{ $kasun_2['nama'] }}</div>
@@ -900,7 +900,7 @@
             <!-- Kasun 3 -->
             <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('{{ addslashes($kasun_3['jabatan']) }}', '{{ addslashes($kasun_3['nama']) }}', '{{ addslashes($kasun_3['foto']) }}', '{{ addslashes($kasun_3['note']) }}')" class="org-subcard bagan-sub-card">
               <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #52633B; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
-                <img src="{{ $kasun_3['foto'] }}" alt="{{ $kasun_3['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                <img src="{{ $kasun_3['foto'] }}" alt="{{ $kasun_3['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()" loading="lazy" decoding="async">
               </div>
               <div style="font-size: 10.5px; font-weight: 800; color: var(--ink);">KASUN</div>
               <div style="font-size: 10px; color: var(--ink-soft); font-weight: 600;">{{ $kasun_3['nama'] }}</div>
@@ -910,7 +910,7 @@
             <!-- Kasun 4 -->
             <div style="flex: 1; min-width: 0; border: 1.5px solid #0B3B60; background: #fff; border-radius: 6px; padding: 6px 2px; text-align: center; cursor: pointer;" onclick="bukaPopupOrang('{{ addslashes($kasun_4['jabatan']) }}', '{{ addslashes($kasun_4['nama']) }}', '{{ addslashes($kasun_4['foto']) }}', '{{ addslashes($kasun_4['note']) }}')" class="org-subcard bagan-sub-card">
               <div style="width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid #52633B; overflow: hidden; margin: 0 auto 3px; background: #F4F6F8;">
-                <img src="{{ $kasun_4['foto'] }}" alt="{{ $kasun_4['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()">
+                <img src="{{ $kasun_4['foto'] }}" alt="{{ $kasun_4['nama'] }}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.remove()" loading="lazy" decoding="async">
               </div>
               <div style="font-size: 10.5px; font-weight: 800; color: var(--ink);">KASUN</div>
               <div style="font-size: 10px; color: var(--ink-soft); font-weight: 600;">{{ $kasun_4['nama'] }}</div>

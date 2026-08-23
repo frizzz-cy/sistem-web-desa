@@ -33,12 +33,16 @@ class AdminKegiatanController extends Controller
             'nama_pembuat' => 'required|string|max:255',
             'deskripsi'    => 'required|string',
             'foto'         => 'nullable|image|mimes:jpeg,png,jpg|max:15360',
+            'foto_media'   => 'nullable|string',
         ]);
 
         if ($request->hasFile('foto')) {
             $data['foto'] = ImageHelper::uploadAndCompress($request->file('foto'), 'kegiatan_images');
+        } elseif ($request->filled('foto_media')) {
+            $data['foto'] = $request->input('foto_media');
         }
 
+        unset($data['foto_media']);
         Kegiatan::create($data);
         return redirect('/admin/kegiatan')->with('success', 'Kegiatan berhasil ditambahkan!');
     }
@@ -60,6 +64,7 @@ class AdminKegiatanController extends Controller
             'nama_pembuat' => 'required|string|max:255',
             'deskripsi'    => 'required|string',
             'foto'         => 'nullable|image|mimes:jpeg,png,jpg|max:15360',
+            'foto_media'   => 'nullable|string',
         ]);
 
         if ($request->hasFile('foto')) {
@@ -67,8 +72,11 @@ class AdminKegiatanController extends Controller
                 Storage::disk('public')->delete($kegiatan->foto);
             }
             $data['foto'] = ImageHelper::uploadAndCompress($request->file('foto'), 'kegiatan_images');
+        } elseif ($request->filled('foto_media')) {
+            $data['foto'] = $request->input('foto_media');
         }
 
+        unset($data['foto_media']);
         $kegiatan->update($data);
         return redirect('/admin/kegiatan')->with('success', 'Kegiatan berhasil diperbarui!');
     }

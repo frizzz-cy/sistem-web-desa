@@ -43,6 +43,39 @@ class AdminMediaController extends Controller
         return view('admin.media', compact('images'));
     }
 
+    // Endpoint JSON untuk Universal Media Picker Modal
+    public function apiList()
+    {
+        $allFiles = Storage::disk('public')->allFiles();
+        $images = [];
+
+        foreach ($allFiles as $file) {
+            $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+            if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'])) {
+                $parts = explode('/', $file);
+                $folder = count($parts) > 1 ? $parts[0] : 'umum';
+
+                $images[] = [
+                    'path' => $file,
+                    'url' => asset('storage/' . $file),
+                    'size' => $this->formatBytes(Storage::disk('public')->size($file)),
+                    'modified' => Storage::disk('public')->lastModified($file),
+                    'folder' => $folder,
+                    'name' => basename($file)
+                ];
+            }
+        }
+
+        usort($images, function ($a, $b) {
+            return $b['modified'] <=> $a['modified'];
+        });
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $images
+        ]);
+    }
+
     // Mengunggah file media baru ke folder umum (uploads)
     public function store(Request $request)
     {
@@ -54,8 +87,28 @@ class AdminMediaController extends Controller
             // Kompresi otomatis menggunakan ImageHelper
             $path = ImageHelper::uploadAndCompress($request->file('file'), 'uploads');
             if ($path) {
+                if ($request->ajax() || $request->wantsJson()) {
+                    return response()->json([
+                        'status' => 'success',
+                        'message' => 'File berhasil diunggah ke Pustaka Media!',
+                        'data' => [
+                            'path' => $path,
+                            'url' => asset('storage/' . $path),
+                            'size' => $this->formatBytes(Storage::disk('public')->size($path)),
+                            'name' => basename($path),
+                            'folder' => 'uploads'
+                        ]
+                    ]);
+                }
                 return redirect('/admin/media')->with('success', 'File berhasil diunggah dan dikompresi ke Pustaka Media!');
             }
+        }
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Gagal mengunggah berkas media.'
+            ], 422);
         }
 
         return redirect('/admin/media')->with('error', 'Gagal mengunggah berkas media.');
