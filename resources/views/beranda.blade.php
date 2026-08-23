@@ -548,11 +548,11 @@
       </button>
     </div>
 
-    <!-- SECTION: POSTER PERLOMBAAN & AGENDA BULAN INI (DINAMIS DARI CMS ADMIN) -->
+    <!-- SECTION: POSTER PERLOMBAAN & AGENDA BULAN INI (MODEL CARD PORTRAIT SEPERTI FOTO 2) -->
     <div style="margin-bottom:24px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
         <h4 style="margin:0; font-size:15px; font-weight:800; color:var(--biru-tua); display:flex; align-items:center; gap:6px;">
-          🎉 <span>Poster Perlombaan &amp; Agenda Kegiatan Desa</span>
+          🎉 <span>Poster Perlombaan &amp; Agenda Kegiatan</span>
         </h4>
         @if(!empty($poster_agendas) && count($poster_agendas) > 0)
           <span style="font-size:11px; font-weight:700; background:#DCFCE7; color:#15803D; padding:3px 10px; border-radius:12px;">
@@ -561,78 +561,62 @@
         @endif
       </div>
 
-      <!-- GRID POSTER KEGIATAN & PERLOMBAAN -->
+      <!-- GRID POSTER CARD PORTRAIT COMPACT -->
       @if(!empty($poster_agendas) && count($poster_agendas) > 0)
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:16px;">
-          @foreach($poster_agendas as $poster)
-            <div style="background:#FFF; border:1.5px solid #E2E8F0; border-radius:12px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,0.06); transition:transform 0.2s ease;">
-              @if(!empty($poster['foto']))
-                <div style="position:relative; width:100%; max-height:280px; overflow:hidden; background:#0B283F;">
-                  <img src="{{ $poster['foto'] }}" alt="{{ $poster['judul'] ?? 'Poster Agenda' }}" style="width:100%; max-height:280px; object-fit:cover; display:block;" loading="lazy">
-                  <div style="position:absolute; top:12px; left:12px;">
-                    <span style="font-size:10px; font-weight:800; background:rgba(11,59,96,0.85); color:#FFF; padding:4px 10px; border-radius:12px; backdrop-filter:blur(4px); box-shadow:0 2px 6px rgba(0,0,0,0.2);">
-                      {{ $poster['kategori'] ?? '🏆 Perlombaan Desa' }}
-                    </span>
-                  </div>
-                </div>
-              @endif
-
-              <div style="@if(empty($poster['foto'])) background:linear-gradient(135deg, #0B3B60 0%, #1668A3 100%); color:#FFF; @else background:#F8FAFC; color:var(--teks); border-bottom:1px solid #E2E8F0; @endif padding:14px 16px;">
-                @if(empty($poster['foto']))
-                  <span style="font-size:10px; font-weight:800; background:#E0F2FE; color:#0369A1; padding:3px 8px; border-radius:10px; text-transform:uppercase; letter-spacing:0.5px;">
-                    {{ $poster['kategori'] ?? '🏆 Perlombaan Desa' }}
-                  </span>
-                @endif
-                <h5 style="margin:@if(empty($poster['foto'])) 8px 0 0 @else 0 @endif; font-size:15px; font-weight:800; color:@if(empty($poster['foto'])) #FFF @else var(--biru-tua) @endif;">
-                  {{ $poster['judul'] ?? '' }}
-                </h5>
-              </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(135px, 1fr)); gap:12px;">
+          @foreach($poster_agendas as $pIdx => $poster)
+            @php
+              $posterDataJson = base64_encode(json_encode($poster));
+            @endphp
+            <div class="poster-anime-card" onclick="bukaDetailPoster('{{ $posterDataJson }}')" style="background:#0F172A; border:1px solid #1E293B; border-radius:10px; overflow:hidden; cursor:pointer; transition:transform 0.2s ease, box-shadow 0.2s ease; display:flex; flex-direction:column; text-align:center; position:relative; box-shadow:0 4px 12px rgba(0,0,0,0.12);" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.12)';">
               
-              <div style="padding:14px 16px;">
-                @if(!empty($poster['tanggal']) || !empty($poster['waktu']) || !empty($poster['lokasi']))
-                  <div style="display:grid; grid-template-columns:auto 1fr; gap:6px 10px; font-size:12.5px; margin-bottom:12px; line-height:1.5;">
-                    @if(!empty($poster['tanggal']))
-                      <span style="color:#64748B; font-weight:600;">📅 Hari / Tgl:</span>
-                      <strong style="color:var(--biru-tua);">{{ $poster['tanggal'] }}</strong>
-                    @endif
-                    
-                    @if(!empty($poster['waktu']))
-                      <span style="color:#64748B; font-weight:600;">⏰ Waktu:</span>
-                      <strong style="color:var(--biru-tua);">{{ $poster['waktu'] }}</strong>
-                    @endif
-                    
-                    @if(!empty($poster['lokasi']))
-                      <span style="color:#64748B; font-weight:600;">📍 Lokasi:</span>
-                      <strong style="color:var(--biru-tua);">{{ $poster['lokasi'] }}</strong>
-                    @endif
-                  </div>
+              <!-- Foto Poster Portrait (Rasio 3:4) -->
+              <div style="position:relative; width:100%; aspect-ratio:3/4; background:#1E293B; overflow:hidden; display:flex; align-items:center; justify-content:center;">
+                @if(!empty($poster['foto']))
+                  <img src="{{ $poster['foto'] }}" alt="{{ $poster['judul'] ?? 'Poster' }}" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy">
+                @else
+                  <div style="font-size:32px; opacity:0.6;">🏆</div>
                 @endif
+                
+                <!-- Badge Kategori Mengambang (Seperti Badge SUB di Foto 2) -->
+                <div style="position:absolute; bottom:6px; left:50%; transform:translateX(-50%); width:max-content; max-width:90%;">
+                  <span style="font-size:9px; font-weight:800; background:rgba(0,0,0,0.85); color:#F59E0B; padding:2px 8px; border-radius:4px; text-transform:uppercase; letter-spacing:0.5px; border:1px solid rgba(245,158,11,0.5); display:inline-block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; box-shadow:0 2px 6px rgba(0,0,0,0.4);">
+                    {{ $poster['kategori'] ?? 'LOMBA' }}
+                  </span>
+                </div>
+              </div>
 
-                @if(!empty($poster['rincian']))
-                  <div style="background:#F8FAFC; border:1px dashed #CBD5E1; padding:10px 12px; border-radius:8px; font-size:12px; color:var(--teks); margin-bottom:12px;">
-                    <strong>🎯 Rincian Acara &amp; Cabang:</strong>
-                    <div style="margin-top:4px; color:#475569; line-height:1.6;">
-                      {!! nl2br(e($poster['rincian'])) !!}
-                    </div>
-                  </div>
-                @endif
-
-                @if(!empty($poster['hadiah']))
-                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; background:#FEF3C7; color:#92400E; padding:8px 12px; border-radius:6px; font-weight:700;">
-                    <span>🎁 {{ $poster['hadiah'] }}</span>
-                  </div>
-                @endif
+              <!-- Judul & Keterangan Card -->
+              <div style="padding:8px 6px 10px; display:flex; flex-direction:column; flex:1; justify-content:space-between;">
+                <div style="font-size:12px; font-weight:700; color:#F59E0B; line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:4px;" title="{{ $poster['judul'] ?? '' }}">
+                  {{ $poster['judul'] ?? 'Agenda Desa' }}
+                </div>
+                
+                <div style="font-size:10px; color:#94A3B8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                  {{ !empty($poster['tanggal']) ? $poster['tanggal'] : 'Lihat Detail ↗' }}
+                </div>
               </div>
             </div>
           @endforeach
         </div>
       @else
-        <div style="background:#F8FAFC; border:2px dashed #CBD5E1; border-radius:12px; padding:28px 20px; text-align:center; color:#64748B;">
-          <div style="font-size:32px; margin-bottom:8px;">📢</div>
-          <div style="font-weight:700; font-size:14px; color:var(--biru-tua); margin-bottom:4px;">Belum Ada Poster Perlombaan / Agenda Baru</div>
-          <div style="font-size:12.5px;">Poster perlombaan, pamflet kegiatan, dan agenda penting desa akan diumumkan di sini.</div>
+        <div style="background:#F8FAFC; border:2px dashed #CBD5E1; border-radius:12px; padding:24px 16px; text-align:center; color:#64748B;">
+          <div style="font-size:28px; margin-bottom:6px;">📢</div>
+          <div style="font-weight:700; font-size:13.5px; color:var(--biru-tua); margin-bottom:2px;">Belum Ada Poster Perlombaan / Agenda Baru</div>
+          <div style="font-size:12px;">Poster kegiatan desa akan diumumkan di sini.</div>
         </div>
       @endif
+    </div>
+
+    <!-- MODAL DETAIL LIGHTBOX POSTER -->
+    <div class="modal-informasi-overlay" id="modal-detail-poster-overlay" style="display:none; z-index:99999;" onclick="tutupDetailPoster(event)">
+      <div class="modal-informasi-box" style="max-width:540px; padding:20px; border-radius:14px; background:#FFF; box-shadow:0 15px 40px rgba(0,0,0,0.3);">
+        <button class="modal-informasi-close" onclick="tutupDetailPoster()">✕</button>
+        
+        <div id="detail-poster-content">
+          <!-- Konten diisi otomatis via JS saat kartu diklik -->
+        </div>
+      </div>
     </div>
 
     <!-- DAFTAR INFORMASI PUBLIK & REGULASI DESA -->
@@ -1201,7 +1185,7 @@
 
   // ================= PENGELOLA MODAL (SINGLE ACTIVE MODAL) =================
   function tutupSemuaModal() {
-    ['modal-layanan-overlay', 'modal-informasi-overlay', 'modal-apbdes-overlay', 'modal-demografi-overlay', 'modal-kelembagaan-overlay', 'modal-semua-berita-overlay'].forEach(id => {
+    ['modal-layanan-overlay', 'modal-informasi-overlay', 'modal-apbdes-overlay', 'modal-detail-poster-overlay', 'modal-demografi-overlay', 'modal-kelembagaan-overlay', 'modal-semua-berita-overlay'].forEach(id => {
       var el = document.getElementById(id);
       if (el) {
         el.classList.remove('show');
@@ -1287,6 +1271,65 @@
   window.tutupModalInformasi = function(event){
     if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-informasi-close')) return;
     var el = document.getElementById('modal-informasi-overlay');
+    if (el) {
+      el.classList.remove('show');
+      el.style.setProperty('display', 'none', 'important');
+    }
+  };
+
+  // ================= MODAL DETAIL POSTER LIGHTBOX =================
+  window.bukaDetailPoster = function(posterDataB64){
+    try {
+      var poster = JSON.parse(atob(posterDataB64));
+      var container = document.getElementById('detail-poster-content');
+      if (!container) return;
+
+      var imgHtml = poster.foto 
+        ? '<div style="margin-bottom:16px; text-align:center; background:#0B283F; border-radius:10px; overflow:hidden; border:1px solid #CBD5E1;"><img src="' + poster.foto + '" alt="' + (poster.judul || '') + '" style="max-height:360px; max-width:100%; object-fit:contain; display:block; margin:0 auto;"></div>'
+        : '';
+
+      var infoRows = '';
+      if (poster.tanggal) {
+        infoRows += '<div style="display:flex; align-items:baseline; gap:8px; font-size:13px; margin-bottom:6px;"><span style="color:#64748B; font-weight:600; min-width:85px;">📅 Tanggal:</span><strong style="color:var(--biru-tua);">' + poster.tanggal + '</strong></div>';
+      }
+      if (poster.waktu) {
+        infoRows += '<div style="display:flex; align-items:baseline; gap:8px; font-size:13px; margin-bottom:6px;"><span style="color:#64748B; font-weight:600; min-width:85px;">⏰ Waktu:</span><strong style="color:var(--biru-tua);">' + poster.waktu + '</strong></div>';
+      }
+      if (poster.lokasi) {
+        infoRows += '<div style="display:flex; align-items:baseline; gap:8px; font-size:13px; margin-bottom:6px;"><span style="color:#64748B; font-weight:600; min-width:85px;">📍 Lokasi:</span><strong style="color:var(--biru-tua);">' + poster.lokasi + '</strong></div>';
+      }
+
+      var rincianHtml = poster.rincian 
+        ? '<div style="background:#F8FAFC; border:1px dashed #CBD5E1; padding:12px 14px; border-radius:8px; font-size:12.5px; color:var(--teks); margin-bottom:14px; line-height:1.6;"><strong>🎯 Rincian Acara & Cabang Lomba:</strong><div style="margin-top:4px; color:#475569; white-space:pre-line;">' + poster.rincian + '</div></div>'
+        : '';
+
+      var hadiahHtml = poster.hadiah 
+        ? '<div style="background:#FEF3C7; color:#92400E; padding:10px 14px; border-radius:8px; font-size:12px; font-weight:700; margin-bottom:16px;">🎁 ' + poster.hadiah + '</div>'
+        : '';
+
+      container.innerHTML = 
+        '<div style="display:inline-block; font-size:10px; font-weight:800; background:#E0F2FE; color:#0369A1; padding:3px 10px; border-radius:10px; text-transform:uppercase; margin-bottom:8px;">' + (poster.kategori || '🏆 Perlombaan Desa') + '</div>' +
+        '<h3 style="margin:0 0 14px; font-size:18px; color:var(--biru-tua); font-weight:800; line-height:1.35;">' + (poster.judul || 'Agenda Desa') + '</h3>' +
+        imgHtml +
+        (infoRows ? '<div style="background:#F8FAFC; padding:12px 14px; border-radius:8px; border:1px solid #E2E8F0; margin-bottom:14px;">' + infoRows + '</div>' : '') +
+        rincianHtml +
+        hadiahHtml +
+        '<button type="button" onclick="tutupDetailPoster()" class="btn btn-secondary" style="width:100%; justify-content:center; padding:10px; font-weight:700; font-size:13px;">Tutup Pratinjau</button>';
+
+      var el = document.getElementById('modal-detail-poster-overlay');
+      if (el) {
+        el.classList.add('show');
+        el.style.setProperty('display', 'flex', 'important');
+        el.style.setProperty('z-index', '999999', 'important');
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  };
+
+  window.tutupDetailPoster = function(event){
+    if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-informasi-close')) return;
+    var el = document.getElementById('modal-detail-poster-overlay');
     if (el) {
       el.classList.remove('show');
       el.style.setProperty('display', 'none', 'important');
