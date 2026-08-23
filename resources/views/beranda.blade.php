@@ -693,24 +693,39 @@
     <!-- KONTEN RINCIAN PER TAHUN (MODEL BALIHO RESMI INFOGRAFIS APBDES SEPERTI FOTO) -->
     @foreach($ap_all as $tKey => $ap)
       @php
-        // Normalisasi data pos pendapatan
-        $padVal = $ap['pad'] ?? ($ap['pendapatan_items'][0]['nilai'] ?? 'Rp 230.760.000,00');
-        $ddVal  = $ap['dd'] ?? ($ap['pendapatan_items'][1]['nilai'] ?? 'Rp 303.093.000,00');
-        $addVal = $ap['add'] ?? ($ap['pendapatan_items'][2]['nilai'] ?? 'Rp 376.615.000,00');
-        $pdrdVal = $ap['pdrd'] ?? ($ap['pendapatan_items'][3]['nilai'] ?? 'Rp 85.805.300,00');
-        $bkVal  = $ap['bk'] ?? ($ap['pendapatan_items'][4]['nilai'] ?? 'Rp 539.600.603,00');
-        $dllVal = $ap['dll'] ?? ($ap['pendapatan_items'][5]['nilai'] ?? 'Rp 127.755.900,00');
+        // Pencarian nilai pos pendapatan yang dinamis dari inputan Admin CMS
+        $pItems = $ap['pendapatan_items'] ?? [];
+        $findP = function($prefix, $idx, $default) use ($pItems, $ap) {
+            foreach ($pItems as $it) {
+                if (stripos($it['label'] ?? '', $prefix) !== false) return $it['nilai'];
+            }
+            return $pItems[$idx]['nilai'] ?? ($ap[strtolower($prefix)] ?? $default);
+        };
+        $padVal  = $findP('PAD', 0, 'Rp 0,00');
+        $ddVal   = $findP('DD', 1, 'Rp 0,00');
+        $addVal  = $findP('ADD', 2, 'Rp 0,00');
+        $pdrdVal = $findP('PDRD', 3, 'Rp 0,00');
+        $bkVal   = $findP('BK', 4, 'Rp 0,00');
+        $dllVal  = $findP('DLL', 5, 'Rp 0,00');
 
-        // Normalisasi data belanja 5 bidang
-        $b_pem = $ap['belanja_pemerintahan'] ?? ($ap['belanja_items'][0]['nilai'] ?? 'Rp 866.594.524,92');
-        $b_bang = $ap['belanja_pembangunan'] ?? ($ap['belanja_items'][1]['nilai'] ?? 'Rp 582.090.603,00');
-        $b_bina = $ap['belanja_pembinaan'] ?? ($ap['belanja_items'][2]['nilai'] ?? 'Rp 42.450.000,00');
-        $b_daya = $ap['belanja_pemberdayaan'] ?? ($ap['belanja_items'][3]['nilai'] ?? 'Rp 158.000.000,00');
-        $b_bencana = $ap['belanja_bencana'] ?? ($ap['belanja_items'][4]['nilai'] ?? 'Rp 27.760.000,00');
+        // Pencarian nilai 5 bidang belanja yang dinamis dari inputan Admin CMS
+        $bItems = $ap['belanja_items'] ?? [];
+        $findB = function($prefix, $idx, $default) use ($bItems, $ap) {
+            foreach ($bItems as $it) {
+                if (stripos($it['label'] ?? '', $prefix) !== false) return $it['nilai'];
+            }
+            return $bItems[$idx]['nilai'] ?? $default;
+        };
+        $b_pem     = $findB('Pemerintahan', 0, $ap['belanja_pemerintahan'] ?? 'Rp 0,00');
+        $b_bang    = $findB('Pembangunan', 1, $ap['belanja_pembangunan'] ?? 'Rp 0,00');
+        $b_bina    = $findB('Pembinaan', 2, $ap['belanja_pembinaan'] ?? 'Rp 0,00');
+        $b_daya    = $findB('Pemberdayaan', 3, $ap['belanja_pemberdayaan'] ?? 'Rp 0,00');
+        $b_bencana = $findB('Bencana', 4, $ap['belanja_bencana'] ?? 'Rp 0,00');
 
-        // Normalisasi pembiayaan
-        $terimaVal = $ap['penerimaan_pembiayaan'] ?? ($ap['pembiayaan_items'][0]['nilai'] ?? 'Rp 13.265.324,92');
-        $keluarVal = $ap['pengeluaran_pembiayaan'] ?? ($ap['pembiayaan_items'][1]['nilai'] ?? 'Rp 0,00');
+        // Pencarian pembiayaan yang dinamis dari inputan Admin CMS
+        $pbItems = $ap['pembiayaan_items'] ?? [];
+        $terimaVal = $pbItems[0]['nilai'] ?? ($ap['penerimaan_pembiayaan'] ?? 'Rp 0,00');
+        $keluarVal = $pbItems[1]['nilai'] ?? ($ap['pengeluaran_pembiayaan'] ?? 'Rp 0,00');
       @endphp
 
       <div id="apbdes-content-{{ $tKey }}" class="apbdes-year-content" style="{{ $loop->first ? 'display:block;' : 'display:none;' }}">
