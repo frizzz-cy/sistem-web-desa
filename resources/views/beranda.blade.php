@@ -458,31 +458,22 @@
       '2025' => [
           'tahun' => '2025',
           'status' => 'Laporan Realisasi / LPJ',
-          'pendapatan_total' => 'Rp 1.540.210.000,00',
-          'pendapatan_items' => [
-              ['label' => 'Pendapatan Asli Desa (PAD)', 'sub' => 'Realisasi Pendapatan Asli Desa', 'nilai' => 'Rp 210.500.000,00'],
-              ['label' => 'Dana Desa (DD - APBN Pusat)', 'sub' => 'Realisasi Dana Desa APBN', 'nilai' => 'Rp 295.000.000,00'],
-              ['label' => 'Alokasi Dana Desa (ADD - APBD Jombang)', 'sub' => 'Realisasi ADD Kabupaten Jombang', 'nilai' => 'Rp 360.200.000,00'],
-              ['label' => 'Bagi Hasil Pajak & Retribusi (PDRD)', 'sub' => 'Realisasi PDRD Daerah', 'nilai' => 'Rp 78.510.000,00'],
-              ['label' => 'Bantuan Keuangan (BK Provinsi/Kabupaten)', 'sub' => 'Realisasi Bantuan Keuangan', 'nilai' => 'Rp 480.000.000,00'],
-              ['label' => 'Lain-Lain Pendapatan Desa Sah (DLL)', 'sub' => 'Realisasi pendapatan sah lainnya', 'nilai' => 'Rp 116.000.000,00']
-          ],
-          'keterangan_pendapatan' => 'Realisasi penerimaan APBDes Tahun Anggaran 2025 dari seluruh pos pendapatan sah.',
-          'belanja_total' => 'Rp 1.535.100.000,00',
-          'belanja_items' => [
-              ['label' => 'Penyelenggaraan Pemerintahan Desa', 'sub' => 'Realisasi operasional dan aparatur desa', 'nilai' => 'Rp 790.000.000,00'],
-              ['label' => 'Pelaksanaan Pembangunan Desa', 'sub' => 'Realisasi infrastruktur & sarpras', 'nilai' => 'Rp 530.000.000,00'],
-              ['label' => 'Pembinaan Kemasyarakatan', 'sub' => 'Realisasi pembinaan kemasyarakatan', 'nilai' => 'Rp 38.500.000,00'],
-              ['label' => 'Pemberdayaan Masyarakat', 'sub' => 'Realisasi pemberdayaan warga & UMKM', 'nilai' => 'Rp 151.600.000,00'],
-              ['label' => 'Penanggulangan Bencana & Keadaan Darurat', 'sub' => 'Realisasi penanganan keadaan darurat', 'nilai' => 'Rp 25.000.000,00']
-          ],
-          'keterangan_belanja' => 'Realisasi belanja APBDes Tahun Anggaran 2025 untuk pembangunan dan pelayanan masyarakat.',
-          'pembiayaan_total' => 'Rp 5.110.000,00',
-          'pembiayaan_items' => [
-              ['label' => 'Penerimaan Pembiayaan (SiLPA)', 'sub' => 'Sisa Lebih Perhitungan Anggaran tahun 2024', 'nilai' => 'Rp 5.110.000,00'],
-              ['label' => 'Pengeluaran Pembiayaan', 'sub' => 'Pengeluaran pembiayaan modal desa', 'nilai' => 'Rp 0,00']
-          ],
-          'keterangan_pembiayaan' => 'Sisa Lebih Perhitungan Anggaran (SiLPA) Tahun Anggaran 2025.'
+          'pendapatan_total' => 'Rp 1.605.144.322,48',
+          'pad' => 'Rp 227.760.000,00',
+          'dd' => 'Rp 819.612.000,00',
+          'add' => 'Rp 431.005.677,00',
+          'pdrd' => 'Rp 89.296.200,00',
+          'bk' => 'Rp 9.900.000,00',
+          'dll' => 'Rp 27.570.445,48',
+          'belanja_total' => 'Rp 1.493.325.720,00',
+          'belanja_pemerintahan' => 'Rp 778.196.440,00',
+          'belanja_pembangunan' => 'Rp 597.607.400,00',
+          'belanja_pembinaan' => 'Rp 32.425.000,00',
+          'belanja_pemberdayaan' => 'Rp 56.396.880,00',
+          'belanja_bencana' => 'Rp 28.700.000,00',
+          'pembiayaan_total' => 'Rp 13.265.324,92',
+          'penerimaan_pembiayaan' => 'Rp 65.396.122,44',
+          'pengeluaran_pembiayaan' => 'Rp 163.922.400,00'
       ]
   ];
 
