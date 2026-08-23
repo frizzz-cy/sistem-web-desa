@@ -29,19 +29,14 @@ Route::get('/', function () {
         // Abaikan jika database belum siap
     }
 
-    $beritas = Berita::visible()->latest()->get();
+    $beritas = Berita::latest()->get();
     
-    $hero_slides_json = Setting::get('hero_slides');
-    if ($hero_slides_json) {
-        $hero_slides = json_decode($hero_slides_json, true);
-    } else {
-        $hero_slides = [
-            Setting::get('hero_slide_1', '/images/slider/sdn2.jpeg'),
-            Setting::get('hero_slide_2', '/images/slider/tknusa.jpeg'),
-            Setting::get('hero_slide_3', '/images/slider/sentra.jpg'),
-            Setting::get('hero_slide_4', '/images/carousel/slide-4.jpg'),
-        ];
-    }
+    $hero_slides = [
+        Setting::get('hero_slide_1', '/images/slider/sdn2.jpeg'),
+        Setting::get('hero_slide_2', '/images/slider/tknusa.jpeg'),
+        Setting::get('hero_slide_3', '/images/slider/sentra.jpg'),
+        Setting::get('hero_slide_4', '/images/carousel/slide-4.jpg'),
+    ];
 
     $tentang = [
         Setting::get('tentang_p1', 'Desa Munungkerep merupakan salah satu desa di Kecamatan Kabuh, Kabupaten Jombang, Jawa Timur, yang berada di kawasan dataran tinggi dengan kondisi tanah kering pada musim kemarau.'),
@@ -212,39 +207,11 @@ Route::get('/', function () {
     $demografi_json = Setting::get('data_demografi');
     $demografi = $demografi_json ? json_decode($demografi_json, true) : $default_demografi;
 
-    $default_layanan_surat = [
-        [
-            'nama' => 'Surat Keterangan Domisili',
-            'syarat' => ['Fotocopy KTP', 'Fotocopy KK', 'Pas foto 3x4 (2 lembar)', 'Surat pengantar RT/RW'],
-            'keterangan' => 'Berlaku selama 6 bulan'
-        ],
-        [
-            'nama' => 'Surat Keterangan Usaha',
-            'syarat' => ['Fotocopy KTP', 'Fotocopy KK', 'Pas foto 3x4 (2 lembar)', 'Surat keterangan usaha dari RT/RW'],
-            'keterangan' => 'Untuk keperluan kredit atau izin usaha'
-        ],
-        [
-            'nama' => 'Surat Pengantar KTP',
-            'syarat' => ['Fotocopy KK', 'Pas foto 4x6 (2 lembar)', 'Formulir permohonan'],
-            'keterangan' => 'Untuk pembuatan KTP baru atau perpanjangan'
-        ],
-        [
-            'nama' => 'Surat Pengantar Kartu Keluarga',
-            'syarat' => ['Fotocopy KTP kepala keluarga', 'Fotocopy KK lama (jika ada)', 'Akta kelahiran/nikah/cerai', 'Formulir permohonan'],
-            'keterangan' => 'Untuk pembuatan KK baru atau perubahan'
-        ],
-        [
-            'nama' => 'Surat Keterangan Tidak Mampu',
-            'syarat' => ['Fotocopy KK', 'Data sekolah'],
-            'keterangan' => 'Untuk keringanan biaya sekolah & beasiswa'
-        ]
-    ];
-
-    $data_layanan_surat_json = Setting::get('data_layanan_surat');
-    $data_layanan_surat = $data_layanan_surat_json ? json_decode($data_layanan_surat_json, true) : $default_layanan_surat;
+    $poster_agendas_json = Setting::get('poster_agendas');
+    $poster_agendas = $poster_agendas_json ? json_decode($poster_agendas_json, true) : [];
 
     return response()
-        ->view('beranda', compact('beritas', 'hero_slides', 'tentang', 'layanan_cards', 'apbdes', 'demografi', 'data_layanan_surat'))
+        ->view('beranda', compact('beritas', 'hero_slides', 'tentang', 'layanan_cards', 'apbdes', 'demografi', 'poster_agendas'))
         ->header('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0')
         ->header('Pragma', 'no-cache')
         ->header('Expires', '0')
@@ -267,23 +234,8 @@ Route::get('/robots.txt', function () {
     abort(404);
 });
 Route::get('/berita/{berita}/view', function (Berita $berita) {
-    if ($berita->is_hidden) {
-        return response()->json([
-            'is_hidden' => true,
-            'views' => $berita->views,
-            'message' => 'Berita ini sedang diarsipkan/disembunyikan oleh administrator.'
-        ], 403);
-    }
     $berita->increment('views');
-    return response()->json([
-        'is_hidden' => false,
-        'views' => $berita->views
-    ]);
-});
-Route::get('/berita/{berita}/status', function (Berita $berita) {
-    return response()->json([
-        'is_hidden' => (bool)$berita->is_hidden
-    ]);
+    return response()->json(['views' => $berita->views]);
 });
 Route::get('/peta', function () { 
     $data_potensi_json = Setting::get('data_potensi');
@@ -367,7 +319,7 @@ Route::get('/profil-desa', function () {
     return view('profil-desa', compact('perangkat')); 
 });
 Route::get('/kegiatan', function () { 
-    $kegiatans = Kegiatan::visible()->latest()->get();
+    $kegiatans = Kegiatan::latest()->get();
     return view('kegiatan', compact('kegiatans')); 
 });
 Route::get('/berita-detail', function () { return view('berita-detail'); }); // Template Detail
@@ -383,40 +335,19 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index']);
     Route::get('dashboard', [AdminDashboardController::class, 'index']);
 
-    // Konten Bersama (Bisa Diakses Administrator & Kontributor)
     Route::resource('produk', AdminProdukController::class);
-    Route::post('produk/{produk}/toggle-visibility', [AdminProdukController::class, 'toggleVisibility'])->name('admin.produk.toggle');
     
     Route::post('berita/upload-image', [AdminBeritaController::class, 'uploadImage']);
     Route::resource('berita', AdminBeritaController::class)->parameters(['berita' => 'berita']);
-    Route::post('berita/{berita}/toggle-visibility', [AdminBeritaController::class, 'toggleVisibility'])->name('admin.berita.toggle');
     
     Route::resource('kegiatan', AdminKegiatanController::class);
-    Route::post('kegiatan/{kegiatan}/toggle-visibility', [AdminKegiatanController::class, 'toggleVisibility'])->name('admin.kegiatan.toggle');
+    
+    Route::resource('user', AdminUserController::class);
     
     Route::get('media', [AdminMediaController::class, 'index']);
-    Route::get('media/api', [AdminMediaController::class, 'apiList'])->name('admin.media.api');
     Route::post('media', [AdminMediaController::class, 'store']);
     Route::delete('media', [AdminMediaController::class, 'destroy']);
 
-    // Modul Pengaturan & Kelola User (KHUSUS ADMINISTRATOR DESA)
-    Route::middleware('admin')->group(function () {
-        Route::resource('user', AdminUserController::class);
-
-        Route::get('pengaturan', [AdminSettingController::class, 'index']);
-        Route::get('pengaturan/beranda', [AdminSettingController::class, 'beranda'])->name('admin.pengaturan.beranda');
-        Route::post('pengaturan/beranda', [AdminSettingController::class, 'updateBeranda']);
-
-        Route::get('pengaturan/apbdes', [AdminSettingController::class, 'apbdes'])->name('admin.pengaturan.apbdes');
-        Route::post('pengaturan/apbdes', [AdminSettingController::class, 'updateApbdes']);
-
-        Route::get('pengaturan/demografi', [AdminSettingController::class, 'demografi'])->name('admin.pengaturan.demografi');
-        Route::post('pengaturan/demografi', [AdminSettingController::class, 'updateDemografi']);
-
-        Route::get('pengaturan/potensi', [AdminSettingController::class, 'potensi'])->name('admin.pengaturan.potensi');
-        Route::post('pengaturan/potensi', [AdminSettingController::class, 'updatePotensi']);
-
-        Route::get('pengaturan/perangkat', [AdminSettingController::class, 'perangkat'])->name('admin.pengaturan.perangkat');
-        Route::post('pengaturan/perangkat', [AdminSettingController::class, 'updatePerangkat']);
-    });
+    Route::get('pengaturan', [AdminSettingController::class, 'index']);
+    Route::post('pengaturan', [AdminSettingController::class, 'update']);
 });
