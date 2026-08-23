@@ -207,8 +207,11 @@ Route::get('/', function () {
     $demografi_json = Setting::get('data_demografi');
     $demografi = $demografi_json ? json_decode($demografi_json, true) : $default_demografi;
 
+    $poster_agendas_json = Setting::get('poster_agendas');
+    $poster_agendas = $poster_agendas_json ? json_decode($poster_agendas_json, true) : [];
+
     return response()
-        ->view('beranda', compact('beritas', 'hero_slides', 'tentang', 'layanan_cards', 'apbdes', 'demografi'))
+        ->view('beranda', compact('beritas', 'hero_slides', 'tentang', 'layanan_cards', 'apbdes', 'demografi', 'poster_agendas'))
         ->header('Cache-Control', 'no-cache, no-store, must-revalidate, max-age=0')
         ->header('Pragma', 'no-cache')
         ->header('Expires', '0')

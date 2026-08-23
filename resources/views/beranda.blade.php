@@ -548,95 +548,91 @@
       </button>
     </div>
 
-    <!-- SECTION: POSTER PERLOMBAAN & AGENDA BULAN INI -->
+    <!-- SECTION: POSTER PERLOMBAAN & AGENDA BULAN INI (DINAMIS DARI CMS ADMIN) -->
     <div style="margin-bottom:24px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
         <h4 style="margin:0; font-size:15px; font-weight:800; color:var(--biru-tua); display:flex; align-items:center; gap:6px;">
-          🎉 <span>Poster Perlombaan &amp; Agenda Kegiatan Bulan Ini</span>
+          🎉 <span>Poster Perlombaan &amp; Agenda Kegiatan Desa</span>
         </h4>
-        <span style="font-size:11px; font-weight:700; background:#DCFCE7; color:#15803D; padding:3px 10px; border-radius:12px;">
-          Agustus 2026
-        </span>
+        @if(!empty($poster_agendas) && count($poster_agendas) > 0)
+          <span style="font-size:11px; font-weight:700; background:#DCFCE7; color:#15803D; padding:3px 10px; border-radius:12px;">
+            {{ count($poster_agendas) }} Agenda Aktif
+          </span>
+        @endif
       </div>
 
       <!-- GRID POSTER KEGIATAN & PERLOMBAAN -->
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:16px;">
-        
-        <!-- POSTER 1: SEMARAK LOMBA KEMERDEKAAN -->
-        <div style="background:#FFF; border:1.5px solid #E2E8F0; border-radius:12px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,0.06); transition:transform 0.2s ease;">
-          <div style="background:linear-gradient(135deg, #B91C1C 0%, #DC2626 100%); color:#FFF; padding:14px 16px; position:relative;">
-            <span style="font-size:10px; font-weight:800; background:#FEF2F2; color:#B91C1C; padding:3px 8px; border-radius:10px; text-transform:uppercase; letter-spacing:0.5px;">🏆 Perlombaan Desa</span>
-            <h5 style="margin:8px 0 2px; font-size:15px; font-weight:800;">Semarak Lomba Kemerdekaan RI Ke-81</h5>
-            <div style="font-size:11.5px; opacity:0.9;">Pemerintah Desa &amp; Karang Taruna Munungkerep</div>
-          </div>
-          
-          <div style="padding:14px 16px;">
-            <div style="display:grid; grid-template-columns:auto 1fr; gap:6px 10px; font-size:12.5px; margin-bottom:12px; line-height:1.5;">
-              <span style="color:#64748B; font-weight:600;">📅 Hari / Tgl:</span>
-              <strong style="color:var(--biru-tua);">Sabtu – Minggu, 22 – 23 Agustus 2026</strong>
-              
-              <span style="color:#64748B; font-weight:600;">⏰ Waktu:</span>
-              <strong style="color:var(--biru-tua);">08.00 WIB s/d Selesai</strong>
-              
-              <span style="color:#64748B; font-weight:600;">📍 Lokasi:</span>
-              <strong style="color:var(--biru-tua);">Lapangan &amp; Halaman Balai Desa</strong>
-            </div>
+      @if(!empty($poster_agendas) && count($poster_agendas) > 0)
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:16px;">
+          @foreach($poster_agendas as $poster)
+            <div style="background:#FFF; border:1.5px solid #E2E8F0; border-radius:12px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,0.06); transition:transform 0.2s ease;">
+              @if(!empty($poster['foto']))
+                <div style="position:relative; width:100%; max-height:280px; overflow:hidden; background:#0B283F;">
+                  <img src="{{ $poster['foto'] }}" alt="{{ $poster['judul'] ?? 'Poster Agenda' }}" style="width:100%; max-height:280px; object-fit:cover; display:block;" loading="lazy">
+                  <div style="position:absolute; top:12px; left:12px;">
+                    <span style="font-size:10px; font-weight:800; background:rgba(11,59,96,0.85); color:#FFF; padding:4px 10px; border-radius:12px; backdrop-filter:blur(4px); box-shadow:0 2px 6px rgba(0,0,0,0.2);">
+                      {{ $poster['kategori'] ?? '🏆 Perlombaan Desa' }}
+                    </span>
+                  </div>
+                </div>
+              @endif
 
-            <div style="background:#F8FAFC; border:1px dashed #CBD5E1; padding:10px 12px; border-radius:8px; font-size:12px; color:var(--teks); margin-bottom:12px;">
-              <strong>🎯 Cabang Lomba:</strong>
-              <div style="margin-top:4px; color:#475569; line-height:1.6;">
-                • Gerak Jalan Kreasi Antar RT/RW<br>
-                • Lomba Tarik Tambang Antar Dusun<br>
-                • Balap Karung Helm &amp; Estafet Air<br>
-                • Lomba Mading &amp; Mewarnai Anak SD/TK
+              <div style="@if(empty($poster['foto'])) background:linear-gradient(135deg, #0B3B60 0%, #1668A3 100%); color:#FFF; @else background:#F8FAFC; color:var(--teks); border-bottom:1px solid #E2E8F0; @endif padding:14px 16px;">
+                @if(empty($poster['foto']))
+                  <span style="font-size:10px; font-weight:800; background:#E0F2FE; color:#0369A1; padding:3px 8px; border-radius:10px; text-transform:uppercase; letter-spacing:0.5px;">
+                    {{ $poster['kategori'] ?? '🏆 Perlombaan Desa' }}
+                  </span>
+                @endif
+                <h5 style="margin:@if(empty($poster['foto'])) 8px 0 0 @else 0 @endif; font-size:15px; font-weight:800; color:@if(empty($poster['foto'])) #FFF @else var(--biru-tua) @endif;">
+                  {{ $poster['judul'] ?? '' }}
+                </h5>
+              </div>
+              
+              <div style="padding:14px 16px;">
+                @if(!empty($poster['tanggal']) || !empty($poster['waktu']) || !empty($poster['lokasi']))
+                  <div style="display:grid; grid-template-columns:auto 1fr; gap:6px 10px; font-size:12.5px; margin-bottom:12px; line-height:1.5;">
+                    @if(!empty($poster['tanggal']))
+                      <span style="color:#64748B; font-weight:600;">📅 Hari / Tgl:</span>
+                      <strong style="color:var(--biru-tua);">{{ $poster['tanggal'] }}</strong>
+                    @endif
+                    
+                    @if(!empty($poster['waktu']))
+                      <span style="color:#64748B; font-weight:600;">⏰ Waktu:</span>
+                      <strong style="color:var(--biru-tua);">{{ $poster['waktu'] }}</strong>
+                    @endif
+                    
+                    @if(!empty($poster['lokasi']))
+                      <span style="color:#64748B; font-weight:600;">📍 Lokasi:</span>
+                      <strong style="color:var(--biru-tua);">{{ $poster['lokasi'] }}</strong>
+                    @endif
+                  </div>
+                @endif
+
+                @if(!empty($poster['rincian']))
+                  <div style="background:#F8FAFC; border:1px dashed #CBD5E1; padding:10px 12px; border-radius:8px; font-size:12px; color:var(--teks); margin-bottom:12px;">
+                    <strong>🎯 Rincian Acara &amp; Cabang:</strong>
+                    <div style="margin-top:4px; color:#475569; line-height:1.6;">
+                      {!! nl2br(e($poster['rincian'])) !!}
+                    </div>
+                  </div>
+                @endif
+
+                @if(!empty($poster['hadiah']))
+                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; background:#FEF3C7; color:#92400E; padding:8px 12px; border-radius:6px; font-weight:700;">
+                    <span>🎁 {{ $poster['hadiah'] }}</span>
+                  </div>
+                @endif
               </div>
             </div>
-
-            <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; background:#FEF3C7; color:#92400E; padding:6px 12px; border-radius:6px; font-weight:700;">
-              <span>🎁 Total Hadiah: Piala &amp; Uang Pembinaan</span>
-              <span>Gratis Terbuka</span>
-            </div>
-          </div>
+          @endforeach
         </div>
-
-        <!-- POSTER 2: PELAYANAN POSYANDU & KESEHATAN -->
-        <div style="background:#FFF; border:1.5px solid #E2E8F0; border-radius:12px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,0.06); transition:transform 0.2s ease;">
-          <div style="background:linear-gradient(135deg, #047857 0%, #059669 100%); color:#FFF; padding:14px 16px; position:relative;">
-            <span style="font-size:10px; font-weight:800; background:#ECFDF5; color:#047857; padding:3px 8px; border-radius:10px; text-transform:uppercase; letter-spacing:0.5px;">🩺 Layanan Kesehatan</span>
-            <h5 style="margin:8px 0 2px; font-size:15px; font-weight:800;">Posyandu Balita &amp; Cek Kesehatan Lansia</h5>
-            <div style="font-size:11.5px; opacity:0.9;">Puskesmas Kabuh &amp; Kader Kesehatan Desa</div>
-          </div>
-          
-          <div style="padding:14px 16px;">
-            <div style="display:grid; grid-template-columns:auto 1fr; gap:6px 10px; font-size:12.5px; margin-bottom:12px; line-height:1.5;">
-              <span style="color:#64748B; font-weight:600;">📅 Hari / Tgl:</span>
-              <strong style="color:var(--biru-tua);">Kamis, 27 Agustus 2026</strong>
-              
-              <span style="color:#64748B; font-weight:600;">⏰ Waktu:</span>
-              <strong style="color:var(--biru-tua);">08.30 – 11.30 WIB</strong>
-              
-              <span style="color:#64748B; font-weight:600;">📍 Lokasi:</span>
-              <strong style="color:var(--biru-tua);">Pos Kesehatan Dusun Karang Gebang</strong>
-            </div>
-
-            <div style="background:#F8FAFC; border:1px dashed #CBD5E1; padding:10px 12px; border-radius:8px; font-size:12px; color:var(--teks); margin-bottom:12px;">
-              <strong>💉 Fasilitas &amp; Layanan:</strong>
-              <div style="margin-top:4px; color:#475569; line-height:1.6;">
-                • Penimbangan Berat &amp; Tinggi Balita<br>
-                • Pembagian Makanan Tambahan (PMT)<br>
-                • Pemeriksaan Tekanan Darah &amp; Gula Darah<br>
-                • Konsultasi Gizi &amp; Tumbuh Kembang Anak
-              </div>
-            </div>
-
-            <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; background:#DCFCE7; color:#166534; padding:6px 12px; border-radius:6px; font-weight:700;">
-              <span>✅ Wajib Bawa Buku KIA / KMS</span>
-              <span>100% Gratis</span>
-            </div>
-          </div>
+      @else
+        <div style="background:#F8FAFC; border:2px dashed #CBD5E1; border-radius:12px; padding:28px 20px; text-align:center; color:#64748B;">
+          <div style="font-size:32px; margin-bottom:8px;">📢</div>
+          <div style="font-weight:700; font-size:14px; color:var(--biru-tua); margin-bottom:4px;">Belum Ada Poster Perlombaan / Agenda Baru</div>
+          <div style="font-size:12.5px;">Poster perlombaan, pamflet kegiatan, dan agenda penting desa akan diumumkan di sini.</div>
         </div>
-
-      </div>
+      @endif
     </div>
 
     <!-- DAFTAR INFORMASI PUBLIK & REGULASI DESA -->
