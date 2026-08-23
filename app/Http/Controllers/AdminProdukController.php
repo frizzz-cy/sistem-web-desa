@@ -43,12 +43,6 @@ class AdminProdukController extends Controller
             $data['foto_produk'] = $request->input('foto_produk_media');
         }
 
-        if (auth()->user()->isAdmin()) {
-            $data['is_hidden'] = $request->boolean('is_hidden');
-        }
-
-        $data['user_id'] = auth()->id();
-
         unset($data['foto_produk_media']);
         Produk::create($data);
         return redirect('/admin/produk')->with('success', 'Produk berhasil ditambahkan!');
@@ -76,13 +70,13 @@ class AdminProdukController extends Controller
         ]);
 
         if ($request->hasFile('foto_produk')) {
+            // Hapus foto lama jika ada
+            if ($produk->foto_produk) {
+                Storage::disk('public')->delete($produk->foto_produk);
+            }
             $data['foto_produk'] = ImageHelper::uploadAndCompress($request->file('foto_produk'), 'produk_images');
         } elseif ($request->filled('foto_produk_media')) {
             $data['foto_produk'] = $request->input('foto_produk_media');
-        }
-
-        if (auth()->user()->isAdmin()) {
-            $data['is_hidden'] = $request->boolean('is_hidden');
         }
 
         unset($data['foto_produk_media']);
@@ -93,35 +87,10 @@ class AdminProdukController extends Controller
     // Menghapus produk
     public function destroy(Produk $produk)
     {
-        $user = auth()->user();
-        if (!$user->isAdmin()) {
-            if (!$produk->user_id || $produk->user_id !== $user->id) {
-                return back()->with('error', 'Akses ditolak! Anda tidak berwenang menghapus produk yang dibuat oleh Administrator.');
-            }
+        if ($produk->foto_produk) {
+            Storage::disk('public')->delete($produk->foto_produk);
         }
-
-        // Catatan: Aset foto di Pustaka Media sengaja tidak di-delete dari disk agar tetap aman digunakan modul lain
         $produk->delete();
         return redirect('/admin/produk')->with('success', 'Produk berhasil dihapus!');
-    }
-
-    // Toggle Sembunyikan / Tampilkan Produk (Khusus Administrator)
-    public function toggleVisibility(Produk $produk)
-    {
-        if (!auth()->user()->isAdmin()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Hanya Administrator Desa yang berwenang mengubah status tayang konten.'
-            ], 403);
-        }
-
-        $produk->is_hidden = !$produk->is_hidden;
-        $produk->save();
-
-        return response()->json([
-            'status' => 'success',
-            'is_hidden' => (bool)$produk->is_hidden,
-            'message' => $produk->is_hidden ? 'Produk berhasil disembunyikan dari publik.' : 'Produk berhasil dipublikasikan kembali.'
-        ]);
     }
 }

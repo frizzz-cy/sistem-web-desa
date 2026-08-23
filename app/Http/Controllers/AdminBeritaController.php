@@ -40,12 +40,6 @@ class AdminBeritaController extends Controller
             $data['foto'] = $request->input('foto_media');
         }
 
-        if (auth()->user()->isAdmin()) {
-            $data['is_hidden'] = $request->boolean('is_hidden');
-        }
-
-        $data['user_id'] = auth()->id();
-
         unset($data['foto_media']);
         Berita::create($data);
         return redirect('/admin/berita')->with('success', 'Berita berhasil ditambahkan!');
@@ -70,15 +64,17 @@ class AdminBeritaController extends Controller
         ]);
 
         if ($request->remove_foto == '1') {
+            if ($berita->foto) {
+                Storage::disk('public')->delete($berita->foto);
+            }
             $data['foto'] = null;
         } elseif ($request->hasFile('foto')) {
+            if ($berita->foto) {
+                Storage::disk('public')->delete($berita->foto);
+            }
             $data['foto'] = ImageHelper::uploadAndCompress($request->file('foto'), 'berita_images');
         } elseif ($request->filled('foto_media')) {
             $data['foto'] = $request->input('foto_media');
-        }
-
-        if (auth()->user()->isAdmin()) {
-            $data['is_hidden'] = $request->boolean('is_hidden');
         }
 
         unset($data['foto_media']);
@@ -89,37 +85,11 @@ class AdminBeritaController extends Controller
     // Menghapus berita
     public function destroy(Berita $berita)
     {
-        $user = auth()->user();
-        if (!$user->isAdmin()) {
-            // Kontributor hanya boleh menghapus berita miliknya sendiri
-            if (!$berita->user_id || $berita->user_id !== $user->id) {
-                return back()->with('error', 'Akses ditolak! Anda tidak berwenang menghapus berita yang dibuat oleh Administrator atau berita resmi desa.');
-            }
+        if ($berita->foto) {
+            Storage::disk('public')->delete($berita->foto);
         }
-
-        // Catatan: Aset foto di Pustaka Media sengaja tidak di-delete dari disk agar tetap aman digunakan modul lain
         $berita->delete();
         return redirect('/admin/berita')->with('success', 'Berita berhasil dihapus!');
-    }
-
-    // Toggle Sembunyikan / Tampilkan Berita (Khusus Administrator)
-    public function toggleVisibility(Berita $berita)
-    {
-        if (!auth()->user()->isAdmin()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Hanya Administrator Desa yang berwenang mengubah status tayang konten.'
-            ], 403);
-        }
-
-        $berita->is_hidden = !$berita->is_hidden;
-        $berita->save();
-
-        return response()->json([
-            'status' => 'success',
-            'is_hidden' => (bool)$berita->is_hidden,
-            'message' => $berita->is_hidden ? 'Berita berhasil disembunyikan dari publik.' : 'Berita berhasil dipublikasikan kembali.'
-        ]);
     }
 
     // Menangani upload gambar dari editor Quill

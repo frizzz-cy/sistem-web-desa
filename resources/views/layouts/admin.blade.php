@@ -245,20 +245,6 @@
         <div class="sidebar-brand">
             <span>MUNUNGKEREP</span>
             <span class="sub">Halaman Kelola CMS</span>
-            @auth
-            <div style="margin-top: 10px; padding: 8px 12px; background: rgba(255,255,255,0.07); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); text-align: left;">
-                <div style="color: #FFFFFF; font-weight: 700; font-size: 12.5px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden;">
-                    {{ auth()->user()->name }}
-                </div>
-                <div style="font-size: 11px; margin-top: 2px; font-weight: 700;">
-                    @if(auth()->user()->isAdmin())
-                        <span style="color: #FCD34D;">👑 Administrator Desa</span>
-                    @else
-                        <span style="color: #93C5FD;">✍️ Kontributor / Pemuda</span>
-                    @endif
-                </div>
-            </div>
-            @endauth
         </div>
         <ul class="sidebar-menu">
             <li class="sidebar-item @if(($activePage ?? '') == 'dashboard') active @endif">
@@ -268,7 +254,6 @@
                 </a>
             </li>
 
-            @if(auth()->check() && auth()->user()->isAdmin())
             <div class="sidebar-category">Konten & Monografi</div>
             <li class="sidebar-item @if(($activePage ?? '') == 'pengaturan-beranda') active @endif">
                 <a href="/admin/pengaturan/beranda">
@@ -300,7 +285,12 @@
                     <span>Struktur Perangkat</span>
                 </a>
             </li>
-            @endif
+            <li class="sidebar-item @if(($activePage ?? '') == 'pengaturan-poster') active @endif">
+                <a href="/admin/pengaturan/poster">
+                    <svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>
+                    <span>Poster &amp; Agenda Desa</span>
+                </a>
+            </li>
 
             <div class="sidebar-category">Informasi & Publikasi</div>
             <li class="sidebar-item @if(($activePage ?? '') == 'berita') active @endif">
@@ -329,14 +319,12 @@
                     <span>Pustaka Media</span>
                 </a>
             </li>
-            @if(auth()->check() && auth()->user()->isAdmin())
             <li class="sidebar-item @if(($activePage ?? '') == 'user') active @endif">
                 <a href="/admin/user">
                     <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                     <span>Kelola User</span>
                 </a>
             </li>
-            @endif
         </ul>
         <div style="padding: 20px; border-top: 1px solid rgba(255,255,255,0.08);">
             <form action="/logout" method="POST" style="margin: 0;">
@@ -546,28 +534,6 @@
                 form.submit();
             });
         });
-
-        // Global Toast Notification Helper
-        window.showAdminToast = function(msg, type = 'success') {
-            let toast = document.getElementById('admin-floating-toast');
-            if (!toast) {
-                toast = document.createElement('div');
-                toast.id = 'admin-floating-toast';
-                toast.style.cssText = 'position:fixed; bottom:24px; right:24px; z-index:999999; padding:12px 20px; border-radius:8px; font-size:13px; font-weight:700; box-shadow:0 10px 25px rgba(0,0,0,0.2); transition:all 0.3s cubic-bezier(0.16, 1, 0.3, 1); display:none; align-items:center; gap:10px; color:#fff;';
-                document.body.appendChild(toast);
-            }
-            toast.style.background = type === 'success' ? '#16A34A' : '#DC2626';
-            toast.innerHTML = (type === 'success' ? '<span>✓</span> ' : '<span>✕</span> ') + `<span>${msg}</span>`;
-            toast.style.display = 'flex';
-            toast.style.opacity = '1';
-            toast.style.transform = 'translateY(0)';
-            clearTimeout(window.adminToastTimer);
-            window.adminToastTimer = setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateY(10px)';
-                setTimeout(() => toast.style.display = 'none', 300);
-            }, 3500);
-        };
     </script>
 
     <!-- ========================================================================= -->

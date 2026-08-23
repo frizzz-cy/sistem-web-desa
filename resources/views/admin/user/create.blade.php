@@ -27,20 +27,6 @@
             </div>
 
             <div class="form-group">
-                <label>Peran Pengguna (Role / Hak Akses)</label>
-                <select name="role" required style="width: 100%; padding: 10px 14px; border: 1.5px solid #CBD5E1; border-radius: 6px; font-family: inherit; font-size: 13.5px; background: #fff;">
-                    <option value="kontributor" {{ old('role', 'kontributor') == 'kontributor' ? 'selected' : '' }}>
-                        ✍️ Kontributor / Pemuda (Hanya Berita, Galeri Kegiatan, UMKM, & Media)
-                    </option>
-                    <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>
-                        👑 Administrator Desa (Akses Penuh Seluruh Sistem & Pengaturan)
-                    </option>
-                </select>
-                <small style="color: #64748B; display: block; margin-top: 4px;">Akun kontributor cocok untuk pemuda/karang taruna yang bertugas mengisi rilis berita dan foto kegiatan.</small>
-                @error('role') <span class="error-msg">{{ $message }}</span> @enderror
-            </div>
-
-            <div class="form-group">
                 <label>Password (Minimal 6 karakter)</label>
                 <input type="password" name="password" required placeholder="Masukkan password pengelola">
                 @error('password') <span class="error-msg">{{ $message }}</span> @enderror

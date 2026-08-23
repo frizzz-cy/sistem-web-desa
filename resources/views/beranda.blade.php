@@ -458,31 +458,22 @@
       '2025' => [
           'tahun' => '2025',
           'status' => 'Laporan Realisasi / LPJ',
-          'pendapatan_total' => 'Rp 1.540.210.000,00',
-          'pendapatan_items' => [
-              ['label' => 'Pendapatan Asli Desa (PAD)', 'sub' => 'Realisasi Pendapatan Asli Desa', 'nilai' => 'Rp 210.500.000,00'],
-              ['label' => 'Dana Desa (DD - APBN Pusat)', 'sub' => 'Realisasi Dana Desa APBN', 'nilai' => 'Rp 295.000.000,00'],
-              ['label' => 'Alokasi Dana Desa (ADD - APBD Jombang)', 'sub' => 'Realisasi ADD Kabupaten Jombang', 'nilai' => 'Rp 360.200.000,00'],
-              ['label' => 'Bagi Hasil Pajak & Retribusi (PDRD)', 'sub' => 'Realisasi PDRD Daerah', 'nilai' => 'Rp 78.510.000,00'],
-              ['label' => 'Bantuan Keuangan (BK Provinsi/Kabupaten)', 'sub' => 'Realisasi Bantuan Keuangan', 'nilai' => 'Rp 480.000.000,00'],
-              ['label' => 'Lain-Lain Pendapatan Desa Sah (DLL)', 'sub' => 'Realisasi pendapatan sah lainnya', 'nilai' => 'Rp 116.000.000,00']
-          ],
-          'keterangan_pendapatan' => 'Realisasi penerimaan APBDes Tahun Anggaran 2025 dari seluruh pos pendapatan sah.',
-          'belanja_total' => 'Rp 1.535.100.000,00',
-          'belanja_items' => [
-              ['label' => 'Penyelenggaraan Pemerintahan Desa', 'sub' => 'Realisasi operasional dan aparatur desa', 'nilai' => 'Rp 790.000.000,00'],
-              ['label' => 'Pelaksanaan Pembangunan Desa', 'sub' => 'Realisasi infrastruktur & sarpras', 'nilai' => 'Rp 530.000.000,00'],
-              ['label' => 'Pembinaan Kemasyarakatan', 'sub' => 'Realisasi pembinaan kemasyarakatan', 'nilai' => 'Rp 38.500.000,00'],
-              ['label' => 'Pemberdayaan Masyarakat', 'sub' => 'Realisasi pemberdayaan warga & UMKM', 'nilai' => 'Rp 151.600.000,00'],
-              ['label' => 'Penanggulangan Bencana & Keadaan Darurat', 'sub' => 'Realisasi penanganan keadaan darurat', 'nilai' => 'Rp 25.000.000,00']
-          ],
-          'keterangan_belanja' => 'Realisasi belanja APBDes Tahun Anggaran 2025 untuk pembangunan dan pelayanan masyarakat.',
-          'pembiayaan_total' => 'Rp 5.110.000,00',
-          'pembiayaan_items' => [
-              ['label' => 'Penerimaan Pembiayaan (SiLPA)', 'sub' => 'Sisa Lebih Perhitungan Anggaran tahun 2024', 'nilai' => 'Rp 5.110.000,00'],
-              ['label' => 'Pengeluaran Pembiayaan', 'sub' => 'Pengeluaran pembiayaan modal desa', 'nilai' => 'Rp 0,00']
-          ],
-          'keterangan_pembiayaan' => 'Sisa Lebih Perhitungan Anggaran (SiLPA) Tahun Anggaran 2025.'
+          'pendapatan_total' => 'Rp 1.605.144.322,48',
+          'pad' => 'Rp 227.760.000,00',
+          'dd' => 'Rp 819.612.000,00',
+          'add' => 'Rp 431.005.677,00',
+          'pdrd' => 'Rp 89.296.200,00',
+          'bk' => 'Rp 9.900.000,00',
+          'dll' => 'Rp 27.570.445,48',
+          'belanja_total' => 'Rp 1.493.325.720,00',
+          'belanja_pemerintahan' => 'Rp 778.196.440,00',
+          'belanja_pembangunan' => 'Rp 597.607.400,00',
+          'belanja_pembinaan' => 'Rp 32.425.000,00',
+          'belanja_pemberdayaan' => 'Rp 56.396.880,00',
+          'belanja_bencana' => 'Rp 28.700.000,00',
+          'pembiayaan_total' => 'Rp 13.265.324,92',
+          'penerimaan_pembiayaan' => 'Rp 65.396.122,44',
+          'pengeluaran_pembiayaan' => 'Rp 163.922.400,00'
       ]
   ];
 
@@ -548,11 +539,11 @@
       </button>
     </div>
 
-    <!-- SECTION: POSTER PERLOMBAAN & AGENDA BULAN INI (DINAMIS DARI CMS ADMIN) -->
+    <!-- SECTION: POSTER PERLOMBAAN & AGENDA BULAN INI (MODEL CARD PORTRAIT SEPERTI FOTO 2) -->
     <div style="margin-bottom:24px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
         <h4 style="margin:0; font-size:15px; font-weight:800; color:var(--biru-tua); display:flex; align-items:center; gap:6px;">
-          🎉 <span>Poster Perlombaan &amp; Agenda Kegiatan Desa</span>
+          🎉 <span>Poster Perlombaan &amp; Agenda Kegiatan</span>
         </h4>
         @if(!empty($poster_agendas) && count($poster_agendas) > 0)
           <span style="font-size:11px; font-weight:700; background:#DCFCE7; color:#15803D; padding:3px 10px; border-radius:12px;">
@@ -561,78 +552,66 @@
         @endif
       </div>
 
-      <!-- GRID POSTER KEGIATAN & PERLOMBAAN -->
+      <!-- GRID POSTER CARD PORTRAIT COMPACT LEBIH BESAR & JELAS -->
       @if(!empty($poster_agendas) && count($poster_agendas) > 0)
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:16px;">
-          @foreach($poster_agendas as $poster)
-            <div style="background:#FFF; border:1.5px solid #E2E8F0; border-radius:12px; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,0.06); transition:transform 0.2s ease;">
-              @if(!empty($poster['foto']))
-                <div style="position:relative; width:100%; max-height:280px; overflow:hidden; background:#0B283F;">
-                  <img src="{{ $poster['foto'] }}" alt="{{ $poster['judul'] ?? 'Poster Agenda' }}" style="width:100%; max-height:280px; object-fit:cover; display:block;" loading="lazy">
-                  <div style="position:absolute; top:12px; left:12px;">
-                    <span style="font-size:10px; font-weight:800; background:rgba(11,59,96,0.85); color:#FFF; padding:4px 10px; border-radius:12px; backdrop-filter:blur(4px); box-shadow:0 2px 6px rgba(0,0,0,0.2);">
-                      {{ $poster['kategori'] ?? '🏆 Perlombaan Desa' }}
-                    </span>
-                  </div>
-                </div>
-              @endif
-
-              <div style="@if(empty($poster['foto'])) background:linear-gradient(135deg, #0B3B60 0%, #1668A3 100%); color:#FFF; @else background:#F8FAFC; color:var(--teks); border-bottom:1px solid #E2E8F0; @endif padding:14px 16px;">
-                @if(empty($poster['foto']))
-                  <span style="font-size:10px; font-weight:800; background:#E0F2FE; color:#0369A1; padding:3px 8px; border-radius:10px; text-transform:uppercase; letter-spacing:0.5px;">
-                    {{ $poster['kategori'] ?? '🏆 Perlombaan Desa' }}
-                  </span>
-                @endif
-                <h5 style="margin:@if(empty($poster['foto'])) 8px 0 0 @else 0 @endif; font-size:15px; font-weight:800; color:@if(empty($poster['foto'])) #FFF @else var(--biru-tua) @endif;">
-                  {{ $poster['judul'] ?? '' }}
-                </h5>
-              </div>
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:16px;">
+          @foreach($poster_agendas as $pIdx => $poster)
+            @php
+              $posterDataJson = base64_encode(json_encode($poster));
+            @endphp
+            <div class="poster-anime-card" onclick="bukaDetailPoster('{{ $posterDataJson }}')" style="background:#0F172A; border:1.5px solid #1E293B; border-radius:12px; overflow:hidden; cursor:pointer; transition:transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; display:flex; flex-direction:column; text-align:center; position:relative; box-shadow:0 6px 16px rgba(0,0,0,0.15);" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 12px 24px rgba(0,0,0,0.25)'; this.style.borderColor='#38BDF8';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 6px 16px rgba(0,0,0,0.15)'; this.style.borderColor='#1E293B';">
               
-              <div style="padding:14px 16px;">
-                @if(!empty($poster['tanggal']) || !empty($poster['waktu']) || !empty($poster['lokasi']))
-                  <div style="display:grid; grid-template-columns:auto 1fr; gap:6px 10px; font-size:12.5px; margin-bottom:12px; line-height:1.5;">
-                    @if(!empty($poster['tanggal']))
-                      <span style="color:#64748B; font-weight:600;">📅 Hari / Tgl:</span>
-                      <strong style="color:var(--biru-tua);">{{ $poster['tanggal'] }}</strong>
-                    @endif
-                    
-                    @if(!empty($poster['waktu']))
-                      <span style="color:#64748B; font-weight:600;">⏰ Waktu:</span>
-                      <strong style="color:var(--biru-tua);">{{ $poster['waktu'] }}</strong>
-                    @endif
-                    
-                    @if(!empty($poster['lokasi']))
-                      <span style="color:#64748B; font-weight:600;">📍 Lokasi:</span>
-                      <strong style="color:var(--biru-tua);">{{ $poster['lokasi'] }}</strong>
-                    @endif
-                  </div>
+              <!-- Foto Poster Portrait (Rasio 3:4) -->
+              <div style="position:relative; width:100%; aspect-ratio:3/4; background:#1E293B; overflow:hidden; display:flex; align-items:center; justify-content:center;">
+                @if(!empty($poster['foto']))
+                  <img src="{{ $poster['foto'] }}" alt="{{ $poster['judul'] ?? 'Poster' }}" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy">
+                @else
+                  <div style="font-size:42px; opacity:0.6;">🏆</div>
                 @endif
+                
+                <!-- Badge Kategori Mengambang (Seperti Badge SUB di Foto 2) -->
+                <div style="position:absolute; bottom:8px; left:50%; transform:translateX(-50%); width:max-content; max-width:92%;">
+                  <span style="font-size:10.5px; font-weight:800; background:rgba(0,0,0,0.85); color:#F59E0B; padding:3px 10px; border-radius:5px; text-transform:uppercase; letter-spacing:0.5px; border:1px solid rgba(245,158,11,0.6); display:inline-block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; box-shadow:0 2px 8px rgba(0,0,0,0.5);">
+                    {{ $poster['kategori'] ?? 'LOMBA' }}
+                  </span>
+                </div>
+              </div>
 
-                @if(!empty($poster['rincian']))
-                  <div style="background:#F8FAFC; border:1px dashed #CBD5E1; padding:10px 12px; border-radius:8px; font-size:12px; color:var(--teks); margin-bottom:12px;">
-                    <strong>🎯 Rincian Acara &amp; Cabang:</strong>
-                    <div style="margin-top:4px; color:#475569; line-height:1.6;">
-                      {!! nl2br(e($poster['rincian'])) !!}
-                    </div>
-                  </div>
-                @endif
-
-                @if(!empty($poster['hadiah']))
-                  <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; background:#FEF3C7; color:#92400E; padding:8px 12px; border-radius:6px; font-weight:700;">
-                    <span>🎁 {{ $poster['hadiah'] }}</span>
-                  </div>
-                @endif
+              <!-- Judul & Keterangan Card -->
+              <div style="padding:10px 10px 12px; display:flex; flex-direction:column; flex:1; justify-content:space-between; background:#0F172A;">
+                <div style="font-size:13.5px; font-weight:800; color:#F59E0B; line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:6px;" title="{{ $poster['judul'] ?? '' }}">
+                  {{ $poster['judul'] ?? 'Agenda Desa' }}
+                </div>
+                
+                <div style="font-size:11px; color:#94A3B8; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:flex; align-items:center; justify-content:center; gap:4px;">
+                  @if(!empty($poster['tanggal']))
+                    <span>📅 {{ $poster['tanggal'] }}</span>
+                  @else
+                    <span style="color:#38BDF8;">Klik untuk Detail ↗</span>
+                  @endif
+                </div>
               </div>
             </div>
           @endforeach
         </div>
       @else
-        <div style="background:#F8FAFC; border:2px dashed #CBD5E1; border-radius:12px; padding:28px 20px; text-align:center; color:#64748B;">
-          <div style="font-size:32px; margin-bottom:8px;">📢</div>
-          <div style="font-weight:700; font-size:14px; color:var(--biru-tua); margin-bottom:4px;">Belum Ada Poster Perlombaan / Agenda Baru</div>
-          <div style="font-size:12.5px;">Poster perlombaan, pamflet kegiatan, dan agenda penting desa akan diumumkan di sini.</div>
+        <div style="background:#F8FAFC; border:2px dashed #CBD5E1; border-radius:12px; padding:24px 16px; text-align:center; color:#64748B;">
+          <div style="font-size:28px; margin-bottom:6px;">📢</div>
+          <div style="font-weight:700; font-size:13.5px; color:var(--biru-tua); margin-bottom:2px;">Belum Ada Poster Perlombaan / Agenda Baru</div>
+          <div style="font-size:12px;">Poster kegiatan desa akan diumumkan di sini.</div>
         </div>
       @endif
+    </div>
+
+    <!-- MODAL DETAIL LIGHTBOX POSTER -->
+    <div class="modal-informasi-overlay" id="modal-detail-poster-overlay" style="display:none; z-index:99999;" onclick="tutupDetailPoster(event)">
+      <div class="modal-informasi-box" style="max-width:540px; padding:20px; border-radius:14px; background:#FFF; box-shadow:0 15px 40px rgba(0,0,0,0.3);">
+        <button class="modal-informasi-close" onclick="tutupDetailPoster()">✕</button>
+        
+        <div id="detail-poster-content">
+          <!-- Konten diisi otomatis via JS saat kartu diklik -->
+        </div>
+      </div>
     </div>
 
     <!-- DAFTAR INFORMASI PUBLIK & REGULASI DESA -->
@@ -711,120 +690,233 @@
       </button>
     </div>
 
-    <!-- KONTEN RINCIAN PER TAHUN -->
+    <!-- KONTEN RINCIAN PER TAHUN (MODEL BALIHO RESMI INFOGRAFIS APBDES SEPERTI FOTO) -->
     @foreach($ap_all as $tKey => $ap)
+      @php
+        // Pencarian nilai pos pendapatan yang dinamis dari inputan Admin CMS
+        $pItems = $ap['pendapatan_items'] ?? [];
+        $findP = function($prefix, $idx, $default) use ($pItems, $ap) {
+            foreach ($pItems as $it) {
+                if (stripos($it['label'] ?? '', $prefix) !== false) return $it['nilai'];
+            }
+            return $pItems[$idx]['nilai'] ?? ($ap[strtolower($prefix)] ?? $default);
+        };
+        $padVal  = $findP('PAD', 0, 'Rp 0,00');
+        $ddVal   = $findP('DD', 1, 'Rp 0,00');
+        $addVal  = $findP('ADD', 2, 'Rp 0,00');
+        $pdrdVal = $findP('PDRD', 3, 'Rp 0,00');
+        $bkVal   = $findP('BK', 4, 'Rp 0,00');
+        $dllVal  = $findP('DLL', 5, 'Rp 0,00');
+
+        // Pencarian nilai 5 bidang belanja yang dinamis dari inputan Admin CMS
+        $bItems = $ap['belanja_items'] ?? [];
+        $findB = function($prefix, $idx, $default) use ($bItems, $ap) {
+            foreach ($bItems as $it) {
+                if (stripos($it['label'] ?? '', $prefix) !== false) return $it['nilai'];
+            }
+            return $bItems[$idx]['nilai'] ?? $default;
+        };
+        $b_pem     = $findB('Pemerintahan', 0, $ap['belanja_pemerintahan'] ?? 'Rp 0,00');
+        $b_bang    = $findB('Pembangunan', 1, $ap['belanja_pembangunan'] ?? 'Rp 0,00');
+        $b_bina    = $findB('Pembinaan', 2, $ap['belanja_pembinaan'] ?? 'Rp 0,00');
+        $b_daya    = $findB('Pemberdayaan', 3, $ap['belanja_pemberdayaan'] ?? 'Rp 0,00');
+        $b_bencana = $findB('Bencana', 4, $ap['belanja_bencana'] ?? 'Rp 0,00');
+
+        // Pencarian pembiayaan yang dinamis dari inputan Admin CMS
+        $pbItems = $ap['pembiayaan_items'] ?? [];
+        $terimaVal = $pbItems[0]['nilai'] ?? ($ap['penerimaan_pembiayaan'] ?? 'Rp 0,00');
+        $keluarVal = $pbItems[1]['nilai'] ?? ($ap['pengeluaran_pembiayaan'] ?? 'Rp 0,00');
+      @endphp
+
       <div id="apbdes-content-{{ $tKey }}" class="apbdes-year-content" style="{{ $loop->first ? 'display:block;' : 'display:none;' }}">
-        <!-- Label Status APBDes -->
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; background:#FFF; border:1px solid #E2E8F0; padding:8px 14px; border-radius:8px;">
-          <span style="font-size:13px; font-weight:800; color:var(--biru-tua);">
-            📅 APBDes Tahun Anggaran {{ $ap['tahun'] ?? $tKey }}
-          </span>
-          <span style="font-size:11.5px; font-weight:700; background:#E0F2FE; color:#0369A1; padding:3px 10px; border-radius:12px;">
-            {{ $ap['status'] ?? 'Murni (Tahun Berjalan)' }}
-          </span>
-        </div>
-
-        <!-- 1. PENDAPATAN DESA -->
-        <div class="apbdes-section">
-          <div class="apbdes-head">
-            <span><i class="fas fa-wallet" style="margin-right:6px;"></i> PENDAPATAN DESA</span>
-            <span class="total">{{ $ap['pendapatan_total'] ?? 'Rp 0,00' }}</span>
+        
+        <!-- BALIHO KONTEN UTAMA -->
+        <div style="background:#FFF; border:2px solid #0369A1; border-radius:14px; padding:18px; box-shadow:0 8px 24px rgba(0,0,0,0.08); position:relative; overflow:hidden;">
+          
+          <!-- HEADER TAHUN & DESA -->
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:16px; border-bottom:2px dashed #CBD5E1; padding-bottom:12px;">
+            <div>
+              <div style="font-size:11px; font-weight:800; color:#0369A1; text-transform:uppercase; letter-spacing:0.5px;">PEMERINTAH DESA MUNUNGKEREP</div>
+              <div style="font-size:16px; font-weight:900; color:var(--biru-tua);">LAPORAN TRANSPARANSI APBDES {{ $ap['tahun'] ?? $tKey }}</div>
+            </div>
+            <span style="font-size:11px; font-weight:800; background:#DCFCE7; color:#15803D; padding:4px 12px; border-radius:12px; border:1px solid #BBF7D0;">
+              {{ $ap['status'] ?? 'Murni (Tahun Berjalan)' }}
+            </span>
           </div>
-          <div class="apbdes-body">
-            @if(!empty($ap['pendapatan_items']))
-              @foreach($ap['pendapatan_items'] as $item)
-                <div class="apbdes-row">
-                  <div class="label-col">
-                    <span class="label">{{ $item['label'] ?? '' }}</span>
-                    @if(!empty($item['sub']))
-                      <span class="sub-label">{{ $item['sub'] }}</span>
-                    @endif
-                  </div>
-                  <span class="val">{{ $item['nilai'] ?? '' }}</span>
-                </div>
-              @endforeach
-            @else
-              <div class="apbdes-row"><div class="label-col"><span class="label">Pendapatan Asli Desa (PAD)</span></div><span class="val">{{ $ap['pad'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><div class="label-col"><span class="label">Dana Desa (DD - APBN Pusat)</span></div><span class="val">{{ $ap['dd'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><div class="label-col"><span class="label">Alokasi Dana Desa (ADD - APBD Jombang)</span></div><span class="val">{{ $ap['add'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><div class="label-col"><span class="label">Bagi Hasil Pajak &amp; Retribusi (PDRD)</span></div><span class="val">{{ $ap['pdrd'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><div class="label-col"><span class="label">Bantuan Keuangan (BK Provinsi/Kabupaten)</span></div><span class="val">{{ $ap['bk'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><div class="label-col"><span class="label">Lain-Lain Pendapatan Desa Sah (DLL)</span></div><span class="val">{{ $ap['dll'] ?? 'Rp 0,00' }}</span></div>
-            @endif
 
-            @if(!empty($ap['keterangan_pendapatan']))
-              <div style="background:#E0F2FE; border-left:3px solid #0284C7; padding:8px 12px; margin-top:10px; border-radius:4px; font-size:12px; color:#0369A1; line-height:1.5;">
-                <strong>ℹ️ Rincian Sumber Dana:</strong> {{ $ap['keterangan_pendapatan'] }}
+          <!-- ================= 1. PENDAPATAN DESA ================= -->
+          <div style="background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:10px; padding:14px; margin-bottom:18px;">
+            <!-- Ribbon Banner Pendapatan -->
+            <div style="background:linear-gradient(135deg, #DC2626 0%, #B91C1C 100%); color:#FFF; text-align:center; font-weight:900; font-size:14px; letter-spacing:1px; padding:7px 12px; border-radius:6px; margin-bottom:12px; text-transform:uppercase; box-shadow:0 3px 8px rgba(220,38,38,0.25);">
+              PENDAPATAN DESA
+            </div>
+
+            <!-- 6 Kotak Pos Pendapatan -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:10px; margin-bottom:12px;">
+              <!-- PAD -->
+              <div style="background:#FFF; border:1.5px solid #DC2626; border-radius:8px; overflow:hidden; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
+                <div style="background:#DC2626; color:#FFF; font-size:11px; font-weight:900; padding:3px 6px;">PAD</div>
+                <div style="padding:6px 4px; font-size:12px; font-weight:800; color:#1E293B;">{{ $padVal }}</div>
               </div>
-            @endif
-          </div>
-        </div>
-
-        <!-- 2. BELANJA DESA -->
-        <div class="apbdes-section">
-          <div class="apbdes-head belanja">
-            <span><i class="fas fa-shopping-bag" style="margin-right:6px;"></i> BELANJA DESA</span>
-            <span class="total">{{ $ap['belanja_total'] ?? 'Rp 0,00' }}</span>
-          </div>
-          <div class="apbdes-body">
-            @if(!empty($ap['belanja_items']))
-              @foreach($ap['belanja_items'] as $item)
-                <div class="apbdes-row">
-                  <div class="label-col">
-                    <span class="label">{{ $item['label'] ?? '' }}</span>
-                    @if(!empty($item['sub']))
-                      <span class="sub-label">{{ $item['sub'] }}</span>
-                    @endif
-                  </div>
-                  <span class="val">{{ $item['nilai'] ?? '' }}</span>
-                </div>
-              @endforeach
-            @else
-              <div class="apbdes-row"><div class="label-col"><span class="label">Penyelenggaraan Pemerintahan Desa</span></div><span class="val">{{ $ap['belanja_pemerintahan'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><div class="label-col"><span class="label">Pelaksanaan Pembangunan Desa</span></div><span class="val">{{ $ap['belanja_pembangunan'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><div class="label-col"><span class="label">Pembinaan Kemasyarakatan</span></div><span class="val">{{ $ap['belanja_pembinaan'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><div class="label-col"><span class="label">Pemberdayaan Masyarakat</span></div><span class="val">{{ $ap['belanja_pemberdayaan'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><div class="label-col"><span class="label">Penanggulangan Bencana &amp; Keadaan Darurat</span></div><span class="val">{{ $ap['belanja_bencana'] ?? 'Rp 0,00' }}</span></div>
-            @endif
-
-            @if(!empty($ap['keterangan_belanja']))
-              <div style="background:#FEF2F2; border-left:3px solid #EF4444; padding:8px 12px; margin-top:10px; border-radius:4px; font-size:12px; color:#B91C1C; line-height:1.5;">
-                <strong>📌 Prioritas Alokasi Belanja:</strong> {{ $ap['keterangan_belanja'] }}
+              <!-- DD -->
+              <div style="background:#FFF; border:1.5px solid #2563EB; border-radius:8px; overflow:hidden; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
+                <div style="background:#2563EB; color:#FFF; font-size:11px; font-weight:900; padding:3px 6px;">DD</div>
+                <div style="padding:6px 4px; font-size:12px; font-weight:800; color:#1E293B;">{{ $ddVal }}</div>
               </div>
-            @endif
-          </div>
-        </div>
-
-        <!-- 3. PEMBIAYAAN DESA -->
-        <div class="apbdes-section">
-          <div class="apbdes-head pembiayaan">
-            <span><i class="fas fa-coins" style="margin-right:6px;"></i> PEMBIAYAAN DESA (NETTO)</span>
-            <span class="total">{{ $ap['pembiayaan_total'] ?? 'Rp 0,00' }}</span>
-          </div>
-          <div class="apbdes-body">
-            @if(!empty($ap['pembiayaan_items']))
-              @foreach($ap['pembiayaan_items'] as $item)
-                <div class="apbdes-row">
-                  <div class="label-col">
-                    <span class="label">{{ $item['label'] ?? '' }}</span>
-                    @if(!empty($item['sub']))
-                      <span class="sub-label">{{ $item['sub'] }}</span>
-                    @endif
-                  </div>
-                  <span class="val">{{ $item['nilai'] ?? '' }}</span>
-                </div>
-              @endforeach
-            @else
-              <div class="apbdes-row"><div class="label-col"><span class="label">Penerimaan Pembiayaan (SiLPA)</span></div><span class="val">{{ $ap['penerimaan_pembiayaan'] ?? 'Rp 0,00' }}</span></div>
-              <div class="apbdes-row"><div class="label-col"><span class="label">Pengeluaran Pembiayaan</span></div><span class="val">{{ $ap['pengeluaran_pembiayaan'] ?? 'Rp 0,00' }}</span></div>
-            @endif
-
-            @if(!empty($ap['keterangan_pembiayaan']))
-              <div style="background:#ECFDF5; border-left:3px solid #10B981; padding:8px 12px; margin-top:10px; border-radius:4px; font-size:12px; color:#047857; line-height:1.5;">
-                <strong>💡 Keterangan Pembiayaan:</strong> {{ $ap['keterangan_pembiayaan'] }}
+              <!-- ADD -->
+              <div style="background:#FFF; border:1.5px solid #16A34A; border-radius:8px; overflow:hidden; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
+                <div style="background:#16A34A; color:#FFF; font-size:11px; font-weight:900; padding:3px 6px;">ADD</div>
+                <div style="padding:6px 4px; font-size:12px; font-weight:800; color:#1E293B;">{{ $addVal }}</div>
               </div>
-            @endif
+              <!-- PDRD -->
+              <div style="background:#FFF; border:1.5px solid #EA580C; border-radius:8px; overflow:hidden; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
+                <div style="background:#EA580C; color:#FFF; font-size:11px; font-weight:900; padding:3px 6px;">PDRD</div>
+                <div style="padding:6px 4px; font-size:12px; font-weight:800; color:#1E293B;">{{ $pdrdVal }}</div>
+              </div>
+              <!-- BK -->
+              <div style="background:#FFF; border:1.5px solid #0F766E; border-radius:8px; overflow:hidden; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
+                <div style="background:#0F766E; color:#FFF; font-size:11px; font-weight:900; padding:3px 6px;">BK</div>
+                <div style="padding:6px 4px; font-size:12px; font-weight:800; color:#1E293B;">{{ $bkVal }}</div>
+              </div>
+              <!-- DLL -->
+              <div style="background:#FFF; border:1.5px solid #C026D3; border-radius:8px; overflow:hidden; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
+                <div style="background:#C026D3; color:#FFF; font-size:11px; font-weight:900; padding:3px 6px;">DLL</div>
+                <div style="padding:6px 4px; font-size:12px; font-weight:800; color:#1E293B;">{{ $dllVal }}</div>
+              </div>
+            </div>
+
+            <!-- Ribbon Total Pendapatan -->
+            <div style="background:linear-gradient(90deg, #DC2626 0%, #B91C1C 100%); color:#FFF; padding:8px 14px; border-radius:6px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+              <span style="font-size:12px; font-weight:800; letter-spacing:0.5px;">JUMLAH PENDAPATAN :</span>
+              <span style="font-size:15px; font-weight:900; color:#FEF08A;">{{ $ap['pendapatan_total'] ?? 'Rp 0,00' }}</span>
+            </div>
           </div>
+
+          <!-- ================= 2. BELANJA DESA ================= -->
+          <div style="background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:10px; padding:14px; margin-bottom:18px;">
+            <!-- Ribbon Banner Belanja -->
+            <div style="background:linear-gradient(135deg, #DC2626 0%, #B91C1C 100%); color:#FFF; text-align:center; font-weight:900; font-size:14px; letter-spacing:1px; padding:7px 12px; border-radius:6px; margin-bottom:14px; text-transform:uppercase; box-shadow:0 3px 8px rgba(220,38,38,0.25);">
+              BELANJA DESA
+            </div>
+
+            <!-- Grid 5 Bidang & Logo Kemendes -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px; align-items:center;">
+              <!-- Kolom Kiri: 5 Pill Bidang Belanja -->
+              <div style="display:flex; flex-direction:column; gap:8px;">
+                <!-- Bidang 1: Penyelenggaraan Pemerintahan (Hijau) -->
+                <div style="display:flex; align-items:center; background:#FFF; border:1.5px solid #10B981; border-radius:30px; padding:4px 12px 4px 6px; box-shadow:0 2px 6px rgba(16,185,129,0.15);">
+                  <div style="width:34px; height:34px; border-radius:50%; background:#10B981; color:#FFF; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; margin-right:8px;">
+                    🏛️
+                  </div>
+                  <div style="flex:1; min-width:0;">
+                    <div style="font-size:10.5px; font-weight:800; color:#065F46; text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Penyelenggaraan Pemerintahan</div>
+                    <div style="font-size:12.5px; font-weight:800; color:#1E293B;">{{ $b_pem }}</div>
+                  </div>
+                </div>
+
+                <!-- Bidang 2: Pelaksanaan Pembangunan (Merah) -->
+                <div style="display:flex; align-items:center; background:#FFF; border:1.5px solid #EF4444; border-radius:30px; padding:4px 12px 4px 6px; box-shadow:0 2px 6px rgba(239,68,68,0.15);">
+                  <div style="width:34px; height:34px; border-radius:50%; background:#EF4444; color:#FFF; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; margin-right:8px;">
+                    🏗️
+                  </div>
+                  <div style="flex:1; min-width:0;">
+                    <div style="font-size:10.5px; font-weight:800; color:#991B1B; text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Pelaksanaan Pembangunan Desa</div>
+                    <div style="font-size:12.5px; font-weight:800; color:#1E293B;">{{ $b_bang }}</div>
+                  </div>
+                </div>
+
+                <!-- Bidang 3: Pembinaan Kemasyarakatan (Ungu/Magenta) -->
+                <div style="display:flex; align-items:center; background:#FFF; border:1.5px solid #D946EF; border-radius:30px; padding:4px 12px 4px 6px; box-shadow:0 2px 6px rgba(217,70,239,0.15);">
+                  <div style="width:34px; height:34px; border-radius:50%; background:#D946EF; color:#FFF; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; margin-right:8px;">
+                    👥
+                  </div>
+                  <div style="flex:1; min-width:0;">
+                    <div style="font-size:10.5px; font-weight:800; color:#86198F; text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Pembinaan Kemasyarakatan</div>
+                    <div style="font-size:12.5px; font-weight:800; color:#1E293B;">{{ $b_bina }}</div>
+                  </div>
+                </div>
+
+                <!-- Bidang 4: Pemberdayaan Masyarakat (Biru) -->
+                <div style="display:flex; align-items:center; background:#FFF; border:1.5px solid #0284C7; border-radius:30px; padding:4px 12px 4px 6px; box-shadow:0 2px 6px rgba(2,132,199,0.15);">
+                  <div style="width:34px; height:34px; border-radius:50%; background:#0284C7; color:#FFF; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; margin-right:8px;">
+                    🤝
+                  </div>
+                  <div style="flex:1; min-width:0;">
+                    <div style="font-size:10.5px; font-weight:800; color:#075985; text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Pemberdayaan Masyarakat</div>
+                    <div style="font-size:12.5px; font-weight:800; color:#1E293B;">{{ $b_daya }}</div>
+                  </div>
+                </div>
+
+                <!-- Bidang 5: Penanggulangan Bencana (Pink/Rose) -->
+                <div style="display:flex; align-items:center; background:#FFF; border:1.5px solid #F43F5E; border-radius:30px; padding:4px 12px 4px 6px; box-shadow:0 2px 6px rgba(244,63,94,0.15);">
+                  <div style="width:34px; height:34px; border-radius:50%; background:#F43F5E; color:#FFF; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; margin-right:8px;">
+                    🚑
+                  </div>
+                  <div style="flex:1; min-width:0;">
+                    <div style="font-size:10.5px; font-weight:800; color:#9F1239; text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Penanggulangan Bencana</div>
+                    <div style="font-size:12.5px; font-weight:800; color:#1E293B;">{{ $b_bencana }}</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Kolom Kanan: Total Belanja + Logo Resmi Kemendes PDTT -->
+              <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:10px;">
+                <!-- Ribbon Total Belanja -->
+                <div style="background:linear-gradient(90deg, #DC2626 0%, #B91C1C 100%); color:#FFF; padding:8px 16px; border-radius:6px; width:100%; margin-bottom:16px; box-shadow:0 3px 8px rgba(220,38,38,0.25);">
+                  <div style="font-size:11px; font-weight:800; letter-spacing:0.5px;">JUMLAH BELANJA :</div>
+                  <div style="font-size:16px; font-weight:900; color:#FEF08A;">{{ $ap['belanja_total'] ?? 'Rp 0,00' }}</div>
+                </div>
+
+                <!-- Emblem Infografis Kemendes PDTT -->
+                <div style="width:140px; height:140px; border-radius:50%; background:#FFF; border:3px solid #0369A1; box-shadow:0 6px 18px rgba(3,105,161,0.2); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px; position:relative;">
+                  <!-- SVG Emblem Kemendes -->
+                  <svg viewBox="0 0 100 100" style="width:75px; height:75px;">
+                    <!-- Atap Rumah Merah -->
+                    <polygon points="50,15 22,38 78,38" fill="#DC2626" />
+                    <rect x="32" y="38" width="36" height="6" fill="#DC2626" />
+                    <!-- Hamparan Sawah Hijau -->
+                    <path d="M20,62 Q50,42 80,62 Q50,78 20,62 Z" fill="#16A34A" />
+                    <path d="M26,56 Q50,46 74,56" stroke="#FFF" stroke-width="2" fill="none" />
+                    <!-- Tangan Menopang Biru/Ungu -->
+                    <path d="M28,68 Q50,88 72,68 Q50,78 28,68 Z" fill="#2563EB" />
+                  </svg>
+                  <span style="font-size:7.5px; font-weight:800; color:#0369A1; text-transform:uppercase; line-height:1.1; margin-top:4px;">
+                    KEMENDES PDTT
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================= 3. PEMBIAYAAN DESA ================= -->
+          <div style="background:#F8FAFC; border:1.5px solid #E2E8F0; border-radius:10px; padding:14px;">
+            <!-- Ribbon Banner Pembiayaan -->
+            <div style="background:linear-gradient(135deg, #DC2626 0%, #B91C1C 100%); color:#FFF; text-align:center; font-weight:900; font-size:14px; letter-spacing:1px; padding:7px 12px; border-radius:6px; margin-bottom:12px; text-transform:uppercase; box-shadow:0 3px 8px rgba(220,38,38,0.25);">
+              PEMBIAYAAN DESA
+            </div>
+
+            <!-- 2 Kotak Pos Pembiayaan -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+              <!-- PENERIMAAN -->
+              <div style="background:#FFF; border:1.5px solid #2563EB; border-radius:8px; overflow:hidden; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
+                <div style="background:#2563EB; color:#FFF; font-size:11px; font-weight:900; padding:3px 6px;">PENERIMAAN</div>
+                <div style="padding:6px 4px; font-size:12.5px; font-weight:800; color:#1E293B;">{{ $terimaVal }}</div>
+              </div>
+
+              <!-- PENGELUARAN -->
+              <div style="background:#FFF; border:1.5px solid #DC2626; border-radius:8px; overflow:hidden; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
+                <div style="background:#DC2626; color:#FFF; font-size:11px; font-weight:900; padding:3px 6px;">PENGELUARAN</div>
+                <div style="padding:6px 4px; font-size:12.5px; font-weight:800; color:#1E293B;">{{ $keluarVal }}</div>
+              </div>
+            </div>
+
+            <!-- Ribbon SILPA / Pembiayaan Netto -->
+            <div style="background:linear-gradient(90deg, #DC2626 0%, #B91C1C 100%); color:#FFF; padding:8px 14px; border-radius:6px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+              <span style="font-size:12px; font-weight:800; letter-spacing:0.5px;">SILPA TAHUN BERJALAN :</span>
+              <span style="font-size:15px; font-weight:900; color:#FEF08A;">{{ $ap['pembiayaan_total'] ?? 'Rp 13.265.324,92' }}</span>
+            </div>
+          </div>
+
         </div>
       </div>
     @endforeach
@@ -1201,7 +1293,7 @@
 
   // ================= PENGELOLA MODAL (SINGLE ACTIVE MODAL) =================
   function tutupSemuaModal() {
-    ['modal-layanan-overlay', 'modal-informasi-overlay', 'modal-apbdes-overlay', 'modal-demografi-overlay', 'modal-kelembagaan-overlay', 'modal-semua-berita-overlay'].forEach(id => {
+    ['modal-layanan-overlay', 'modal-informasi-overlay', 'modal-apbdes-overlay', 'modal-detail-poster-overlay', 'modal-demografi-overlay', 'modal-kelembagaan-overlay', 'modal-semua-berita-overlay'].forEach(id => {
       var el = document.getElementById(id);
       if (el) {
         el.classList.remove('show');
@@ -1287,6 +1379,65 @@
   window.tutupModalInformasi = function(event){
     if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-informasi-close')) return;
     var el = document.getElementById('modal-informasi-overlay');
+    if (el) {
+      el.classList.remove('show');
+      el.style.setProperty('display', 'none', 'important');
+    }
+  };
+
+  // ================= MODAL DETAIL POSTER LIGHTBOX =================
+  window.bukaDetailPoster = function(posterDataB64){
+    try {
+      var poster = JSON.parse(atob(posterDataB64));
+      var container = document.getElementById('detail-poster-content');
+      if (!container) return;
+
+      var imgHtml = poster.foto 
+        ? '<div style="margin-bottom:16px; text-align:center; background:#0B283F; border-radius:10px; overflow:hidden; border:1px solid #CBD5E1;"><img src="' + poster.foto + '" alt="' + (poster.judul || '') + '" style="max-height:360px; max-width:100%; object-fit:contain; display:block; margin:0 auto;"></div>'
+        : '';
+
+      var infoRows = '';
+      if (poster.tanggal) {
+        infoRows += '<div style="display:flex; align-items:baseline; gap:8px; font-size:13px; margin-bottom:6px;"><span style="color:#64748B; font-weight:600; min-width:85px;">📅 Tanggal:</span><strong style="color:var(--biru-tua);">' + poster.tanggal + '</strong></div>';
+      }
+      if (poster.waktu) {
+        infoRows += '<div style="display:flex; align-items:baseline; gap:8px; font-size:13px; margin-bottom:6px;"><span style="color:#64748B; font-weight:600; min-width:85px;">⏰ Waktu:</span><strong style="color:var(--biru-tua);">' + poster.waktu + '</strong></div>';
+      }
+      if (poster.lokasi) {
+        infoRows += '<div style="display:flex; align-items:baseline; gap:8px; font-size:13px; margin-bottom:6px;"><span style="color:#64748B; font-weight:600; min-width:85px;">📍 Lokasi:</span><strong style="color:var(--biru-tua);">' + poster.lokasi + '</strong></div>';
+      }
+
+      var rincianHtml = poster.rincian 
+        ? '<div style="background:#F8FAFC; border:1px dashed #CBD5E1; padding:12px 14px; border-radius:8px; font-size:12.5px; color:var(--teks); margin-bottom:14px; line-height:1.6;"><strong>🎯 Rincian Acara & Cabang Lomba:</strong><div style="margin-top:4px; color:#475569; white-space:pre-line;">' + poster.rincian + '</div></div>'
+        : '';
+
+      var hadiahHtml = poster.hadiah 
+        ? '<div style="background:#FEF3C7; color:#92400E; padding:10px 14px; border-radius:8px; font-size:12px; font-weight:700; margin-bottom:16px;">🎁 ' + poster.hadiah + '</div>'
+        : '';
+
+      container.innerHTML = 
+        '<div style="display:inline-block; font-size:10px; font-weight:800; background:#E0F2FE; color:#0369A1; padding:3px 10px; border-radius:10px; text-transform:uppercase; margin-bottom:8px;">' + (poster.kategori || '🏆 Perlombaan Desa') + '</div>' +
+        '<h3 style="margin:0 0 14px; font-size:18px; color:var(--biru-tua); font-weight:800; line-height:1.35;">' + (poster.judul || 'Agenda Desa') + '</h3>' +
+        imgHtml +
+        (infoRows ? '<div style="background:#F8FAFC; padding:12px 14px; border-radius:8px; border:1px solid #E2E8F0; margin-bottom:14px;">' + infoRows + '</div>' : '') +
+        rincianHtml +
+        hadiahHtml +
+        '<button type="button" onclick="tutupDetailPoster()" class="btn btn-secondary" style="width:100%; justify-content:center; padding:10px; font-weight:700; font-size:13px;">Tutup Pratinjau</button>';
+
+      var el = document.getElementById('modal-detail-poster-overlay');
+      if (el) {
+        el.classList.add('show');
+        el.style.setProperty('display', 'flex', 'important');
+        el.style.setProperty('z-index', '999999', 'important');
+      }
+    } catch(err) {
+      console.error(err);
+    }
+  };
+
+  window.tutupDetailPoster = function(event){
+    if (event && event.target !== event.currentTarget && !event.target.classList.contains('modal-informasi-close')) return;
+    var el = document.getElementById('modal-detail-poster-overlay');
     if (el) {
       el.classList.remove('show');
       el.style.setProperty('display', 'none', 'important');

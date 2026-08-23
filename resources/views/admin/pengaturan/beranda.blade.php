@@ -183,19 +183,15 @@ $actionOptions = [
                                 <img src="{{ $slideUrl }}" class="slide-img-preview" alt="Preview Slide {{ $loop->iteration }}">
 
                                 <input type="hidden" name="slide_keys[]" value="{{ $index }}">
-                                <input type="hidden" name="slide_existing[]" value="{{ $slideUrl }}" class="slide-existing-input">
+                                <input type="hidden" name="slide_existing[]" value="{{ $slideUrl }}">
                             </div>
 
                             <div style="margin-top: 8px;">
-                                <label style="font-size: 11.5px; font-weight: 700; color: #475569; display: block; margin-bottom: 4px;">Ganti Foto Slide:</label>
-                                <input type="file" name="slide_file_{{ $index }}" accept="image/*" style="font-size: 12px; width: 100%; box-sizing: border-box;" onchange="previewSlideImage(this)">
-                                <div style="margin-top: 6px;">
-                                    <button type="button" class="btn btn-secondary" onclick="openMediaPicker((url) => {
-                                        const c = this.closest('.slide-card');
-                                        c.querySelector('.slide-img-preview').src = url;
-                                        c.querySelector('.slide-existing-input').value = url;
-                                    })" style="width: 100%; font-size: 11.5px; padding: 6px 10px; justify-content: center; font-weight: 600;">
-                                        📁 Pilih dari Pustaka Media
+                                <label style="font-size: 11.5px; font-weight: 600; color: var(--teks-muted); display: block; margin-bottom: 4px;">Ganti Foto Slide:</label>
+                                <div style="display: flex; gap: 6px; align-items: center;">
+                                    <input type="file" name="slide_file_{{ $index }}" accept="image/*" style="font-size:12px; flex: 1;" onchange="previewSlideImage(this)">
+                                    <button type="button" class="btn btn-secondary" onclick="pilihSlideDariMedia(this)" style="font-size: 11px; padding: 5px 8px; white-space: nowrap;" title="Pilih dari Pustaka Media">
+                                        📁 Media
                                     </button>
                                 </div>
                             </div>
@@ -306,55 +302,96 @@ $actionOptions = [
                 </div>
             </div>
 
-            <!-- SECTION 4: PERSYARATAN LAYANAN ADMINISTRASI DESA (ISI POP-UP MODAL) -->
-            <div class="setting-section">
-                <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-                    <span>4. Persyaratan Layanan Administrasi Surat Desa (Isi Pop-up Modal)</span>
-                    <button type="button" class="btn btn-secondary" onclick="tambahSuratCard()" style="font-size: 12px; padding: 7px 14px; background: #E0F2FE; color: #0369A1; border: 1px solid #BAE6FD; font-weight: 700;">
-                        + Tambah Jenis Surat Baru
+            <!-- SECTION 4: POSTER PERLOMBAAN & AGENDA INFORMASI PUBLIK -->
+            <div class="setting-section" id="section-poster-agenda">
+                <div class="section-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+                    <span>4. Poster Perlombaan &amp; Agenda Informasi Publik</span>
+                    <button type="button" onclick="tambahPosterCard()" class="btn btn-secondary" style="font-size:12px; padding:6px 14px; background:#FEF3C7; color:#B45309; border:1px solid #FDE68A; font-weight:700;">
+                        + Tambah Poster / Agenda Baru
                     </button>
                 </div>
-                <p style="margin-top:0; margin-bottom:16px; font-size:12.5px; color:var(--teks-muted);">
-                    Kelola daftar surat keterangan dan surat pengantar desa (Domisili, Usaha, KTP, KK, SKTM, dll), rincian berkas persyaratan, dan catatan masa berlaku yang ditampilkan pada pop-up modal di beranda.
-                </p>
+                <p style="margin-top:0; margin-bottom:16px; font-size:12.5px; color:var(--teks-muted);">Unggah foto poster, tuliskan judul perlombaan, hari/tanggal, waktu, lokasi, cabang lomba, dan hadiah untuk ditampilkan di dalam pop-up Informasi Publik.</p>
 
-                <div id="surat-cards-container" style="display: flex; flex-direction: column; gap: 18px;">
-                    @php $suratList = $data_layanan_surat ?? []; @endphp
-                    @foreach($suratList as $sIdx => $surat)
+                <div id="poster-cards-container" style="display:flex; flex-direction:column; gap:16px;">
+                    @php $pIdx = 0; @endphp
+                    @forelse($poster_agendas ?? [] as $pKey => $poster)
                         @php 
-                            $syaratText = is_array($surat['syarat'] ?? null) ? implode("\n", $surat['syarat']) : ($surat['syarat'] ?? '');
+                            $currKey = is_numeric($pKey) ? 'poster_' . $pKey : $pKey; 
+                            $pIdx++;
                         @endphp
-                        <div class="surat-card" data-surat-idx="{{ $sIdx }}" style="border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 18px; background: #F8FAFC; position: relative;">
-                            <!-- Header Kartu Surat -->
-                            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; border-bottom: 1px solid #E2E8F0; padding-bottom: 10px;">
-                                <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 250px;">
-                                    <span class="surat-badge-label" style="background: var(--biru-tua); color: #fff; font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 4px; letter-spacing: 0.5px; white-space: nowrap;">
-                                        SURAT KE-{{ $sIdx + 1 }}
-                                    </span>
-                                    <input type="text" name="surat_nama[]" value="{{ $surat['nama'] ?? '' }}" placeholder="Nama Surat (Contoh: Surat Keterangan Domisili)" required style="flex: 1; font-weight: 700; font-size: 14px; padding: 7px 12px; border: 1.5px solid #94A3B8; border-radius: 6px; background: #FFF; color: var(--biru-tua);">
-                                </div>
-                                <button type="button" onclick="hapusSuratCard(this)" style="background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; border-radius: 6px; padding: 6px 12px; font-size: 12px; font-weight: 700; cursor: pointer;">
-                                    Hapus Surat Ini
+                        <div class="poster-item-card" style="background:#FFF; border:1.5px solid #CBD5E1; border-radius:12px; padding:20px; box-shadow:0 2px 10px rgba(0,0,0,0.04); position:relative;">
+                            <input type="hidden" name="poster_keys[]" value="{{ $currKey }}">
+                            
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid #E2E8F0; padding-bottom:10px;">
+                                <h4 style="margin:0; font-size:15px; color:var(--biru-tua); font-weight:800;">
+                                    📌 Poster #{{ $pIdx }}
+                                </h4>
+                                <button type="button" onclick="hapusPosterCard(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; padding:5px 12px; font-size:12px; font-weight:700; cursor:pointer;">
+                                    🗑️ Hapus Poster
                                 </button>
                             </div>
 
-                            <!-- Form Isi Syarat & Catatan -->
-                            <div style="display: grid; grid-template-columns: 1fr; gap: 12px;">
-                                <div class="form-group" style="margin-bottom: 0;">
-                                    <label style="font-size: 12.5px; font-weight: 700; color: #334155; display: flex; justify-content: space-between;">
-                                        <span>Daftar Berkas Persyaratan (1 baris = 1 syarat):</span>
-                                        <span style="font-size: 11px; font-weight: normal; color: #64748B;">💡 Tekan Enter untuk baris baru</span>
-                                    </label>
-                                    <textarea name="surat_syarat[]" rows="3" required placeholder="Contoh:&#10;Fotocopy KTP&#10;Fotocopy KK&#10;Pas foto 3x4 (2 lembar)&#10;Surat pengantar RT/RW" style="width: 100%; padding: 10px; border: 1px solid #CBD5E1; border-radius: 6px; font-family: inherit; font-size: 13px; box-sizing: border-box; line-height: 1.5; background: #FFF;">{{ $syaratText }}</textarea>
+                            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px; margin-bottom:14px;">
+                                <!-- Upload Foto Poster -->
+                                <div>
+                                    <label style="font-size:12.5px; font-weight:700; display:block; margin-bottom:6px;">Foto / Gambar Poster</label>
+                                    @if(!empty($poster['foto']))
+                                        <div style="margin-bottom:8px;">
+                                            <img src="{{ $poster['foto'] }}" alt="Poster Preview" style="max-height:160px; max-width:100%; border-radius:8px; border:1px solid #CBD5E1; object-fit:cover;">
+                                        </div>
+                                    @endif
+                                    <input type="file" name="poster_foto_{{ $currKey }}" accept="image/*" style="font-size:12px;">
+                                    <small style="display:block; color:#64748B; margin-top:4px; font-size:11px;">Format JPG, PNG, atau WEBP. Gambar otomatis dioptimalkan.</small>
                                 </div>
 
-                                <div class="form-group" style="margin-bottom: 0;">
-                                    <label style="font-size: 12px; font-weight: 600; color: #475569;">Catatan / Keterangan Tambahan (Ikon 📌):</label>
-                                    <input type="text" name="surat_keterangan[]" value="{{ $surat['keterangan'] ?? '' }}" placeholder="Contoh: Berlaku selama 6 bulan / Untuk keperluan kredit atau izin usaha" style="width: 100%; padding: 8px 12px; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 12.5px; background: #FFF;">
+                                <!-- Judul & Kategori -->
+                                <div>
+                                    <div class="form-group" style="margin-bottom:12px;">
+                                        <label style="font-size:12.5px; font-weight:700;">Judul Perlombaan / Agenda</label>
+                                        <input type="text" name="poster_judul[]" value="{{ $poster['judul'] ?? '' }}" placeholder="Contoh: Semarak Lomba Kemerdekaan RI Ke-81" required style="font-size:13px; font-weight:700;">
+                                    </div>
+                                    <div class="form-group" style="margin-bottom:0;">
+                                        <label style="font-size:12.5px; font-weight:700;">Badge Kategori</label>
+                                        <input type="text" name="poster_kategori[]" value="{{ $poster['kategori'] ?? '🏆 Perlombaan Desa' }}" placeholder="Contoh: 🏆 Perlombaan Desa / 🩺 Layanan Kesehatan / 📢 Pengumuman" required style="font-size:12.5px;">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Waktu, Hari/Tanggal, Lokasi -->
+                            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:14px; background:#F8FAFC; padding:12px; border-radius:8px; border:1px solid #E2E8F0;">
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label style="font-size:12px; font-weight:700;">📅 Hari / Tanggal</label>
+                                    <input type="text" name="poster_tanggal[]" value="{{ $poster['tanggal'] ?? '' }}" placeholder="Contoh: Sabtu – Minggu, 22 – 23 Agustus 2026" style="font-size:12.5px;">
+                                </div>
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label style="font-size:12px; font-weight:700;">⏰ Waktu / Jam</label>
+                                    <input type="text" name="poster_waktu[]" value="{{ $poster['waktu'] ?? '' }}" placeholder="Contoh: 08.00 WIB s/d Selesai" style="font-size:12.5px;">
+                                </div>
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label style="font-size:12px; font-weight:700;">📍 Lokasi Pelaksanaan</label>
+                                    <input type="text" name="poster_lokasi[]" value="{{ $poster['lokasi'] ?? '' }}" placeholder="Contoh: Lapangan & Balai Desa Munungkerep" style="font-size:12.5px;">
+                                </div>
+                            </div>
+
+                            <!-- Rincian Acara & Hadiah -->
+                            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px;">
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label style="font-size:12px; font-weight:700;">🎯 Cabang Lomba / Rincian Acara (Teks Detail)</label>
+                                    <textarea name="poster_rincian[]" rows="3" placeholder="Contoh:&#10;• Gerak Jalan Kreasi Antar RT&#10;• Lomba Tarik Tambang Antar Dusun&#10;• Balap Karung Helm & Mewarnai Anak" style="font-size:12.5px; line-height:1.5;">{{ $poster['rincian'] ?? '' }}</textarea>
+                                </div>
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label style="font-size:12px; font-weight:700;">🎁 Hadiah / Biaya / Syarat (Keterangan Footer)</label>
+                                    <textarea name="poster_hadiah[]" rows="3" placeholder="Contoh: Total Hadiah: Piala Bergilir & Uang Pembinaan (Gratis Terbuka untuk Seluruh Warga)" style="font-size:12.5px; line-height:1.5;">{{ $poster['hadiah'] ?? '' }}</textarea>
                                 </div>
                             </div>
                         </div>
-                    @endforeach
+                    @empty
+                        <div id="poster-empty-state" style="text-align:center; padding:30px 20px; background:#F8FAFC; border:2px dashed #CBD5E1; border-radius:10px; color:#64748B;">
+                            <div style="font-size:32px; margin-bottom:8px;">📢</div>
+                            <div style="font-weight:700; font-size:14px; margin-bottom:4px; color:var(--biru-tua);">Belum Ada Poster Perlombaan / Agenda</div>
+                            <div style="font-size:12.5px; margin-bottom:14px;">Klik tombol "+ Tambah Poster / Agenda Baru" di atas untuk menambahkan poster lomba atau kegiatan desa pertama Anda.</div>
+                        </div>
+                    @endforelse
                 </div>
             </div>
 
@@ -417,116 +454,63 @@ $actionOptions = [
 
         function tambahSlideCard() {
             const container = document.getElementById('slide-grid-container');
-            const currentCards = container.querySelectorAll('.slide-card');
-            const newIndex = currentCards.length;
-            const randomKey = 'new_' + Date.now();
+            const uniqueId = 'new_' + Date.now();
+            const currentTotal = container.querySelectorAll('.slide-card').length;
 
             const card = document.createElement('div');
             card.className = 'slide-card';
-            card.dataset.slideIdx = newIndex;
+            card.dataset.slideIndex = uniqueId;
             card.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #E2E8F0; padding-bottom: 8px;">
-                    <span class="slide-label" style="font-weight: 800; font-size: 12px; color: var(--biru-tua); background: #E0F2FE; padding: 2px 8px; border-radius: 4px;">SLIDE KE-${newIndex + 1}</span>
-                    <button type="button" onclick="hapusSlideCard(this)" style="background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; border-radius: 6px; padding: 4px 8px; font-size: 11px; font-weight: 700; cursor: pointer;">Hapus</button>
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span class="slide-label" style="font-weight:800; font-size:12px; color:var(--biru-tua); background:#E2E8F0; padding:3px 8px; border-radius:4px;">
+                            SLIDE KE-${currentTotal + 1}
+                        </span>
+                        <button type="button" onclick="hapusSlideCard(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:4px; padding:3px 8px; font-size:11px; font-weight:700; cursor:pointer;" title="Hapus slide ini">
+                            ✕ Hapus
+                        </button>
+                    </div>
+
+                    <img src="/images/slider/sdn2.jpeg" class="slide-img-preview" alt="Preview Slide Baru">
+
+                    <input type="hidden" name="slide_keys[]" value="${uniqueId}">
+                    <input type="hidden" name="slide_existing[]" value="/images/slider/sdn2.jpeg">
                 </div>
-                <div style="margin-bottom: 12px; border-radius: 6px; overflow: hidden; height: 120px; background: #000; display: flex; align-items: center; justify-content: center; position: relative;">
-                    <img src="https://placehold.co/600x300/1e293b/ffffff?text=Pilih+Foto+Slide" class="slide-img-preview" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.9;">
+
+                <div style="margin-top: 8px;">
+                    <label style="font-size: 11.5px; font-weight: 600; color: #0284C7; display: block; margin-bottom: 4px;">Pilih Gambar Baru:</label>
+                    <div style="display: flex; gap: 6px; align-items: center;">
+                        <input type="file" name="slide_file_${uniqueId}" accept="image/*" style="font-size:12px; flex: 1;" onchange="previewSlideImage(this)">
+                        <button type="button" class="btn btn-secondary" onclick="pilihSlideDariMedia(this)" style="font-size: 11px; padding: 5px 8px; white-space: nowrap;" title="Pilih dari Pustaka Media">
+                            📁 Media
+                        </button>
+                    </div>
                 </div>
-                <div class="form-group" style="margin-bottom: 10px;">
-                    <label style="font-size: 11.5px;">Ganti Foto Slide:</label>
-                    <input type="file" name="slide_file_${randomKey}" accept="image/*" onchange="previewSlideImage(this)" style="font-size: 12px;">
-                </div>
-                <div style="margin-bottom: 10px;">
-                    <button type="button" class="btn btn-secondary" onclick="openMediaPicker((url) => {
-                        const c = this.closest('.slide-card');
-                        c.querySelector('.slide-img-preview').src = url;
-                        c.querySelector('.slide-existing-input').value = url;
-                    })" style="width: 100%; font-size: 12px; padding: 6px; justify-content: center;">
-                        📁 Pilih dari Pustaka Media
-                    </button>
-                </div>
-                <input type="hidden" name="slide_existing[]" value="https://placehold.co/600x300/1e293b/ffffff?text=Slide+Baru" class="slide-existing-input">
-                <input type="hidden" name="slide_keys[]" value="${randomKey}">
             `;
 
             container.appendChild(card);
             updateSlideNumbering();
         }
 
-        // ================= LAYANAN SURAT FUNCTIONS =================
-        function updateSuratNumbering() {
-            const container = document.getElementById('surat-cards-container');
-            const cards = container.querySelectorAll('.surat-card');
-            cards.forEach((card, idx) => {
-                const badge = card.querySelector('.surat-badge-label');
-                if (badge) {
-                    badge.textContent = `SURAT KE-${idx + 1}`;
+        function pilihSlideDariMedia(btn) {
+            const card = btn.closest('.slide-card');
+            const previewImg = card.querySelector('.slide-img-preview');
+            const existingInput = card.querySelector('input[name="slide_existing[]"]');
+            const fileInput = card.querySelector('input[type="file"]');
+
+            window.openMediaPicker({
+                onSelect: function(item) {
+                    if (previewImg) previewImg.src = item.url;
+                    if (existingInput) existingInput.value = item.url;
+                    if (fileInput) {
+                        fileInput.value = '';
+                        fileInput.removeAttribute('required');
+                    }
                 }
             });
         }
 
-        function hapusSuratCard(btn) {
-            const container = document.getElementById('surat-cards-container');
-            const cards = container.querySelectorAll('.surat-card');
-            if (cards.length <= 1) {
-                alert('Setidaknya harus tersisa minimal 1 jenis surat layanan administrasi!');
-                return;
-            }
-            if (confirm('Apakah Anda yakin ingin menghapus jenis surat layanan ini?')) {
-                const card = btn.closest('.surat-card');
-                if (card) {
-                    card.remove();
-                    updateSuratNumbering();
-                }
-            }
-        }
-
-        function tambahSuratCard() {
-            const container = document.getElementById('surat-cards-container');
-            const existingCards = container.querySelectorAll('.surat-card');
-            const nextIdx = existingCards.length;
-
-            const card = document.createElement('div');
-            card.className = 'surat-card';
-            card.dataset.suratIdx = nextIdx;
-            card.style = 'border: 1.5px solid #CBD5E1; border-radius: 10px; padding: 18px; background: #F8FAFC; position: relative;';
-
-            card.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; border-bottom: 1px solid #E2E8F0; padding-bottom: 10px;">
-                    <div style="display: flex; align-items: center; gap: 10px; flex: 1; min-width: 250px;">
-                        <span class="surat-badge-label" style="background: var(--biru-tua); color: #fff; font-size: 11px; font-weight: 800; padding: 4px 8px; border-radius: 4px; letter-spacing: 0.5px; white-space: nowrap;">
-                            SURAT KE-${nextIdx + 1}
-                        </span>
-                        <input type="text" name="surat_nama[]" value="" placeholder="Nama Surat (Contoh: Surat Keterangan Domisili)" required style="flex: 1; font-weight: 700; font-size: 14px; padding: 7px 12px; border: 1.5px solid #94A3B8; border-radius: 6px; background: #FFF; color: var(--biru-tua);">
-                    </div>
-                    <button type="button" onclick="hapusSuratCard(this)" style="background: #FEE2E2; color: #DC2626; border: 1px solid #FECACA; border-radius: 6px; padding: 6px 12px; font-size: 12px; font-weight: 700; cursor: pointer;">
-                        Hapus Surat Ini
-                    </button>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr; gap: 12px;">
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label style="font-size: 12.5px; font-weight: 700; color: #334155; display: flex; justify-content: space-between;">
-                            <span>Daftar Berkas Persyaratan (1 baris = 1 syarat):</span>
-                            <span style="font-size: 11px; font-weight: normal; color: #64748B;">💡 Tekan Enter untuk baris baru</span>
-                        </label>
-                        <textarea name="surat_syarat[]" rows="3" required placeholder="Contoh:&#10;Fotocopy KTP&#10;Fotocopy KK&#10;Pas foto 3x4 (2 lembar)&#10;Surat pengantar RT/RW" style="width: 100%; padding: 10px; border: 1px solid #CBD5E1; border-radius: 6px; font-family: inherit; font-size: 13px; box-sizing: border-box; line-height: 1.5; background: #FFF;"></textarea>
-                    </div>
-
-                    <div class="form-group" style="margin-bottom: 0;">
-                        <label style="font-size: 12px; font-weight: 600; color: #475569;">Catatan / Keterangan Tambahan (Ikon 📌):</label>
-                        <input type="text" name="surat_keterangan[]" value="" placeholder="Contoh: Berlaku selama 6 bulan / Untuk keperluan kredit atau izin usaha" style="width: 100%; padding: 8px 12px; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 12.5px; background: #FFF;">
-                    </div>
-                </div>
-            `;
-
-            container.appendChild(card);
-            updateSuratNumbering();
-            const inputNama = card.querySelector('input[name="surat_nama[]"]');
-            if (inputNama) inputNama.focus();
-        }
-
-        // ================= 6 PORTAL CARDS FUNCTIONS =================
+        // ================= PORTAL CARDS ICON & ACTION HANDLERS =================
         function handleActionChange(selectEl) {
             const card = selectEl.closest('.portal-edit-card');
             const hiddenLinkInput = card.querySelector('.card-link-hidden');
@@ -569,6 +553,89 @@ $actionOptions = [
             const allBtns = card.querySelectorAll('.icon-pick-btn');
             allBtns.forEach(b => b.classList.remove('active'));
             btnEl.classList.add('active');
+        }
+
+        // ================= POSTER PERLOMBAAN & AGENDA =================
+        function tambahPosterCard() {
+            const container = document.getElementById('poster-cards-container');
+            const emptyState = document.getElementById('poster-empty-state');
+            if (emptyState) emptyState.remove();
+
+            const uniqueKey = 'poster_' + Date.now();
+            const currentIdx = container.querySelectorAll('.poster-item-card').length + 1;
+
+            const card = document.createElement('div');
+            card.className = 'poster-item-card';
+            card.style.cssText = 'background:#FFF; border:1.5px solid #CBD5E1; border-radius:12px; padding:20px; box-shadow:0 2px 10px rgba(0,0,0,0.04); position:relative;';
+            card.innerHTML = `
+                <input type="hidden" name="poster_keys[]" value="${uniqueKey}">
+                
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid #E2E8F0; padding-bottom:10px;">
+                    <h4 style="margin:0; font-size:15px; color:var(--biru-tua); font-weight:800;">
+                        📌 Poster Baru (#${currentIdx})
+                    </h4>
+                    <button type="button" onclick="hapusPosterCard(this)" style="background:#FEE2E2; color:#DC2626; border:1px solid #FECACA; border-radius:6px; padding:5px 12px; font-size:12px; font-weight:700; cursor:pointer;">
+                        🗑️ Hapus Poster
+                    </button>
+                </div>
+
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px; margin-bottom:14px;">
+                    <!-- Upload Foto Poster -->
+                    <div>
+                        <label style="font-size:12.5px; font-weight:700; display:block; margin-bottom:6px;">Foto / Gambar Poster</label>
+                        <input type="file" name="poster_foto_${uniqueKey}" accept="image/*" style="font-size:12px;">
+                        <small style="display:block; color:#64748B; margin-top:4px; font-size:11px;">Format JPG, PNG, atau WEBP. Gambar otomatis dioptimalkan.</small>
+                    </div>
+
+                    <!-- Judul & Kategori -->
+                    <div>
+                        <div class="form-group" style="margin-bottom:12px;">
+                            <label style="font-size:12.5px; font-weight:700;">Judul Perlombaan / Agenda</label>
+                            <input type="text" name="poster_judul[]" placeholder="Contoh: Semarak Lomba Kemerdekaan RI Ke-81" required style="font-size:13px; font-weight:700;">
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label style="font-size:12.5px; font-weight:700;">Badge Kategori</label>
+                            <input type="text" name="poster_kategori[]" value="🏆 Perlombaan Desa" placeholder="Contoh: 🏆 Perlombaan Desa / 🩺 Layanan Kesehatan / 📢 Pengumuman" required style="font-size:12.5px;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Waktu, Hari/Tanggal, Lokasi -->
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:14px; background:#F8FAFC; padding:12px; border-radius:8px; border:1px solid #E2E8F0;">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label style="font-size:12px; font-weight:700;">📅 Hari / Tanggal</label>
+                        <input type="text" name="poster_tanggal[]" placeholder="Contoh: Sabtu – Minggu, 22 – 23 Agustus 2026" style="font-size:12.5px;">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label style="font-size:12px; font-weight:700;">⏰ Waktu / Jam</label>
+                        <input type="text" name="poster_waktu[]" placeholder="Contoh: 08.00 WIB s/d Selesai" style="font-size:12.5px;">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label style="font-size:12px; font-weight:700;">📍 Lokasi Pelaksanaan</label>
+                        <input type="text" name="poster_lokasi[]" placeholder="Contoh: Lapangan & Balai Desa Munungkerep" style="font-size:12.5px;">
+                    </div>
+                </div>
+
+                <!-- Rincian Acara & Hadiah -->
+                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:14px;">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label style="font-size:12px; font-weight:700;">🎯 Cabang Lomba / Rincian Acara (Teks Detail)</label>
+                        <textarea name="poster_rincian[]" rows="3" placeholder="Contoh:&#10;• Gerak Jalan Kreasi Antar RT&#10;• Lomba Tarik Tambang Antar Dusun&#10;• Balap Karung Helm & Mewarnai Anak" style="font-size:12.5px; line-height:1.5;"></textarea>
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label style="font-size:12px; font-weight:700;">🎁 Hadiah / Biaya / Syarat (Keterangan Footer)</label>
+                        <textarea name="poster_hadiah[]" rows="3" placeholder="Contoh: Total Hadiah: Piala Bergilir & Uang Pembinaan (Gratis Terbuka untuk Seluruh Warga)" style="font-size:12.5px; line-height:1.5;"></textarea>
+                    </div>
+                </div>
+            `;
+            container.appendChild(card);
+        }
+
+        function hapusPosterCard(btn) {
+            if (confirm('Apakah Anda yakin ingin menghapus poster agenda ini?')) {
+                const card = btn.closest('.poster-item-card');
+                if (card) card.remove();
+            }
         }
     </script>
 @endsection
