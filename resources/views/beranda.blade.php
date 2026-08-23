@@ -561,39 +561,43 @@
         @endif
       </div>
 
-      <!-- GRID POSTER CARD PORTRAIT COMPACT -->
+      <!-- GRID POSTER CARD PORTRAIT COMPACT LEBIH BESAR & JELAS -->
       @if(!empty($poster_agendas) && count($poster_agendas) > 0)
-        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(135px, 1fr)); gap:12px;">
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(200px, 1fr)); gap:16px;">
           @foreach($poster_agendas as $pIdx => $poster)
             @php
               $posterDataJson = base64_encode(json_encode($poster));
             @endphp
-            <div class="poster-anime-card" onclick="bukaDetailPoster('{{ $posterDataJson }}')" style="background:#0F172A; border:1px solid #1E293B; border-radius:10px; overflow:hidden; cursor:pointer; transition:transform 0.2s ease, box-shadow 0.2s ease; display:flex; flex-direction:column; text-align:center; position:relative; box-shadow:0 4px 12px rgba(0,0,0,0.12);" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.12)';">
+            <div class="poster-anime-card" onclick="bukaDetailPoster('{{ $posterDataJson }}')" style="background:#0F172A; border:1.5px solid #1E293B; border-radius:12px; overflow:hidden; cursor:pointer; transition:transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; display:flex; flex-direction:column; text-align:center; position:relative; box-shadow:0 6px 16px rgba(0,0,0,0.15);" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 12px 24px rgba(0,0,0,0.25)'; this.style.borderColor='#38BDF8';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 6px 16px rgba(0,0,0,0.15)'; this.style.borderColor='#1E293B';">
               
               <!-- Foto Poster Portrait (Rasio 3:4) -->
               <div style="position:relative; width:100%; aspect-ratio:3/4; background:#1E293B; overflow:hidden; display:flex; align-items:center; justify-content:center;">
                 @if(!empty($poster['foto']))
                   <img src="{{ $poster['foto'] }}" alt="{{ $poster['judul'] ?? 'Poster' }}" style="width:100%; height:100%; object-fit:cover; display:block;" loading="lazy">
                 @else
-                  <div style="font-size:32px; opacity:0.6;">🏆</div>
+                  <div style="font-size:42px; opacity:0.6;">🏆</div>
                 @endif
                 
                 <!-- Badge Kategori Mengambang (Seperti Badge SUB di Foto 2) -->
-                <div style="position:absolute; bottom:6px; left:50%; transform:translateX(-50%); width:max-content; max-width:90%;">
-                  <span style="font-size:9px; font-weight:800; background:rgba(0,0,0,0.85); color:#F59E0B; padding:2px 8px; border-radius:4px; text-transform:uppercase; letter-spacing:0.5px; border:1px solid rgba(245,158,11,0.5); display:inline-block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; box-shadow:0 2px 6px rgba(0,0,0,0.4);">
+                <div style="position:absolute; bottom:8px; left:50%; transform:translateX(-50%); width:max-content; max-width:92%;">
+                  <span style="font-size:10.5px; font-weight:800; background:rgba(0,0,0,0.85); color:#F59E0B; padding:3px 10px; border-radius:5px; text-transform:uppercase; letter-spacing:0.5px; border:1px solid rgba(245,158,11,0.6); display:inline-block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; box-shadow:0 2px 8px rgba(0,0,0,0.5);">
                     {{ $poster['kategori'] ?? 'LOMBA' }}
                   </span>
                 </div>
               </div>
 
               <!-- Judul & Keterangan Card -->
-              <div style="padding:8px 6px 10px; display:flex; flex-direction:column; flex:1; justify-content:space-between;">
-                <div style="font-size:12px; font-weight:700; color:#F59E0B; line-height:1.3; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:4px;" title="{{ $poster['judul'] ?? '' }}">
+              <div style="padding:10px 10px 12px; display:flex; flex-direction:column; flex:1; justify-content:space-between; background:#0F172A;">
+                <div style="font-size:13.5px; font-weight:800; color:#F59E0B; line-height:1.35; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; margin-bottom:6px;" title="{{ $poster['judul'] ?? '' }}">
                   {{ $poster['judul'] ?? 'Agenda Desa' }}
                 </div>
                 
-                <div style="font-size:10px; color:#94A3B8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                  {{ !empty($poster['tanggal']) ? $poster['tanggal'] : 'Lihat Detail ↗' }}
+                <div style="font-size:11px; color:#94A3B8; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:flex; align-items:center; justify-content:center; gap:4px;">
+                  @if(!empty($poster['tanggal']))
+                    <span>📅 {{ $poster['tanggal'] }}</span>
+                  @else
+                    <span style="color:#38BDF8;">Klik untuk Detail ↗</span>
+                  @endif
                 </div>
               </div>
             </div>
