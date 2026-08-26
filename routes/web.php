@@ -373,4 +373,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
     Route::get('pengaturan/poster', [AdminSettingController::class, 'poster'])->name('admin.pengaturan.poster');
     Route::post('pengaturan/poster', [AdminSettingController::class, 'updatePoster']);
+
+    Route::get('pengaturan/footer', [AdminSettingController::class, 'footer'])->name('admin.pengaturan.footer');
+    Route::post('pengaturan/footer', [AdminSettingController::class, 'updateFooter']);
 });

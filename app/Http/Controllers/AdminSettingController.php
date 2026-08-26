@@ -541,6 +541,59 @@ class AdminSettingController extends Controller
     }
 
     // =========================================================================
+    // 7. MODUL PENGATURAN FOOTER, KONTAK & DETAIL WILAYAH
+    // =========================================================================
+    public function footer()
+    {
+        $footer_settings = [
+            'nama_desa' => Setting::get('footer_nama_desa', 'Pemerintah Desa Munungkerep'),
+            'sub_desa' => Setting::get('footer_sub_desa', 'Sistem Informasi Desa'),
+            'deskripsi' => Setting::get('footer_deskripsi', 'Portal resmi Desa Munungkerep untuk transparansi informasi, peta wilayah, dan pelayanan publik bagi seluruh warga dan masyarakat umum.'),
+            'jam_judul' => Setting::get('footer_jam_judul', 'Jam Kantor Balai Desa:'),
+            'jam_waktu' => Setting::get('footer_jam_waktu', 'Senin – Jumat: 08.00 – 15.00 WIB'),
+            'wa_pengaduan' => Setting::get('footer_wa_pengaduan', '0812-3492-2365'),
+            'wa_layanan' => Setting::get('footer_wa_layanan', '0812-3492-2365'),
+            'email' => Setting::get('footer_email', 'munungkerep11@gmail.com'),
+            'aspirasi' => Setting::get('footer_aspirasi', 'Balai Desa Munungkerep'),
+            'wilayah_desa' => Setting::get('footer_wilayah_desa', 'Munungkerep'),
+            'wilayah_kecamatan' => Setting::get('footer_wilayah_kecamatan', 'Kabuh'),
+            'wilayah_kabupaten' => Setting::get('footer_wilayah_kabupaten', 'Jombang'),
+            'wilayah_provinsi' => Setting::get('footer_wilayah_provinsi', 'Jawa Timur'),
+            'wilayah_kodepos' => Setting::get('footer_wilayah_kodepos', '61455'),
+            'copyright' => Setting::get('footer_copyright', '© 2026 Pemerintah Desa Munungkerep — Disusun oleh Tim KKN 2026. Seluruh hak dilindungi.')
+        ];
+
+        return view('admin.pengaturan.footer', compact('footer_settings'));
+    }
+
+    public function updateFooter(Request $request)
+    {
+        $fields = [
+            'footer_nama_desa' => 'nama_desa',
+            'footer_sub_desa' => 'sub_desa',
+            'footer_deskripsi' => 'deskripsi',
+            'footer_jam_judul' => 'jam_judul',
+            'footer_jam_waktu' => 'jam_waktu',
+            'footer_wa_pengaduan' => 'wa_pengaduan',
+            'footer_wa_layanan' => 'wa_layanan',
+            'footer_email' => 'email',
+            'footer_aspirasi' => 'aspirasi',
+            'footer_wilayah_desa' => 'wilayah_desa',
+            'footer_wilayah_kecamatan' => 'wilayah_kecamatan',
+            'footer_wilayah_kabupaten' => 'wilayah_kabupaten',
+            'footer_wilayah_provinsi' => 'wilayah_provinsi',
+            'footer_wilayah_kodepos' => 'wilayah_kodepos',
+            'footer_copyright' => 'copyright'
+        ];
+
+        foreach ($fields as $key => $inputName) {
+            Setting::set($key, $request->input($inputName, ''));
+        }
+
+        return redirect('/admin/pengaturan/footer')->with('success', 'Pengaturan Footer, Kontak Pengaduan, dan Wilayah Desa berhasil diperbarui!');
+    }
+
+    // =========================================================================
     // HELPER DATA BAWAAN (DEFAULT SEEDERS)
     // =========================================================================
 
