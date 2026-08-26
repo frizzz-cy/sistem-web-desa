@@ -11,13 +11,21 @@ class Setting extends Model
     // Helper untuk mengambil setting
     public static function get($key, $default = null)
     {
-        $setting = self::where('key', $key)->first();
-        return $setting ? $setting->value : $default;
+        try {
+            $setting = self::where('key', $key)->first();
+            return ($setting && $setting->value !== null && $setting->value !== '') ? $setting->value : $default;
+        } catch (\Throwable $e) {
+            return $default;
+        }
     }
 
     // Helper untuk menyimpan/mengubah setting
     public static function set($key, $value)
     {
-        return self::updateOrCreate(['key' => $key], ['value' => $value]);
+        try {
+            return self::updateOrCreate(['key' => $key], ['value' => $value]);
+        } catch (\Throwable $e) {
+            return null;
+        }
     }
 }

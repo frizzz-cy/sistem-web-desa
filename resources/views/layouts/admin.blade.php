@@ -291,6 +291,12 @@
                     <span>Poster &amp; Agenda Desa</span>
                 </a>
             </li>
+            <li class="sidebar-item @if(($activePage ?? '') == 'pengaturan-footer') active @endif">
+                <a href="/admin/pengaturan/footer">
+                    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <span>Footer &amp; Kontak Desa</span>
+                </a>
+            </li>
 
             <div class="sidebar-category">Informasi & Publikasi</div>
             <li class="sidebar-item @if(($activePage ?? '') == 'berita') active @endif">

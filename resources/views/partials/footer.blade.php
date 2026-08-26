@@ -198,6 +198,32 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+@php
+  $f_nama_desa    = \App\Models\Setting::get('footer_nama_desa', 'Pemerintah Desa Munungkerep');
+  $f_sub_desa     = \App\Models\Setting::get('footer_sub_desa', 'Sistem Informasi Desa');
+  $f_deskripsi    = \App\Models\Setting::get('footer_deskripsi', 'Portal resmi Desa Munungkerep untuk transparansi informasi, peta wilayah, dan pelayanan publik bagi seluruh warga dan masyarakat umum.');
+  $f_jam_judul    = \App\Models\Setting::get('footer_jam_judul', 'Jam Kantor Balai Desa:');
+  $f_jam_waktu    = \App\Models\Setting::get('footer_jam_waktu', 'Senin – Jumat: 08.00 – 15.00 WIB');
+  $f_wa_pengaduan = \App\Models\Setting::get('footer_wa_pengaduan', '0812-3492-2365');
+  $f_wa_layanan   = \App\Models\Setting::get('footer_wa_layanan', '0812-3492-2365');
+  $f_email        = \App\Models\Setting::get('footer_email', 'munungkerep11@gmail.com');
+  $f_aspirasi     = \App\Models\Setting::get('footer_aspirasi', 'Balai Desa Munungkerep');
+  $f_wil_desa     = \App\Models\Setting::get('footer_wilayah_desa', 'Munungkerep');
+  $f_wil_kec      = \App\Models\Setting::get('footer_wilayah_kecamatan', 'Kabuh');
+  $f_wil_kab      = \App\Models\Setting::get('footer_wilayah_kabupaten', 'Jombang');
+  $f_wil_prov     = \App\Models\Setting::get('footer_wilayah_provinsi', 'Jawa Timur');
+  $f_wil_kodepos  = \App\Models\Setting::get('footer_wilayah_kodepos', '61455');
+  $f_copyright    = \App\Models\Setting::get('footer_copyright', '© 2026 Pemerintah Desa Munungkerep — Disusun oleh Tim KKN 2026. Seluruh hak dilindungi.');
+
+  $formatWa = function($no) {
+    $clean = preg_replace('/[^0-9]/', '', (string)$no);
+    if (substr($clean, 0, 1) === '0') {
+      $clean = '62' . substr($clean, 1);
+    }
+    return $clean;
+  };
+@endphp
+
 <footer>
   <div class="footer-inner">
     <!-- 1. BRAND DESA -->
@@ -207,19 +233,19 @@
           <img src="/images/kabupaten.png" alt="Logo Kabupaten Jombang" onerror="this.style.display='none'">
         </div>
         <div>
-          <div class="nama-desa">Pemerintah Desa<br>Munungkerep</div>
-          <div class="sub-desa">Sistem Informasi Desa</div>
+          <div class="nama-desa">{!! nl2br(e($f_nama_desa)) !!}</div>
+          <div class="sub-desa">{{ $f_sub_desa }}</div>
         </div>
       </div>
-      <p>Portal resmi Desa Munungkerep untuk transparansi informasi, peta wilayah, dan pelayanan publik bagi seluruh warga dan masyarakat umum.</p>
+      <p>{{ $f_deskripsi }}</p>
     </div>
 
     <!-- 2. INFORMASI LAYANAN -->
     <div class="footer-col">
       <h4>INFORMASI LAYANAN</h4>
       <div class="jam-pelayanan">
-        <div class="jam-title"><i class="fas fa-clock"></i> Jam Kantor Balai Desa:</div>
-        <div class="jam-waktu">Senin – Jumat: 08.00 – 15.00 WIB</div>
+        <div class="jam-title"><i class="fas fa-clock"></i> {{ $f_jam_judul }}</div>
+        <div class="jam-waktu">{{ $f_jam_waktu }}</div>
       </div>
       <a href="javascript:void(0)" onclick="if(typeof bukaModalLayanan === 'function'){ bukaModalLayanan(); } else { window.location.href='/#modal-layanan'; }"><i class="fas fa-file-signature" style="margin-right:8px; font-size:12px; color:#8E9DAA;"></i> Surat Administrasi</a>
       <a href="javascript:void(0)" onclick="if(typeof bukaModalDemografi === 'function'){ bukaModalDemografi(); } else { window.location.href='/#modal-demografi'; }"><i class="fas fa-id-card" style="margin-right:8px; font-size:12px; color:#8E9DAA;"></i> Pelayanan Kependudukan</a>
@@ -234,28 +260,28 @@
         <div class="kontak-icon" style="background: rgba(37, 211, 102, 0.15); color: #25D366;"><i class="fab fa-whatsapp"></i></div>
         <div class="kontak-info">
           <span class="kontak-label">Pengaduan &amp; Call Center:</span>
-          <a href="https://wa.me/6281234922365" target="_blank" class="kontak-val">0812-3492-2365</a>
+          <a href="https://wa.me/{{ $formatWa($f_wa_pengaduan) }}" target="_blank" class="kontak-val">{{ $f_wa_pengaduan }}</a>
         </div>
       </div> 
       <div class="kontak-item">
         <div class="kontak-icon" style="background: rgba(212, 160, 23, 0.15); color: #D4A017;"><i class="fas fa-headset"></i></div>
         <div class="kontak-info">
           <span class="kontak-label">Khusus Layanan Informasi:</span>
-          <a href="https://wa.me/6281234922365" target="_blank" class="kontak-val">0812-3492-2365</a>
+          <a href="https://wa.me/{{ $formatWa($f_wa_layanan) }}" target="_blank" class="kontak-val">{{ $f_wa_layanan }}</a>
         </div>
       </div>
       <div class="kontak-item">
         <div class="kontak-icon" style="background: rgba(22, 104, 163, 0.2); color: #38BDF8;"><i class="fas fa-envelope"></i></div>
         <div class="kontak-info">
           <span class="kontak-label">Email Resmi Desa:</span>
-          <a href="mailto:munungkerep11@gmail.com" class="kontak-val">munungkerep11@gmail.com</a>
+          <a href="mailto:{{ $f_email }}" class="kontak-val">{{ $f_email }}</a>
         </div>
       </div>
       <div class="kontak-item">
         <div class="kontak-icon" style="background: rgba(198, 40, 40, 0.2); color: #ef5350;"><i class="fas fa-box-archive"></i></div>
         <div class="kontak-info">
           <span class="kontak-label">Kotak Aspirasi Warga:</span>
-          <span class="kontak-val" style="font-weight: 500; font-size: 12px;">Balai Desa Munungkerep</span>
+          <span class="kontak-val" style="font-weight: 500; font-size: 12px;">{{ $f_aspirasi }}</span>
         </div>
       </div>
     </div>
@@ -273,16 +299,16 @@
     <div class="footer-col">
       <h4>DETAIL WILAYAH</h4>
       <div class="footer-wilayah">
-        <div class="baris"><span class="label">Desa</span><span class="nilai">Munungkerep</span></div>
-        <div class="baris"><span class="label">Kecamatan</span><span class="nilai">Kabuh</span></div>
-        <div class="baris"><span class="label">Kabupaten</span><span class="nilai">Jombang</span></div>
-        <div class="baris"><span class="label">Provinsi</span><span class="nilai">Jawa Timur</span></div>
-        <div class="baris"><span class="label">Kode Pos</span><span class="nilai">61455</span></div>
+        <div class="baris"><span class="label">Desa</span><span class="nilai">{{ $f_wil_desa }}</span></div>
+        <div class="baris"><span class="label">Kecamatan</span><span class="nilai">{{ $f_wil_kec }}</span></div>
+        <div class="baris"><span class="label">Kabupaten</span><span class="nilai">{{ $f_wil_kab }}</span></div>
+        <div class="baris"><span class="label">Provinsi</span><span class="nilai">{{ $f_wil_prov }}</span></div>
+        <div class="baris"><span class="label">Kode Pos</span><span class="nilai">{{ $f_wil_kodepos }}</span></div>
       </div>
     </div>
   </div>
 
   <div class="footer-bottom">
-    &copy; 2026 Pemerintah Desa Munungkerep — Disusun oleh Tim KKN 2026. Seluruh hak dilindungi.
+    {{ $f_copyright }}
   </div>
 </footer>
