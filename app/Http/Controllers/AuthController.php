@@ -90,7 +90,7 @@ class AuthController extends Controller
 
         // Jika salah password atau username/email
         return back()->withErrors([
-            'login_field' => "Username/Email atau password salah. (Sisa percobaan: {$attemptsLeft}x lagi sebelum IP Anda diblokir)",
+            'login_field' => "Username/Email atau password salah.",
         ])->withInput($request->only('login_field'));
     }
 
