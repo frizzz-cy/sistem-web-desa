@@ -28,21 +28,23 @@ class AuthController extends Controller
         $loginValue = trim((string)$request->input('login_field'));
         $ipAddress  = $request->ip();
 
-        // Kunci pembatasan percobaan login (berdasarkan username/email + IP Address)
-        $throttleKey = Str::transliterate(Str::lower($loginValue).'|'.$ipAddress);
+        // Kunci pembatasan percobaan login (Global per IP Address untuk mencegah gonta-ganti username)
+        $ipThrottleKey = 'login_ip|' . $ipAddress;
 
-        // 1. Cek apakah pengguna terkena batasan coba login (Max: 5 kali gagal dalam 1 menit)
-        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
-            $seconds = RateLimiter::availableIn($throttleKey);
+        // 1. Cek apakah IP ini sudah melebihi 5 kali percobaan gagal
+        if (RateLimiter::tooManyAttempts($ipThrottleKey, 5)) {
+            $seconds = RateLimiter::availableIn($ipThrottleKey);
             
-            Log::warning("[LOGIN_BRUTEFORCE_BLOCKED] Percobaan login diblokir sementara | IP: {$ipAddress} | Akun: {$loginValue} | Tunggu: {$seconds} detik");
+            // HUKUMAN: Otomatis Blokir IP selama 24 Jam
+            \App\Services\IpBlockService::block($ipAddress, 'Brute-force login attack (5x gagal berturut-turut)', 24);
+            
+            Log::alert("[LOGIN_PUNISHMENT_BANNED] IP {$ipAddress} otomatis diblokir 24 jam karena 5x gagal login!");
 
-            // Kirim notifikasi Telegram alert brute force
-            \App\Services\TelegramService::notifyBruteForceBlocked($loginValue, $ipAddress, (string)$request->userAgent(), $seconds);
+            // Kirim notifikasi Telegram alert brute force & auto ban
+            \App\Services\TelegramService::notifyBruteForceBlocked($loginValue, $ipAddress, (string)$request->userAgent(), 86400);
 
-            return back()->withErrors([
-                'login_field' => "Terlalu banyak percobaan login yang gagal. Akses dikunci sementara demi keamanan, silakan coba lagi dalam {$seconds} detik.",
-            ])->withInput($request->only('login_field'));
+            // Lempar langsung ke halaman hukuman (trolling page)
+            return response()->view('errors.blocked', ['ip' => $ipAddress], 403);
         }
 
         // Cek apakah input mengandung '@' (berarti email), jika tidak berarti username
@@ -57,7 +59,7 @@ class AuthController extends Controller
         // Proses pencocokan ke database
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             // Bersihkan riwayat kegagalan login jika berhasil
-            RateLimiter::clear($throttleKey);
+            RateLimiter::clear($ipThrottleKey);
 
             $request->session()->regenerate();
             
@@ -70,18 +72,25 @@ class AuthController extends Controller
             return redirect()->intended('/admin/dashboard'); 
         }
 
-        // 2. Jika gagal login, tambah hitungan kegagalan (Lockout 60 detik setelah 5 kegagalan)
-        RateLimiter::hit($throttleKey, 60);
+        // 2. Tambah hitungan kegagalan untuk IP ini (Masa lockout 5 menit jika tembus limit)
+        RateLimiter::hit($ipThrottleKey, 300);
 
-        $attemptsLeft = RateLimiter::retriesLeft($throttleKey, 5);
+        $attemptsLeft = RateLimiter::retriesLeft($ipThrottleKey, 5);
         Log::warning("[LOGIN_FAILED] Gagal login | Akun: {$loginValue} | IP: {$ipAddress} | Sisa percobaan: {$attemptsLeft}");
+
+        // Jika sudah 0 sisa percobaan, langsung blokir dan lempar ke halaman punishment
+        if ($attemptsLeft <= 0) {
+            \App\Services\IpBlockService::block($ipAddress, 'Brute-force login attack (5x gagal berturut-turut)', 24);
+            \App\Services\TelegramService::notifyBruteForceBlocked($loginValue, $ipAddress, (string)$request->userAgent(), 86400);
+            return response()->view('errors.blocked', ['ip' => $ipAddress], 403);
+        }
 
         // Kirim Notifikasi Login Gagal ke Telegram Bot
         \App\Services\TelegramService::notifyLoginFailed($loginValue, $ipAddress, (string)$request->userAgent(), $attemptsLeft);
 
         // Jika salah password atau username/email
         return back()->withErrors([
-            'login_field' => "Username/Email atau password salah. (Sisa percobaan: {$attemptsLeft})",
+            'login_field' => "Username/Email atau password salah. (Sisa percobaan: {$attemptsLeft}x lagi sebelum IP Anda diblokir)",
         ])->withInput($request->only('login_field'));
     }
 
