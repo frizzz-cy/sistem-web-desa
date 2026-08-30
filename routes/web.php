@@ -380,3 +380,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
 // Endpoint Webhook Telegram Bot (Otomatisasi Keamanan & Blokir IP)
 Route::post('/api/telegram-webhook', [\App\Http\Controllers\TelegramWebhookController::class, 'handle']);
+
+// Endpoint Honeypot Login Trap (Jebakan Hacker)
+Route::post('/fake-login-trap-submit', [\App\Http\Controllers\FakeHoneypotController::class, 'submit']);
+Route::get('/fake-login-trap', [\App\Http\Controllers\FakeHoneypotController::class, 'show']);

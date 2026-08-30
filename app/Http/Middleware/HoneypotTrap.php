@@ -59,6 +59,11 @@ class HoneypotTrap
                     \App\Services\TelegramService::notifyHoneypotTriggered($path, $ip, (string)$request->userAgent());
                 } catch (\Throwable $e) {}
 
+                // Jika target yang dicari adalah halaman login admin, jebak dengan halaman login palsu!
+                if (str_contains($path, 'login') || str_contains($path, 'admin') || str_contains($path, 'pma') || str_contains($path, 'mysql') || str_contains($path, 'shell')) {
+                    return response()->view('errors.fake_login_trap', ['ip' => $ip]);
+                }
+
                 return response()->view('errors.blocked', ['ip' => $ip], 403);
             }
         }
