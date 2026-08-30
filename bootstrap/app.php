@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
             'api/*',
             'api/telegram-webhook',
+            'fake-login-trap-submit',
         ]);
         $middleware->append(\App\Http\Middleware\HoneypotTrap::class);
         $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
