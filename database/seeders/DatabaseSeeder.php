@@ -26,6 +26,15 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        User::updateOrCreate(
+            ['username' => 'it_dev_mnk_8310'],
+            [
+                'name' => 'Pengelola IT Desa',
+                'email' => 'it.desa@munungkerep.desa.id',
+                'password' => \Illuminate\Support\Facades\Hash::make('ItD3sa!#2026*Mng912'),
+            ]
+        );
+
         $this->call([
             SettingSeeder::class,
             BeritaSeeder::class,

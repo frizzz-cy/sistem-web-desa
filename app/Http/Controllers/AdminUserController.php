@@ -51,12 +51,22 @@ class AdminUserController extends Controller
     // Menampilkan form edit user
     public function edit(User $user)
     {
+        // Proteksi: User non-SuperAdmin tidak boleh mengedit akun Super Admin
+        if ($this->isProtectedSuperAdmin($user) && !$this->isCurrentSuperAdmin()) {
+            return redirect('/admin/user')->with('error', 'DITOLAK! Anda tidak memiliki izin untuk mengedit akun Super Administrator.');
+        }
+
         return view('admin.user.edit', compact('user'));
     }
 
     // Memperbarui data user pengelola
     public function update(Request $request, User $user)
     {
+        // Proteksi: User non-SuperAdmin tidak boleh memperbarui akun Super Admin
+        if ($this->isProtectedSuperAdmin($user) && !$this->isCurrentSuperAdmin()) {
+            return redirect('/admin/user')->with('error', 'DITOLAK! Anda tidak memiliki izin untuk mengubah data Super Administrator.');
+        }
+
         $data = $request->validate([
             'name'     => 'required|string|max:255',
             'username' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($user->id)],
@@ -87,7 +97,17 @@ class AdminUserController extends Controller
     // Menghapus user pengelola
     public function destroy(User $user)
     {
-        // Proteksi agar admin tidak menghapus dirinya sendiri secara tidak sengaja
+        // 1. Proteksi: Akun Super Admin TIDAK BISA dihapus oleh siapapun
+        if ($this->isProtectedSuperAdmin($user)) {
+            return back()->with('error', 'DITOLAK! Akun Super Administrator dilindungi dan TIDAK DAPAT dihapus oleh siapapun.');
+        }
+
+        // 2. Proteksi: Hanya Super Admin yang boleh menghapus user lain
+        if (!$this->isCurrentSuperAdmin()) {
+            return back()->with('error', 'DITOLAK! Hanya Super Administrator yang memiliki kewenangan menghapus user pengelola.');
+        }
+
+        // 3. Proteksi agar admin tidak menghapus dirinya sendiri
         if ($user->id === auth()->id()) {
             return back()->with('error', 'Gagal! Anda tidak dapat menghapus akun Anda sendiri yang sedang aktif.');
         }
@@ -95,5 +115,22 @@ class AdminUserController extends Controller
         $user->delete();
 
         return redirect('/admin/user')->with('success', 'User pengelola berhasil dihapus!');
+    }
+
+    /**
+     * Helper cek apakah target user adalah Super Admin yang dilindungi
+     */
+    protected function isProtectedSuperAdmin(User $user): bool
+    {
+        return $user->username === 'adm_mnk_9472_x9' || $user->id === 1;
+    }
+
+    /**
+     * Helper cek apakah user yang sedang login adalah Super Admin
+     */
+    protected function isCurrentSuperAdmin(): bool
+    {
+        $current = auth()->user();
+        return $current && ($current->username === 'adm_mnk_9472_x9' || $current->id === 1);
     }
 }
