@@ -1,0 +1,73 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Response;
+
+class HoneypotTrap
+{
+    /**
+     * Daftar endpoint jebakan (Honeypot) yang sering dipindai oleh bot/hacker
+     */
+    protected array $honeypotPaths = [
+        'wp-login.php', 'wp-admin', 'xmlrpc.php', 'wp-content', 'wp-includes',
+        'phpmyadmin', 'pma', 'adminer.php', 'mysql', 'dbadmin',
+        '.env', '.git', '.aws', 'config.json', 'web.config',
+        'shell.php', 'wso.php', 'alfa.php', 'c99.php', 'r57.php',
+        'eval-stdin.php', 'index.php/wp-login', 'vendor/phpunit'
+    ];
+
+    /**
+     * Handle an incoming request and check if IP is blacklisted or hitting honeypot.
+     */
+    public function handle(Request $request, Closure $next): Response
+    {
+        $ip = $request->ip();
+        $cacheKey = "banned_ip_{$ip}";
+
+        // 1. Cek apakah IP ini sedang dalam daftar blokir sementara
+        try {
+            if (Cache::has($cacheKey)) {
+                return response(
+                    '<h2 style="font-family:sans-serif;color:#DC2626;text-align:center;margin-top:20vh;">403 Forbidden</h2>' .
+                    '<p style="font-family:sans-serif;text-align:center;color:#475569;">Akses IP Anda diblokir sementara oleh sistem keamanan otomatis karena aktivitas mencurigakan.</p>',
+                    403
+                )->header('Content-Type', 'text/html');
+            }
+        } catch (\Throwable $e) {
+            // Lanjutkan jika cache tidak dapat diakses
+        }
+
+        // 2. Cek apakah request mengakses endpoint jebakan
+        $path = strtolower(trim($request->path(), '/'));
+        
+        foreach ($this->honeypotPaths as $trap) {
+            if ($path === $trap || str_starts_with($path, $trap . '/') || str_contains($path, $trap)) {
+                // Blokir IP ini selama 24 Jam (86.400 detik) di Cache
+                try {
+                    Cache::put($cacheKey, true, now()->addHours(24));
+                } catch (\Throwable $e) {
+                    // Abaikan kegagalan cache
+                }
+
+                try {
+                    Log::alert("[HONEYPOT_TRIGGERED] IP Hacker terperangkap & diblokir 24 jam! | IP: {$ip} | Path: {$path} | UA: " . $request->userAgent());
+                } catch (\Throwable $e) {
+                    // Abaikan kegagalan log
+                }
+
+                return response(
+                    '<h2 style="font-family:sans-serif;color:#DC2626;text-align:center;margin-top:20vh;">403 Forbidden</h2>' .
+                    '<p style="font-family:sans-serif;text-align:center;color:#475569;">Aktivitas mencurigakan terdeteksi. Akses Anda telah diblokir secara otomatis.</p>',
+                    403
+                )->header('Content-Type', 'text/html');
+            }
+        }
+
+        return $next($request);
+    }
+}
