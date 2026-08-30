@@ -376,5 +376,4 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
     Route::get('pengaturan/footer', [AdminSettingController::class, 'footer'])->name('admin.pengaturan.footer');
     Route::post('pengaturan/footer', [AdminSettingController::class, 'updateFooter']);
-    Route::post('pengaturan/telegram-test', [AdminSettingController::class, 'testTelegram']);
 });
