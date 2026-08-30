@@ -32,11 +32,7 @@ class HoneypotTrap
         // 1. Cek apakah IP ini sedang dalam daftar blokir (Permanen / Sementara)
         try {
             if (\App\Services\IpBlockService::isBlocked($ip)) {
-                return response(
-                    '<h2 style="font-family:sans-serif;color:#DC2626;text-align:center;margin-top:20vh;">403 Forbidden</h2>' .
-                    '<p style="font-family:sans-serif;text-align:center;color:#475569;">Akses IP (' . htmlspecialchars($ip) . ') diblokir oleh sistem keamanan administrator karena aktivitas mencurigakan.</p>',
-                    403
-                )->header('Content-Type', 'text/html');
+                return response()->view('errors.blocked', ['ip' => $ip], 403);
             }
         } catch (\Throwable $e) {
             // Lanjutkan jika cache tidak dapat diakses
@@ -63,11 +59,7 @@ class HoneypotTrap
                     \App\Services\TelegramService::notifyHoneypotTriggered($path, $ip, (string)$request->userAgent());
                 } catch (\Throwable $e) {}
 
-                return response(
-                    '<h2 style="font-family:sans-serif;color:#DC2626;text-align:center;margin-top:20vh;">403 Forbidden</h2>' .
-                    '<p style="font-family:sans-serif;text-align:center;color:#475569;">Aktivitas mencurigakan terdeteksi. Akses Anda telah diblokir secara otomatis.</p>',
-                    403
-                )->header('Content-Type', 'text/html');
+                return response()->view('errors.blocked', ['ip' => $ip], 403);
             }
         }
 
