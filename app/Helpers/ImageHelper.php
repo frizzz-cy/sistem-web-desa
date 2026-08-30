@@ -18,9 +18,22 @@ class ImageHelper
      */
     public static function uploadAndCompress(UploadedFile $file, string $folder, int $maxWidth = 1000, int $quality = 80): ?string
     {
-        // 1. Dapatkan ekstensi asli dan load file ke GD image resource
-        $extension = strtolower($file->getClientOriginalExtension());
+        // 0. Sanitasi folder tujuan dari ancaman Directory Traversal
+        $folder = trim(str_replace(['..', '\\', "\0"], '', $folder), '/');
+
+        // 1. Validasi Keamanan Ekstensi & MIME-Type (Mencegah Upload Web Shell / Script PHP)
+        $dangerousExtensions = ['php', 'phtml', 'php3', 'php4', 'php5', 'phps', 'phar', 'sh', 'exe', 'cgi', 'pl', 'asp', 'aspx', 'jsp', 'htaccess', 'js', 'html', 'htm'];
+        $extension = strtolower((string)$file->getClientOriginalExtension());
+        $mimeType = strtolower((string)$file->getMimeType());
+
+        if (in_array($extension, $dangerousExtensions) || !str_starts_with($mimeType, 'image/')) {
+            return null; // Tolak unggahan berbahaya
+        }
+
         $filePath = $file->getRealPath();
+        if (!$filePath || !file_exists($filePath)) {
+            return null;
+        }
 
         switch ($extension) {
             case 'jpeg':
@@ -37,13 +50,14 @@ class ImageHelper
                 $srcImage = @imagecreatefromwebp($filePath);
                 break;
             default:
-                // Jika ekstensi tidak didukung GD secara bawaan, simpan biasa
-                return $file->store($folder, 'public');
+                // Jika ekstensi gambar lain yang valid (misal SVG / ICO)
+                $safeName = uniqid('file_', true) . '.' . $extension;
+                return $file->storeAs($folder, $safeName, 'public');
         }
 
         if (!$srcImage) {
-            // Fallback ke penyimpanan biasa jika gagal meload resource
-            return $file->store($folder, 'public');
+            $safeName = uniqid('file_', true) . '.' . $extension;
+            return $file->storeAs($folder, $safeName, 'public');
         }
 
         // 2. Hitung ukuran baru dengan mempertahankan aspect ratio
