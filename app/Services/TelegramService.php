@@ -96,6 +96,69 @@ class TelegramService
     }
 
     /**
+     * Kirim Notifikasi Honeypot / Scanner Bot Terdeteksi & Diblokir
+     */
+    public static function notifyHoneypotTriggered(string $path, string $ip, string $userAgent): void
+    {
+        // Rate-limit notifikasi agar tidak spamming jika bot memindai 100 URL sekaligus
+        $cacheKey = "tele_notif_honeypot_{$ip}";
+        try {
+            if (\Illuminate\Support\Facades\Cache::has($cacheKey)) {
+                return;
+            }
+            \Illuminate\Support\Facades\Cache::put($cacheKey, true, now()->addMinutes(5));
+        } catch (\Throwable $e) {}
+
+        $waktu = now()->locale('id')->isoFormat('dddd, D MMMM Y - HH:mm:ss') . ' WIB';
+        $device = self::parseUserAgent($userAgent);
+
+        $msg = "🪤 <b>PERINGATAN: SCANNER BOT / HACKER TERPERANGKAP!</b>\n\n"
+             . "🎯 <b>Target Path:</b> <code>/{$path}</code>\n"
+             . "🌐 <b>Alamat IP:</b> <code>{$ip}</code>\n"
+             . "💻 <b>Scanner / Tool:</b> {$device}\n"
+             . "⛔ <b>Tindakan Sistem:</b> <b>IP DIBLOKIR OTOMATIS 24 JAM!</b>\n"
+             . "⏰ <b>Waktu:</b> {$waktu}\n\n"
+             . "<i>Sistem Honeypot berhasil menetralkan pemindaian otomatis ini.</i>";
+
+        self::sendMessage($msg);
+    }
+
+    /**
+     * Kirim Notifikasi Serangan WAF (SQL Injection / XSS / LFI) Terblokir
+     */
+    public static function notifyAttackBlocked(string $type, string $ip, string $userAgent, string $uri): void
+    {
+        // Rate-limit notifikasi agar tidak spamming
+        $cacheKey = "tele_notif_waf_{$ip}_{$type}";
+        try {
+            if (\Illuminate\Support\Facades\Cache::has($cacheKey)) {
+                return;
+            }
+            \Illuminate\Support\Facades\Cache::put($cacheKey, true, now()->addMinutes(5));
+        } catch (\Throwable $e) {}
+
+        $waktu = now()->locale('id')->isoFormat('dddd, D MMMM Y - HH:mm:ss') . ' WIB';
+        $device = self::parseUserAgent($userAgent);
+
+        $typeLabel = match($type) {
+            'BAD_BOT_SCANNER' => 'Vulnerability Scanner / Bad Bot',
+            'MALICIOUS_URI_ATTACK' => 'Eksploitasi SQLi / XSS / LFI Attack',
+            'SENSITIVE_FILE_ACCESS' => 'Percobaan Akses File Sensitif (.env / .git)',
+            default => $type
+        };
+
+        $msg = "🛑 <b>FIREWALL WAF: SERANGAN TERBLOKIR!</b>\n\n"
+             . "⚠️ <b>Jenis Serangan:</b> {$typeLabel}\n"
+             . "🎯 <b>Target URL/Payload:</b> <code>{$uri}</code>\n"
+             . "🌐 <b>IP Penyerang:</b> <code>{$ip}</code>\n"
+             . "💻 <b>User-Agent:</b> {$device}\n"
+             . "🛡️ <b>Status:</b> Akses Ditolak (HTTP 403 Forbidden)\n"
+             . "⏰ <b>Waktu:</b> {$waktu}";
+
+        self::sendMessage($msg);
+    }
+
+    /**
      * Helper sederhana parse User-Agent
      */
     public static function parseUserAgent(string $ua): string

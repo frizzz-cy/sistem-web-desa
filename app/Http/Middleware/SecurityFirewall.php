@@ -80,7 +80,7 @@ class SecurityFirewall
     }
 
     /**
-     * Catat log aktivitas serangan untuk pemantauan keamanan
+     * Catat log aktivitas serangan dan kirim notifikasi ke Telegram Bot
      */
     protected function logAttack(string $type, string $ip, string $userAgent, string $uri): void
     {
@@ -88,6 +88,12 @@ class SecurityFirewall
             Log::warning("[SECURITY_FIREWALL_BLOCK] Type: {$type} | IP: {$ip} | URI: {$uri} | UA: {$userAgent}");
         } catch (\Throwable $e) {
             // Abaikan kegagalan log
+        }
+
+        try {
+            \App\Services\TelegramService::notifyAttackBlocked($type, $ip, $userAgent, $uri);
+        } catch (\Throwable $e) {
+            // Abaikan kegagalan notifikasi
         }
     }
 }
