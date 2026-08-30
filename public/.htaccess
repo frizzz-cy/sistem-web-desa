@@ -111,4 +111,22 @@
     Header set X-XSS-Protection "1; mode=block"
     Header set X-Frame-Options "SAMEORIGIN"
     Header set Referrer-Policy "strict-origin-when-cross-origin"
+    Header set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+    Header unset X-Powered-By
 </IfModule>
+
+# =========================================================================
+# 4. SERVER HARDENING & ACCESS CONTROL
+# =========================================================================
+# Nonaktifkan metode HTTP yang rentan (TRACE / TRACK)
+<IfModule mod_rewrite.c>
+    RewriteCond %{REQUEST_METHOD} ^(TRACE|TRACK) [NC]
+    RewriteRule .* - [F]
+</IfModule>
+
+# Blokir akses ke file sensitif (.env, .git, .sql, .bak, .log, composer, package)
+<FilesMatch "(\.(env|git|htaccess|htpasswd|sql|bak|log|ini|sh|yaml|yml)|composer\.(json|lock)|package\.(json|lock)|artisan)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+

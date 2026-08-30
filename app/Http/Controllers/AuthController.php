@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -13,16 +16,31 @@ class AuthController extends Controller
         return view('login');
     }
 
-    // Memproses Data Login
+    // Memproses Data Login dengan Proteksi Anti Brute-Force
     public function login(Request $request)
     {
         // Validasi input form
         $request->validate([
-            'login_field' => 'required',
-            'password'    => 'required'
+            'login_field' => 'required|string|max:100',
+            'password'    => 'required|string|max:255'
         ]);
 
-        $loginValue = $request->input('login_field');
+        $loginValue = trim((string)$request->input('login_field'));
+        $ipAddress  = $request->ip();
+
+        // Kunci pembatasan percobaan login (berdasarkan username/email + IP Address)
+        $throttleKey = Str::transliterate(Str::lower($loginValue).'|'.$ipAddress);
+
+        // 1. Cek apakah pengguna terkena batasan coba login (Max: 5 kali gagal dalam 1 menit)
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            
+            Log::warning("[LOGIN_BRUTEFORCE_BLOCKED] Percobaan login diblokir sementara | IP: {$ipAddress} | Akun: {$loginValue} | Tunggu: {$seconds} detik");
+
+            return back()->withErrors([
+                'login_field' => "Terlalu banyak percobaan login yang gagal. Akses dikunci sementara demi keamanan, silakan coba lagi dalam {$seconds} detik.",
+            ])->withInput($request->only('login_field'));
+        }
 
         // Cek apakah input mengandung '@' (berarti email), jika tidak berarti username
         $loginType = filter_var($loginValue, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
@@ -34,16 +52,27 @@ class AuthController extends Controller
         ];
 
         // Proses pencocokan ke database
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, $request->filled('remember'))) {
+            // Bersihkan riwayat kegagalan login jika berhasil
+            RateLimiter::clear($throttleKey);
+
             $request->session()->regenerate();
             
+            Log::info("[LOGIN_SUCCESS] User berhasil login | ID: " . Auth::id() . " | IP: {$ipAddress}");
+
             // SETELAH LOGIN BERHASIL, ARAHKAN KE DASHBOARD ADMIN
             return redirect()->intended('/admin/dashboard'); 
         }
 
+        // 2. Jika gagal login, tambah hitungan kegagalan (Lockout 60 detik setelah 5 kegagalan)
+        RateLimiter::hit($throttleKey, 60);
+
+        $attemptsLeft = RateLimiter::retriesLeft($throttleKey, 5);
+        Log::warning("[LOGIN_FAILED] Gagal login | Akun: {$loginValue} | IP: {$ipAddress} | Sisa percobaan: {$attemptsLeft}");
+
         // Jika salah password atau username/email
         return back()->withErrors([
-            'login_field' => 'Username/Email atau password yang Anda masukkan salah.',
+            'login_field' => "Username/Email atau password salah. (Sisa percobaan: {$attemptsLeft})",
         ])->withInput($request->only('login_field'));
     }
 
