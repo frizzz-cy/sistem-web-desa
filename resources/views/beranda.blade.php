@@ -1244,8 +1244,18 @@
     document.getElementById('detail-bd-img').src = foto;
     document.getElementById('detail-bd-img').alt = judul;
     
+    // Sanitasi XSS ketat sebelum injeksi ke innerHTML
+    const cleanIsi = (isi || '')
+        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+        .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
+        .replace(/<object\b[^<]*(?:(?!<\/object>)<[^<]*)*<\/object>/gi, '')
+        .replace(/<embed\b[^<]*(?:(?!<\/embed>)<[^<]*)*<\/embed>/gi, '')
+        .replace(/on\w+\s*=\s*(["\']).*?\1/gi, '')
+        .replace(/on\w+\s*=\s*[^>\s]+/gi, '')
+        .replace(/javascript\s*:/gi, '');
+
     const contentDiv = document.getElementById('detail-bd-content');
-    contentDiv.innerHTML = isi;
+    contentDiv.innerHTML = cleanIsi;
     
     // Kirim request AJAX (fetch) untuk menambah jumlah tayang secara asinkronus
     if (id) {

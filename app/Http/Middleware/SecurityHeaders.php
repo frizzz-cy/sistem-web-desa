@@ -30,6 +30,14 @@ class SecurityHeaders
         // Batasi izin hardware browser (Geolocation, Kamera, Mikrofon) jika tidak dibutuhkan
         $response->headers->set('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
 
+        // Content Security Policy (CSP) untuk membatasi eksekusi resource pihak ketiga yang tidak diizinkan
+        $response->headers->set('Content-Security-Policy', "default-src 'self' https: data: 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https: blob:; font-src 'self' https: data:; frame-ancestors 'self';");
+
+        // HSTS (HTTP Strict Transport Security) jika koneksi HTTPS
+        if ($request->isSecure()) {
+            $response->headers->set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+        }
+
         // Hapus header identitas teknologi / PHP jika header belum dikirim
         if (!headers_sent() && function_exists('header_remove')) {
             @header_remove('X-Powered-By');
