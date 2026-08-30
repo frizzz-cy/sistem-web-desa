@@ -560,7 +560,9 @@ class AdminSettingController extends Controller
             'wilayah_kabupaten' => Setting::get('footer_wilayah_kabupaten', 'Jombang'),
             'wilayah_provinsi' => Setting::get('footer_wilayah_provinsi', 'Jawa Timur'),
             'wilayah_kodepos' => Setting::get('footer_wilayah_kodepos', '61455'),
-            'copyright' => Setting::get('footer_copyright', '© 2026 Pemerintah Desa Munungkerep — Disusun oleh Tim KKN 2026. Seluruh hak dilindungi.')
+            'copyright' => Setting::get('footer_copyright', '© 2026 Pemerintah Desa Munungkerep — Disusun oleh Tim KKN 2026. Seluruh hak dilindungi.'),
+            'telegram_bot_token' => Setting::get('telegram_bot_token', ''),
+            'telegram_chat_id' => Setting::get('telegram_chat_id', '')
         ];
 
         return view('admin.pengaturan.footer', compact('footer_settings'));
@@ -583,14 +585,44 @@ class AdminSettingController extends Controller
             'footer_wilayah_kabupaten' => 'wilayah_kabupaten',
             'footer_wilayah_provinsi' => 'wilayah_provinsi',
             'footer_wilayah_kodepos' => 'wilayah_kodepos',
-            'footer_copyright' => 'copyright'
+            'footer_copyright' => 'copyright',
+            'telegram_bot_token' => 'telegram_bot_token',
+            'telegram_chat_id' => 'telegram_chat_id'
         ];
 
         foreach ($fields as $key => $inputName) {
             Setting::set($key, $request->input($inputName, ''));
         }
 
-        return redirect('/admin/pengaturan/footer')->with('success', 'Pengaturan Footer, Kontak Pengaduan, dan Wilayah Desa berhasil diperbarui!');
+        return redirect('/admin/pengaturan/footer')->with('success', 'Pengaturan Footer, Kontak Pengaduan, dan Notifikasi Telegram berhasil diperbarui!');
+    }
+
+    public function testTelegram(Request $request)
+    {
+        $botToken = $request->input('telegram_bot_token') ?: Setting::get('telegram_bot_token');
+        $chatId   = $request->input('telegram_chat_id') ?: Setting::get('telegram_chat_id');
+
+        if (empty($botToken) || empty($chatId)) {
+            return back()->with('error', 'Gagal mengirim tes! Pastikan Bot Token dan Chat ID Telegram telah diisi.');
+        }
+
+        // Simpan token sementara jika ada perubahan
+        Setting::set('telegram_bot_token', $botToken);
+        Setting::set('telegram_chat_id', $chatId);
+
+        $testMsg = "🔔 <b>TES KONEKSI TELEGRAM KEAMANAN BERHASIL!</b>\n\n"
+                 . "📍 <b>Sistem:</b> Website Resmi Desa Munungkerep\n"
+                 . "🌐 <b>Status:</b> Bot Telegram Siap Menerima Notifikasi Login & Alert Keamanan\n"
+                 . "⏰ <b>Waktu:</b> " . now()->format('d M Y - H:i:s') . " WIB\n\n"
+                 . "<i>Notifikasi login IP & perangkat akan otomatis dikirim ke chat ini setiap kali ada yang login ke admin!</i>";
+
+        $success = \App\Services\TelegramService::sendMessage($testMsg);
+
+        if ($success) {
+            return back()->with('success', 'Berhasil! Pesan tes keamanan telah terkirim ke Telegram Bot Anda.');
+        }
+
+        return back()->with('error', 'Gagal mengirim pesan ke Telegram! Periksa kembali Bot Token dan Chat ID Anda.');
     }
 
     // =========================================================================

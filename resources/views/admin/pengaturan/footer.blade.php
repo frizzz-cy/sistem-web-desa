@@ -145,10 +145,40 @@
                 </div>
             </div>
 
-            <!-- 5. COPYRIGHT FOOTER -->
+            <!-- 5. NOTIFIKASI KEAMANAN & LOGIN KE TELEGRAM BOT -->
+            <div class="setting-section" style="border-left: 4px solid #0284C7; background: #F0F9FF;">
+                <div class="section-header" style="color: #0369A1;">
+                    <span>✈️ 5. Notifikasi Keamanan &amp; Login IP ke Telegram Bot</span>
+                </div>
+                <p style="font-size: 13px; color: #475569; margin-top: 0; margin-bottom: 16px;">
+                    Setiap kali ada admin atau user yang login (atau percobaan serangan gagal), sistem akan otomatis mengirimkan detail <b>Alamat IP</b>, <b>Perangkat &amp; Browser</b>, serta <b>Waktu Login</b> ke akun Telegram Anda.
+                </p>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 16px;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-size: 12.5px; font-weight: 700; color: #0369A1;">🤖 Telegram Bot Token</label>
+                        <input type="text" name="telegram_bot_token" id="input_bot_token" value="{{ $footer_settings['telegram_bot_token'] ?? '' }}" placeholder="Contoh: 7123456789:AAFlkjh89sd7f98s7df...">
+                        <small style="color: #64748B; font-size: 11px;">Didapat dari <b>@BotFather</b> di Telegram.</small>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label style="font-size: 12.5px; font-weight: 700; color: #0369A1;">🆔 Telegram Chat ID (ID Akun/Grup Anda)</label>
+                        <input type="text" name="telegram_chat_id" id="input_chat_id" value="{{ $footer_settings['telegram_chat_id'] ?? '' }}" placeholder="Contoh: 123456789 atau -100123456789">
+                        <small style="color: #64748B; font-size: 11px;">Didapat dari <b>@userinfobot</b> atau <b>@getidsbot</b> di Telegram.</small>
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding-top: 8px; border-top: 1px dashed #BAE6FD;">
+                    <span style="font-size: 12px; color: #0369A1; font-weight: 600;">Tes apakah bot sudah terhubung dengan benar:</span>
+                    <button type="submit" formaction="/admin/pengaturan/telegram-test" class="btn btn-secondary" style="background: #E0F2FE; color: #0369A1; border: 1.5px solid #BAE6FD; font-size: 12.5px; font-weight: 700;">
+                        🔔 Kirim Tes Notifikasi ke Telegram
+                    </button>
+                </div>
+            </div>
+
+            <!-- 6. COPYRIGHT FOOTER -->
             <div class="setting-section">
                 <div class="section-header">
-                    <span>©️ 5. Baris Hak Cipta (Copyright Bawah)</span>
+                    <span>©️ 6. Baris Hak Cipta (Copyright Bawah)</span>
                 </div>
                 <div class="form-group" style="margin-bottom: 0;">
                     <label style="font-size: 12.5px; font-weight: 700;">Teks Copyright Paling Bawah</label>
@@ -160,7 +190,7 @@
             <div style="background: #F8FAFC; border: 1.5px solid var(--border); padding: 18px 24px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-top: 10px;">
                 <span style="font-size: 13px; color: var(--teks-muted);">Periksa kembali formulir di atas sebelum menyimpan.</span>
                 <button type="submit" class="btn btn-primary" style="padding: 12px 28px; font-size: 14.5px;">
-                    Simpan Pengaturan Footer
+                    Simpan Seluruh Pengaturan
                 </button>
             </div>
         </form>

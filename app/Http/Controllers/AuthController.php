@@ -37,6 +37,9 @@ class AuthController extends Controller
             
             Log::warning("[LOGIN_BRUTEFORCE_BLOCKED] Percobaan login diblokir sementara | IP: {$ipAddress} | Akun: {$loginValue} | Tunggu: {$seconds} detik");
 
+            // Kirim notifikasi Telegram alert brute force
+            \App\Services\TelegramService::notifyBruteForceBlocked($loginValue, $ipAddress, (string)$request->userAgent(), $seconds);
+
             return back()->withErrors([
                 'login_field' => "Terlalu banyak percobaan login yang gagal. Akses dikunci sementara demi keamanan, silakan coba lagi dalam {$seconds} detik.",
             ])->withInput($request->only('login_field'));
@@ -60,6 +63,9 @@ class AuthController extends Controller
             
             Log::info("[LOGIN_SUCCESS] User berhasil login | ID: " . Auth::id() . " | IP: {$ipAddress}");
 
+            // Kirim Notifikasi Login Berhasil ke Telegram Bot
+            \App\Services\TelegramService::notifyLoginSuccess(Auth::user(), $ipAddress, (string)$request->userAgent());
+
             // SETELAH LOGIN BERHASIL, ARAHKAN KE DASHBOARD ADMIN
             return redirect()->intended('/admin/dashboard'); 
         }
@@ -69,6 +75,9 @@ class AuthController extends Controller
 
         $attemptsLeft = RateLimiter::retriesLeft($throttleKey, 5);
         Log::warning("[LOGIN_FAILED] Gagal login | Akun: {$loginValue} | IP: {$ipAddress} | Sisa percobaan: {$attemptsLeft}");
+
+        // Kirim Notifikasi Login Gagal ke Telegram Bot
+        \App\Services\TelegramService::notifyLoginFailed($loginValue, $ipAddress, (string)$request->userAgent(), $attemptsLeft);
 
         // Jika salah password atau username/email
         return back()->withErrors([
