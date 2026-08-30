@@ -60,6 +60,11 @@ class HoneypotTrap
                     // Abaikan kegagalan log
                 }
 
+                // Kirim notifikasi bahaya hacker/scanner terdeteksi ke Telegram Bot
+                try {
+                    \App\Services\TelegramService::notifyHoneypotTriggered($path, $ip, (string)$request->userAgent());
+                } catch (\Throwable $e) {}
+
                 return response(
                     '<h2 style="font-family:sans-serif;color:#DC2626;text-align:center;margin-top:20vh;">403 Forbidden</h2>' .
                     '<p style="font-family:sans-serif;text-align:center;color:#475569;">Aktivitas mencurigakan terdeteksi. Akses Anda telah diblokir secara otomatis.</p>',
