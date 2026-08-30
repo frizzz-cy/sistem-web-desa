@@ -17,8 +17,8 @@ class AdminMediaController extends Controller
 
         foreach ($allFiles as $file) {
             $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-            // Filter hanya file gambar saja
-            if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'])) {
+            // Filter hanya file gambar aman (tanpa SVG untuk mencegah embedded script)
+            if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
                 // Kelompokkan folder
                 $parts = explode('/', $file);
                 $folder = count($parts) > 1 ? $parts[0] : 'umum';
@@ -51,7 +51,7 @@ class AdminMediaController extends Controller
 
         foreach ($allFiles as $file) {
             $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-            if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'])) {
+            if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
                 $parts = explode('/', $file);
                 $folder = count($parts) > 1 ? $parts[0] : 'umum';
 
@@ -117,10 +117,14 @@ class AdminMediaController extends Controller
     // Menghapus file media dari disk penyimpanan
     public function destroy(Request $request)
     {
-        $path = $request->input('path');
+        $rawPath = $request->input('path');
 
-        // Pastikan file ada di public disk (proteksi path traversal)
-        if ($path && Storage::disk('public')->exists($path)) {
+        // Sanitasi ketat untuk mencegah Path Traversal (../../.env)
+        $path = str_replace(["\0", '..', '\\'], '', (string)$rawPath);
+        $path = ltrim($path, '/');
+
+        // Pastikan file berada di dalam root public disk dan benar-benar ada
+        if (!empty($path) && Storage::disk('public')->exists($path)) {
             Storage::disk('public')->delete($path);
             return redirect('/admin/media')->with('success', 'Aset media berhasil dihapus secara permanen.');
         }
