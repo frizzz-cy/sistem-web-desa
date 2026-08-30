@@ -118,7 +118,7 @@ function submitHoneypot(e) {
     if (attempts >= 5 && attempts % 5 === 0) {
       alertBox.textContent = 'Terlalu banyak percobaan login yang gagal. Akses dikunci sementara demi keamanan, silakan coba lagi dalam 59 detik.';
     } else {
-      alertBox.textContent = `Username/Email atau password salah. (Sisa percobaan: ${retriesLeft})`;
+      alertBox.textContent = 'Username/Email atau password salah.';
     }
 
     alertBox.style.display = 'block';
