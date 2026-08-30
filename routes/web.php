@@ -332,7 +332,7 @@ Route::get('/produk', [ProdukController::class, 'index']);
 
 // Fitur Auth (Login & Logout)
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login')->middleware('guest');
-Route::post('/login', [AuthController::class, 'login'])->middleware('guest');
+Route::post('/login', [AuthController::class, 'login'])->middleware(['guest', 'throttle:5,1']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth');
 
 

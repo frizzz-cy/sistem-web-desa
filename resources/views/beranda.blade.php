@@ -1218,6 +1218,16 @@
 
 <script>
   // ================= LOGIKA BUKA/TUTUP HALAMAN BERITA =================
+  function sanitizeImageUrl(url) {
+    try {
+      const parsed = new URL(url, window.location.origin);
+      if (parsed.protocol === 'http:' || parsed.protocol === 'https:') {
+        return parsed.href.replace(/["'<>]/g, '');
+      }
+    } catch (e) {}
+    return '';
+  }
+
   function bukaBerita(link) {
     const id = link.getAttribute('data-id');
     const judul = link.getAttribute('data-judul');
@@ -1227,14 +1237,16 @@
     const views = link.getAttribute('data-views');
     let isi = link.querySelector('.berita-isi-full').textContent;
 
-    // Parse Markdown image syntax: ![](URL)
+    // Parse Markdown image syntax: ![](URL) dengan sanitasi URL ketat
     isi = isi.replace(/!\[.*?\]\((https?:\/\/[^\s)]+)\)/gi, (match, url) => {
-        return `<img src="${url}" style="max-width:100%; border-radius:8px; display:block; margin:16px auto; box-shadow:0 4px 12px rgba(0,0,0,0.08);">`;
+        const safeUrl = sanitizeImageUrl(url);
+        return safeUrl ? `<img src="${safeUrl}" style="max-width:100%; border-radius:8px; display:block; margin:16px auto; box-shadow:0 4px 12px rgba(0,0,0,0.08);">` : '';
     });
 
-    // Parse raw image URLs on their own line (wrapped in <p>)
-    isi = isi.replace(/<p>\s*(https?:\/\/[^\s<]+\.(?:jpg|jpeg|png|gif|webp|svg)(?:\?[^\s<]+)?)\s*<\/p>/gi, (match, url) => {
-        return `<img src="${url}" style="max-width:100%; border-radius:8px; display:block; margin:16px auto; box-shadow:0 4px 12px rgba(0,0,0,0.08);">`;
+    // Parse raw image URLs on their own line (wrapped in <p>) dengan sanitasi URL ketat
+    isi = isi.replace(/<p>\s*(https?:\/\/[^\s<]+\.(?:jpg|jpeg|png|gif|webp)(?:\?[^\s<]+)?)\s*<\/p>/gi, (match, url) => {
+        const safeUrl = sanitizeImageUrl(url);
+        return safeUrl ? `<img src="${safeUrl}" style="max-width:100%; border-radius:8px; display:block; margin:16px auto; box-shadow:0 4px 12px rgba(0,0,0,0.08);">` : '';
     });
     
     document.getElementById('detail-bd-badge').textContent = kategori;

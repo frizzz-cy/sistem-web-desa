@@ -17,7 +17,11 @@ class AdminMediaController extends Controller
 
         foreach ($allFiles as $file) {
             $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+<<<<<<< HEAD
             // Filter hanya file gambar aman (tanpa SVG untuk mencegah embedded script)
+=======
+            // Filter hanya file gambar raster aman saja (tanpa SVG untuk mencegah inline XSS)
+>>>>>>> a174d6d (feat: add media management controller and home page view with routing)
             if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
                 // Kelompokkan folder
                 $parts = explode('/', $file);
@@ -114,17 +118,27 @@ class AdminMediaController extends Controller
         return redirect('/admin/media')->with('error', 'Gagal mengunggah berkas media.');
     }
 
-    // Menghapus file media dari disk penyimpanan
+    // Menghapus file media dari disk penyimpanan dengan proteksi path traversal ketat
     public function destroy(Request $request)
     {
-        $rawPath = $request->input('path');
+        $rawPath = (string) $request->input('path');
 
-        // Sanitasi ketat untuk mencegah Path Traversal (../../.env)
-        $path = str_replace(["\0", '..', '\\'], '', (string)$rawPath);
-        $path = ltrim($path, '/');
+        // Proteksi Path Traversal & karakter terlarang
+        if (empty($rawPath) || str_contains($rawPath, '..') || str_contains($rawPath, "\0") || str_starts_with($rawPath, '/') || str_starts_with($rawPath, '\\')) {
+            return redirect('/admin/media')->with('error', 'Path berkas tidak valid atau dilarang.');
+        }
 
-        // Pastikan file berada di dalam root public disk dan benar-benar ada
-        if (!empty($path) && Storage::disk('public')->exists($path)) {
+        $path = ltrim($rawPath, '/');
+
+        // Pastikan hanya file gambar aman yang diizinkan untuk dihapus
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+        if (!in_array($extension, $allowedExtensions)) {
+            return redirect('/admin/media')->with('error', 'Hanya berkas gambar yang dapat dihapus.');
+        }
+
+        // Pastikan file ada di public disk
+        if (Storage::disk('public')->exists($path)) {
             Storage::disk('public')->delete($path);
             return redirect('/admin/media')->with('success', 'Aset media berhasil dihapus secara permanen.');
         }
