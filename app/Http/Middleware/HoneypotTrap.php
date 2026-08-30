@@ -29,12 +29,12 @@ class HoneypotTrap
         $ip = $request->ip();
         $cacheKey = "banned_ip_{$ip}";
 
-        // 1. Cek apakah IP ini sedang dalam daftar blokir sementara
+        // 1. Cek apakah IP ini sedang dalam daftar blokir (Permanen / Sementara)
         try {
-            if (Cache::has($cacheKey)) {
+            if (\App\Services\IpBlockService::isBlocked($ip)) {
                 return response(
                     '<h2 style="font-family:sans-serif;color:#DC2626;text-align:center;margin-top:20vh;">403 Forbidden</h2>' .
-                    '<p style="font-family:sans-serif;text-align:center;color:#475569;">Akses IP Anda diblokir sementara oleh sistem keamanan otomatis karena aktivitas mencurigakan.</p>',
+                    '<p style="font-family:sans-serif;text-align:center;color:#475569;">Akses IP (' . htmlspecialchars($ip) . ') diblokir oleh sistem keamanan administrator karena aktivitas mencurigakan.</p>',
                     403
                 )->header('Content-Type', 'text/html');
             }
@@ -47,12 +47,10 @@ class HoneypotTrap
         
         foreach ($this->honeypotPaths as $trap) {
             if ($path === $trap || str_starts_with($path, $trap . '/') || str_contains($path, $trap)) {
-                // Blokir IP ini selama 24 Jam (86.400 detik) di Cache
+                // Blokir IP ini selama 24 Jam di IpBlockService
                 try {
-                    Cache::put($cacheKey, true, now()->addHours(24));
-                } catch (\Throwable $e) {
-                    // Abaikan kegagalan cache
-                }
+                    \App\Services\IpBlockService::block($ip, "Honeypot Trap Triggered ({$path})", 24);
+                } catch (\Throwable $e) {}
 
                 try {
                     Log::alert("[HONEYPOT_TRIGGERED] IP Hacker terperangkap & diblokir 24 jam! | IP: {$ip} | Path: {$path} | UA: " . $request->userAgent());
