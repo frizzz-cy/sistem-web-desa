@@ -13,8 +13,8 @@ class TelegramService
      */
     public static function sendMessage(string $message): bool
     {
-        $botToken = env('TELEGRAM_BOT_TOKEN');
-        $chatId   = env('TELEGRAM_CHAT_ID');
+        $botToken = config('services.telegram.bot_token') ?: env('TELEGRAM_BOT_TOKEN');
+        $chatId   = config('services.telegram.chat_id') ?: env('TELEGRAM_CHAT_ID');
 
         if (empty($botToken) || empty($chatId)) {
             return false;
