@@ -377,3 +377,6 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('pengaturan/footer', [AdminSettingController::class, 'footer'])->name('admin.pengaturan.footer');
     Route::post('pengaturan/footer', [AdminSettingController::class, 'updateFooter']);
 });
+
+// Endpoint Webhook Telegram Bot (Otomatisasi Keamanan & Blokir IP)
+Route::post('/api/telegram-webhook', [\App\Http\Controllers\TelegramWebhookController::class, 'handle']);

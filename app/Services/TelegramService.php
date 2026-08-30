@@ -2,16 +2,52 @@
 
 namespace App\Services;
 
-use App\Models\Setting;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class TelegramService
 {
     /**
-     * Kirim pesan format HTML ke Telegram Bot
+     * Kirim pesan teks format HTML ke Telegram Bot (Chat default)
      */
     public static function sendMessage(string $message): bool
+    {
+        $chatId = config('services.telegram.chat_id') ?: env('TELEGRAM_CHAT_ID');
+        return self::sendMessageToChat((string)$chatId, $message);
+    }
+
+    /**
+     * Kirim pesan ke Chat ID tertentu
+     */
+    public static function sendMessageToChat(string $chatId, string $message): bool
+    {
+        $botToken = config('services.telegram.bot_token') ?: env('TELEGRAM_BOT_TOKEN');
+
+        if (empty($botToken) || empty($chatId)) {
+            return false;
+        }
+
+        try {
+            $url = "https://api.telegram.org/bot{$botToken}/sendMessage";
+            
+            $response = Http::timeout(5)->post($url, [
+                'chat_id'                  => $chatId,
+                'text'                     => $message,
+                'parse_mode'               => 'HTML',
+                'disable_web_page_preview' => true,
+            ]);
+
+            return $response->successful();
+        } catch (\Throwable $e) {
+            Log::warning('[TELEGRAM_NOTIF_ERROR] Gagal mengirim pesan Telegram: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Kirim pesan dengan tombol interaktif (Inline Keyboard)
+     */
+    public static function sendMessageWithKeyboard(string $message, array $keyboard): bool
     {
         $botToken = config('services.telegram.bot_token') ?: env('TELEGRAM_BOT_TOKEN');
         $chatId   = config('services.telegram.chat_id') ?: env('TELEGRAM_CHAT_ID');
@@ -23,22 +59,94 @@ class TelegramService
         try {
             $url = "https://api.telegram.org/bot{$botToken}/sendMessage";
             
-            $response = Http::timeout(4)->post($url, [
+            $response = Http::timeout(5)->post($url, [
                 'chat_id'                  => $chatId,
                 'text'                     => $message,
                 'parse_mode'               => 'HTML',
                 'disable_web_page_preview' => true,
+                'reply_markup'             => json_encode($keyboard),
             ]);
 
             return $response->successful();
         } catch (\Throwable $e) {
-            Log::warning('[TELEGRAM_NOTIF_ERROR] Gagal mengirim notifikasi Telegram: ' . $e->getMessage());
+            Log::warning('[TELEGRAM_NOTIF_ERROR] Gagal mengirim pesan keyboard: ' . $e->getMessage());
             return false;
         }
     }
 
     /**
-     * Kirim Notifikasi Login Berhasil
+     * Jawab Callback Query dari tombol
+     */
+    public static function answerCallbackQuery(string $callbackId, string $text, bool $showAlert = false): bool
+    {
+        $botToken = config('services.telegram.bot_token') ?: env('TELEGRAM_BOT_TOKEN');
+        if (empty($botToken)) return false;
+
+        try {
+            $url = "https://api.telegram.org/bot{$botToken}/answerCallbackQuery";
+            $response = Http::timeout(5)->post($url, [
+                'callback_query_id' => $callbackId,
+                'text'              => $text,
+                'show_alert'        => $showAlert,
+            ]);
+            return $response->successful();
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Edit teks pesan Telegram yang sudah ada
+     */
+    public static function editMessageText(string $chatId, int $messageId, string $text, ?array $keyboard = null): bool
+    {
+        $botToken = config('services.telegram.bot_token') ?: env('TELEGRAM_BOT_TOKEN');
+        if (empty($botToken) || empty($chatId)) return false;
+
+        try {
+            $url = "https://api.telegram.org/bot{$botToken}/editMessageText";
+            $payload = [
+                'chat_id'                  => $chatId,
+                'message_id'               => $messageId,
+                'text'                     => $text,
+                'parse_mode'               => 'HTML',
+                'disable_web_page_preview' => true,
+            ];
+
+            if ($keyboard) {
+                $payload['reply_markup'] = json_encode($keyboard);
+            }
+
+            $response = Http::timeout(5)->post($url, $payload);
+            return $response->successful();
+        } catch (\Throwable $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Set Webhook URL ke Telegram API
+     */
+    public static function setWebhook(string $webhookUrl): array
+    {
+        $botToken = config('services.telegram.bot_token') ?: env('TELEGRAM_BOT_TOKEN');
+        if (empty($botToken)) {
+            return ['ok' => false, 'description' => 'TELEGRAM_BOT_TOKEN belum diset di .env'];
+        }
+
+        try {
+            $url = "https://api.telegram.org/bot{$botToken}/setWebhook";
+            $response = Http::timeout(10)->post($url, [
+                'url' => $webhookUrl
+            ]);
+            return $response->json() ?: ['ok' => $response->successful()];
+        } catch (\Throwable $e) {
+            return ['ok' => false, 'description' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Kirim Notifikasi Login Berhasil (disertai tombol blokir IP jika mencurigakan)
      */
     public static function notifyLoginSuccess($user, string $ip, string $userAgent): void
     {
@@ -53,9 +161,17 @@ class TelegramService
              . "💻 <b>Perangkat & Browser:</b> {$device}\n"
              . "⏰ <b>Waktu:</b> {$waktu}\n"
              . "📍 <b>Sistem:</b> Website Desa Munungkerep\n\n"
-             . "<i>Jika ini bukan Anda, segera login dan amankan akun Anda!</i>";
+             . "<i>Jika ini bukan Anda, klik tombol blokir di bawah!</i>";
 
-        self::sendMessage($msg);
+        $keyboard = [
+            'inline_keyboard' => [
+                [
+                    ['text' => "🚫 Blokir IP Ini ({$ip})", 'callback_data' => "block:{$ip}"]
+                ]
+            ]
+        ];
+
+        self::sendMessageWithKeyboard($msg, $keyboard);
     }
 
     /**
@@ -72,9 +188,17 @@ class TelegramService
              . "💻 <b>Perangkat & Browser:</b> {$device}\n"
              . "⏳ <b>Sisa Percobaan:</b> {$attemptsLeft}x lagi sebelum diblokir\n"
              . "⏰ <b>Waktu:</b> {$waktu}\n\n"
-             . "<i>Sistem sedang memantau aktivitas mencurigakan ini.</i>";
+             . "<i>Ingin langsung menonaktifkan IP penyerang ini?</i>";
 
-        self::sendMessage($msg);
+        $keyboard = [
+            'inline_keyboard' => [
+                [
+                    ['text' => "🚫 Blokir IP Ini ({$ip})", 'callback_data' => "block:{$ip}"]
+                ]
+            ]
+        ];
+
+        self::sendMessageWithKeyboard($msg, $keyboard);
     }
 
     /**
@@ -92,7 +216,15 @@ class TelegramService
              . "🛑 <b>Status:</b> Akses IP Dikunci Sementara ({$seconds} detik)\n"
              . "⏰ <b>Waktu:</b> {$waktu}";
 
-        self::sendMessage($msg);
+        $keyboard = [
+            'inline_keyboard' => [
+                [
+                    ['text' => "🚫 Blokir Permanen IP ({$ip})", 'callback_data' => "block:{$ip}"]
+                ]
+            ]
+        ];
+
+        self::sendMessageWithKeyboard($msg, $keyboard);
     }
 
     /**
@@ -100,7 +232,6 @@ class TelegramService
      */
     public static function notifyHoneypotTriggered(string $path, string $ip, string $userAgent): void
     {
-        // Rate-limit notifikasi agar tidak spamming jika bot memindai 100 URL sekaligus
         $cacheKey = "tele_notif_honeypot_{$ip}";
         try {
             if (\Illuminate\Support\Facades\Cache::has($cacheKey)) {
@@ -116,11 +247,18 @@ class TelegramService
              . "🎯 <b>Target Path:</b> <code>/{$path}</code>\n"
              . "🌐 <b>Alamat IP:</b> <code>{$ip}</code>\n"
              . "💻 <b>Scanner / Tool:</b> {$device}\n"
-             . "⛔ <b>Tindakan Sistem:</b> <b>IP DIBLOKIR OTOMATIS 24 JAM!</b>\n"
-             . "⏰ <b>Waktu:</b> {$waktu}\n\n"
-             . "<i>Sistem Honeypot berhasil menetralkan pemindaian otomatis ini.</i>";
+             . "⛔ <b>Tindakan Sistem:</b> <b>IP DIBLOKIR OTOMATIS!</b>\n"
+             . "⏰ <b>Waktu:</b> {$waktu}";
 
-        self::sendMessage($msg);
+        $keyboard = [
+            'inline_keyboard' => [
+                [
+                    ['text' => "🔓 Buka Blokir IP ({$ip})", 'callback_data' => "unblock:{$ip}"]
+                ]
+            ]
+        ];
+
+        self::sendMessageWithKeyboard($msg, $keyboard);
     }
 
     /**
@@ -128,7 +266,6 @@ class TelegramService
      */
     public static function notifyAttackBlocked(string $type, string $ip, string $userAgent, string $uri): void
     {
-        // Rate-limit notifikasi agar tidak spamming
         $cacheKey = "tele_notif_waf_{$ip}_{$type}";
         try {
             if (\Illuminate\Support\Facades\Cache::has($cacheKey)) {
@@ -155,7 +292,15 @@ class TelegramService
              . "🛡️ <b>Status:</b> Akses Ditolak (HTTP 403 Forbidden)\n"
              . "⏰ <b>Waktu:</b> {$waktu}";
 
-        self::sendMessage($msg);
+        $keyboard = [
+            'inline_keyboard' => [
+                [
+                    ['text' => "🚫 Blokir Permanen IP ({$ip})", 'callback_data' => "block:{$ip}"]
+                ]
+            ]
+        ];
+
+        self::sendMessageWithKeyboard($msg, $keyboard);
     }
 
     /**
