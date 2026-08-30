@@ -18,20 +18,11 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::updateOrCreate(
-            ['username' => 'admin'],
+            ['username' => 'adm_mnk_9472_x9'],
             [
-                'name' => 'Admin Munungkerep',
-                'email' => 'admin@munungkerep.desa.id',
-                'password' => \Illuminate\Support\Facades\Hash::make('admin123'),
-            ]
-        );
-
-        User::updateOrCreate(
-            ['username' => 'operator'],
-            [
-                'name' => 'Operator Desa',
-                'email' => 'operator@munungkerep.desa.id',
-                'password' => \Illuminate\Support\Facades\Hash::make('operator123'),
+                'name' => 'Super Administrator Desa',
+                'email' => 'sec.admin@munungkerep.desa.id',
+                'password' => \Illuminate\Support\Facades\Hash::make('MngKr3p!#9842*SecGuardX'),
             ]
         );
 
