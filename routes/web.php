@@ -321,7 +321,11 @@ Route::get('/peta', function () {
 Route::get('/profil-desa', function () { 
     $perangkat_json = Setting::get('data_perangkat');
     $perangkat = $perangkat_json ? json_decode($perangkat_json, true) : [];
-    return view('profil-desa', compact('perangkat')); 
+
+    $kepemimpinan_json = Setting::get('data_kepemimpinan');
+    $kepemimpinan = $kepemimpinan_json ? json_decode($kepemimpinan_json, true) : \App\Http\Controllers\AdminSettingController::getDefaultKepemimpinan();
+
+    return view('profil-desa', compact('perangkat', 'kepemimpinan')); 
 });
 Route::get('/kegiatan', function () { 
     $kegiatans = Kegiatan::latest()->get();
@@ -376,6 +380,9 @@ Route::middleware('auth')->prefix('admin')->group(function () {
 
     Route::get('pengaturan/footer', [AdminSettingController::class, 'footer'])->name('admin.pengaturan.footer');
     Route::post('pengaturan/footer', [AdminSettingController::class, 'updateFooter']);
+
+    Route::get('pengaturan/kepemimpinan', [AdminSettingController::class, 'kepemimpinan'])->name('admin.pengaturan.kepemimpinan');
+    Route::post('pengaturan/kepemimpinan', [AdminSettingController::class, 'updateKepemimpinan']);
 });
 
 // Endpoint Webhook Telegram Bot (Otomatisasi Keamanan & Blokir IP)

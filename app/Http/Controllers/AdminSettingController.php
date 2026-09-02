@@ -594,6 +594,82 @@ class AdminSettingController extends Controller
     }
 
     // =========================================================================
+    // 8. MODUL TIMELINE KEPEMIMPINAN DESA (PIGORA KADES)
+    // =========================================================================
+    public function kepemimpinan()
+    {
+        $kepemimpinan_json = Setting::get('data_kepemimpinan');
+        if (!$kepemimpinan_json) {
+            $data_kepemimpinan = self::getDefaultKepemimpinan();
+            Setting::set('data_kepemimpinan', json_encode($data_kepemimpinan));
+        } else {
+            $data_kepemimpinan = json_decode($kepemimpinan_json, true) ?: self::getDefaultKepemimpinan();
+        }
+
+        return view('admin.pengaturan.kepemimpinan', compact('data_kepemimpinan'));
+    }
+
+    public function updateKepemimpinan(Request $request)
+    {
+        $existing_json = Setting::get('data_kepemimpinan');
+        $existing_items = $existing_json ? json_decode($existing_json, true) : self::getDefaultKepemimpinan();
+        $existing_map = [];
+        foreach ($existing_items as $item) {
+            if (isset($item['id'])) {
+                $existing_map[$item['id']] = $item;
+            }
+        }
+
+        $ids = $request->input('kades_id', []);
+        $names = $request->input('kades_nama', []);
+        $jabatan = $request->input('kades_jabatan', []);
+        $periode = $request->input('kades_periode', []);
+        $aktif_id = $request->input('kades_aktif'); // ID kades petahana/aktif
+
+        $new_list = [];
+
+        foreach ($ids as $idx => $id) {
+            $id = (string)$id;
+            $nama = trim($names[$idx] ?? '');
+            if (empty($nama)) continue;
+
+            $foto_path = $existing_map[$id]['foto'] ?? '';
+
+            // Cek apakah admin menekan tombol hapus foto untuk Kades ini
+            if ($request->input('delete_foto_' . $id) == '1') {
+                $foto_path = '';
+            }
+
+            // Cek apakah admin mengunggah file foto baru
+            $fileFieldName = "kades_foto_" . $id;
+            $mediaFieldName = "kades_foto_media_" . $id;
+
+            if ($request->hasFile($fileFieldName)) {
+                $file = $request->file($fileFieldName);
+                $path = ImageHelper::uploadAndCompress($file, 'kepemimpinan');
+                if ($path) {
+                    $foto_path = asset('storage/' . $path);
+                }
+            } elseif ($request->filled($mediaFieldName)) {
+                $foto_path = $request->input($mediaFieldName);
+            }
+
+            $new_list[] = [
+                'id' => $id,
+                'nama' => $nama,
+                'jabatan' => $jabatan[$idx] ?? 'Kepala Desa Munungkerep',
+                'periode' => $periode[$idx] ?? '',
+                'foto' => $foto_path,
+                'aktif' => ($id === (string)$aktif_id)
+            ];
+        }
+
+        Setting::set('data_kepemimpinan', json_encode($new_list));
+
+        return redirect('/admin/pengaturan/kepemimpinan')->with('success', 'Data Timeline Kepemimpinan & Foto Kepala Desa berhasil diperbarui!');
+    }
+
+    // =========================================================================
     // HELPER DATA BAWAAN (DEFAULT SEEDERS)
     // =========================================================================
 
@@ -891,6 +967,84 @@ class AdminSettingController extends Controller
                 'title' => 'Event & Kegiatan',
                 'desc' => 'Dokumentasi dan informasi kegiatan warga — gotong royong, posyandu, dan agenda desa lainnya.',
                 'link' => '/kegiatan'
+            ]
+        ];
+    }
+
+    public static function getDefaultKepemimpinan(): array
+    {
+        return [
+            [
+                'id' => 1,
+                'nama' => 'Jari',
+                'jabatan' => 'Kepala Desa Munungkerep',
+                'periode' => 'Periode Tahun 1927 - 1937',
+                'foto' => '',
+                'aktif' => false
+            ],
+            [
+                'id' => 2,
+                'nama' => 'Joyo Soeparto',
+                'jabatan' => 'Kepala Desa Munungkerep',
+                'periode' => 'Periode Tahun 1938 - 1945',
+                'foto' => '',
+                'aktif' => false
+            ],
+            [
+                'id' => 3,
+                'nama' => 'Kaseman',
+                'jabatan' => 'Kepala Desa Munungkerep',
+                'periode' => 'Periode Tahun 1945 - 1977',
+                'foto' => '',
+                'aktif' => false
+            ],
+            [
+                'id' => 4,
+                'nama' => 'Sarto',
+                'jabatan' => 'Kepala Desa Munungkerep',
+                'periode' => 'Periode Tahun 1977 - 1985',
+                'foto' => '',
+                'aktif' => false
+            ],
+            [
+                'id' => 5,
+                'nama' => 'Supriyatmo',
+                'jabatan' => 'Kepala Desa Munungkerep',
+                'periode' => 'Periode Tahun 1985 - 1993',
+                'foto' => '',
+                'aktif' => false
+            ],
+            [
+                'id' => 6,
+                'nama' => 'Suwito',
+                'jabatan' => 'Kepala Desa Munungkerep',
+                'periode' => 'Periode Tahun 1993 - 2002',
+                'foto' => '',
+                'aktif' => false
+            ],
+            [
+                'id' => 7,
+                'nama' => 'Sutrismi',
+                'jabatan' => 'Kepala Desa Munungkerep',
+                'periode' => 'Periode Tahun 2003 - 2013',
+                'foto' => '/images/perangkat/kepala desa.png',
+                'aktif' => false
+            ],
+            [
+                'id' => 8,
+                'nama' => 'Suroso',
+                'jabatan' => 'Kepala Desa Munungkerep',
+                'periode' => 'Periode Tahun 2013 - 2019',
+                'foto' => '',
+                'aktif' => false
+            ],
+            [
+                'id' => 9,
+                'nama' => 'Sutrismi',
+                'jabatan' => 'Kepala Desa Munungkerep',
+                'periode' => 'Periode 2019 - Sekarang',
+                'foto' => '/images/perangkat/kepala desa.png',
+                'aktif' => true
             ]
         ];
     }
