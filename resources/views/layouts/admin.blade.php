@@ -285,6 +285,12 @@
                     <span>Struktur Perangkat</span>
                 </a>
             </li>
+            <li class="sidebar-item @if(($activePage ?? '') == 'pengaturan-kepemimpinan') active @endif">
+                <a href="/admin/pengaturan/kepemimpinan">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"></circle><path d="M6 21v-2a6 6 0 0 1 12 0v2"></path><polyline points="8 3 12 6 16 3"></polyline></svg>
+                    <span>Timeline Kepemimpinan</span>
+                </a>
+            </li>
             <li class="sidebar-item @if(($activePage ?? '') == 'pengaturan-poster') active @endif">
                 <a href="/admin/pengaturan/poster">
                     <svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>

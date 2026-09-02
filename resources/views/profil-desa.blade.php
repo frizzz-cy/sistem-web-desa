@@ -476,179 +476,38 @@
         <button class="btn-pigora-nav next" onclick="geserPigora('kanan')" title="Geser Kanan"><i class="fas fa-chevron-right"></i></button>
 
         <div class="pigora-track" id="pigora-track">
+          @php
+            $listKades = $kepemimpinan ?? \App\Http\Controllers\AdminSettingController::getDefaultKepemimpinan();
+          @endphp
 
-          <!-- KADES 1 -->
-          <div class="pigora-slider-item">
-            <div class="pigora-card-frame">
-              <div class="pigora-box-outer">
-                <div class="pigora-box-inner">
-                  <div class="pigora-photo-area">
-                    <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.5c-3.3 0-9.8 1.6-9.8 4.9v2.4h19.6v-2.4c0-3.3-6.5-4.9-9.8-4.9z"/></svg>
-                  </div>
-                  <div class="pigora-inner-label">
-                    <div class="pigora-inner-nama">Jari</div>
-                    <div class="pigora-inner-sub">Kepala Desa Munungkerep</div>
-                    <div class="pigora-inner-periode">Periode Tahun 1927 - 1937</div>
+          @foreach($listKades as $kades)
+            @php
+              $isAktif = !empty($kades['aktif']);
+              $hasFoto = !empty($kades['foto']);
+            @endphp
+            <div class="pigora-slider-item {{ $isAktif ? 'aktif' : '' }}">
+              <div class="pigora-card-frame">
+                <div class="pigora-box-outer">
+                  <div class="pigora-box-inner">
+                    <div class="pigora-photo-area">
+                      <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.5c-3.3 0-9.8 1.6-9.8 4.9v2.4h19.6v-2.4c0-3.3-6.5-4.9-9.8-4.9z"/></svg>
+                      @if($hasFoto)
+                        <img src="{{ $kades['foto'] }}" alt="{{ $kades['nama'] }}" onerror="this.remove()">
+                      @endif
+                    </div>
+                    <div class="pigora-inner-label">
+                      <div class="pigora-inner-nama">{{ $kades['nama'] }}</div>
+                      <div class="pigora-inner-sub">{{ $kades['jabatan'] ?? 'Kepala Desa Munungkerep' }}</div>
+                      <div class="pigora-inner-periode" @if($isAktif) style="color:var(--amber);" @endif>{{ $kades['periode'] }}</div>
+                    </div>
                   </div>
                 </div>
               </div>
+              @if(!$loop->last)
+                <div class="pigora-nav-arrow"><i class="fas fa-arrow-right"></i></div>
+              @endif
             </div>
-            <div class="pigora-nav-arrow"><i class="fas fa-arrow-right"></i></div>
-          </div>
-
-          <!-- KADES 2 -->
-          <div class="pigora-slider-item">
-            <div class="pigora-card-frame">
-              <div class="pigora-box-outer">
-                <div class="pigora-box-inner">
-                  <div class="pigora-photo-area">
-                    <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.5c-3.3 0-9.8 1.6-9.8 4.9v2.4h19.6v-2.4c0-3.3-6.5-4.9-9.8-4.9z"/></svg>
-                  </div>
-                  <div class="pigora-inner-label">
-                    <div class="pigora-inner-nama">Joyo Soeparto</div>
-                    <div class="pigora-inner-sub">Kepala Desa Munungkerep</div>
-                    <div class="pigora-inner-periode">Periode Tahun 1938 - 1945</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="pigora-nav-arrow"><i class="fas fa-arrow-right"></i></div>
-          </div>
-
-          <!-- KADES 3 -->
-          <div class="pigora-slider-item">
-            <div class="pigora-card-frame">
-              <div class="pigora-box-outer">
-                <div class="pigora-box-inner">
-                  <div class="pigora-photo-area">
-                    <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.5c-3.3 0-9.8 1.6-9.8 4.9v2.4h19.6v-2.4c0-3.3-6.5-4.9-9.8-4.9z"/></svg>
-                  </div>
-                  <div class="pigora-inner-label">
-                    <div class="pigora-inner-nama">Kaseman</div>
-                    <div class="pigora-inner-sub">Kepala Desa Munungkerep</div>
-                    <div class="pigora-inner-periode">Periode Tahun 1945 - 1977</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="pigora-nav-arrow"><i class="fas fa-arrow-right"></i></div>
-          </div>
-
-          <!-- KADES 4 -->
-          <div class="pigora-slider-item">
-            <div class="pigora-card-frame">
-              <div class="pigora-box-outer">
-                <div class="pigora-box-inner">
-                  <div class="pigora-photo-area">
-                    <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.5c-3.3 0-9.8 1.6-9.8 4.9v2.4h19.6v-2.4c0-3.3-6.5-4.9-9.8-4.9z"/></svg>
-                  </div>
-                  <div class="pigora-inner-label">
-                    <div class="pigora-inner-nama">Sarto</div>
-                    <div class="pigora-inner-sub">Kepala Desa Munungkerep</div>
-                    <div class="pigora-inner-periode">Periode Tahun 1977 - 1985</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="pigora-nav-arrow"><i class="fas fa-arrow-right"></i></div>
-          </div>
-
-          <!-- KADES 5 -->
-          <div class="pigora-slider-item">
-            <div class="pigora-card-frame">
-              <div class="pigora-box-outer">
-                <div class="pigora-box-inner">
-                  <div class="pigora-photo-area">
-                    <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.5c-3.3 0-9.8 1.6-9.8 4.9v2.4h19.6v-2.4c0-3.3-6.5-4.9-9.8-4.9z"/></svg>
-                  </div>
-                  <div class="pigora-inner-label">
-                    <div class="pigora-inner-nama">Supriyatmo</div>
-                    <div class="pigora-inner-sub">Kepala Desa Munungkerep</div>
-                    <div class="pigora-inner-periode">Periode Tahun 1985 - 1993</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="pigora-nav-arrow"><i class="fas fa-arrow-right"></i></div>
-          </div>
-
-          <!-- KADES 6 -->
-          <div class="pigora-slider-item">
-            <div class="pigora-card-frame">
-              <div class="pigora-box-outer">
-                <div class="pigora-box-inner">
-                  <div class="pigora-photo-area">
-                    <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.5c-3.3 0-9.8 1.6-9.8 4.9v2.4h19.6v-2.4c0-3.3-6.5-4.9-9.8-4.9z"/></svg>
-                  </div>
-                  <div class="pigora-inner-label">
-                    <div class="pigora-inner-nama">Suwito</div>
-                    <div class="pigora-inner-sub">Kepala Desa Munungkerep</div>
-                    <div class="pigora-inner-periode">Periode Tahun 1993 - 2002</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="pigora-nav-arrow"><i class="fas fa-arrow-right"></i></div>
-          </div>
-
-          <!-- KADES 7 -->
-          <div class="pigora-slider-item">
-            <div class="pigora-card-frame">
-              <div class="pigora-box-outer">
-                <div class="pigora-box-inner">
-                  <div class="pigora-photo-area">
-                    <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.5c-3.3 0-9.8 1.6-9.8 4.9v2.4h19.6v-2.4c0-3.3-6.5-4.9-9.8-4.9z"/></svg>
-                    <img src="/images/perangkat/kepala desa.png" alt="Sutrismi" onerror="this.remove()">
-                  </div>
-                  <div class="pigora-inner-label">
-                    <div class="pigora-inner-nama">Sutrismi</div>
-                    <div class="pigora-inner-sub">Kepala Desa Munungkerep</div>
-                    <div class="pigora-inner-periode">Periode Tahun 2003 - 2013</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="pigora-nav-arrow"><i class="fas fa-arrow-right"></i></div>
-          </div>
-
-          <!-- KADES 8 -->
-          <div class="pigora-slider-item">
-            <div class="pigora-card-frame">
-              <div class="pigora-box-outer">
-                <div class="pigora-box-inner">
-                  <div class="pigora-photo-area">
-                    <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.5c-3.3 0-9.8 1.6-9.8 4.9v2.4h19.6v-2.4c0-3.3-6.5-4.9-9.8-4.9z"/></svg>
-                  </div>
-                  <div class="pigora-inner-label">
-                    <div class="pigora-inner-nama">Suroso</div>
-                    <div class="pigora-inner-sub">Kepala Desa Munungkerep</div>
-                    <div class="pigora-inner-periode">Periode Tahun 2013 - 2019</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="pigora-nav-arrow"><i class="fas fa-arrow-right"></i></div>
-          </div>
-
-          <!-- KADES 9 (PETAHANA) -->
-          <div class="pigora-slider-item aktif">
-            <div class="pigora-card-frame">
-              <div class="pigora-box-outer">
-                <div class="pigora-box-inner">
-                  <div class="pigora-photo-area">
-                    <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.5c-3.3 0-9.8 1.6-9.8 4.9v2.4h19.6v-2.4c0-3.3-6.5-4.9-9.8-4.9z"/></svg>
-                    <img src="/images/perangkat/kepala desa.png" alt="Sutrismi" onerror="this.remove()">
-                  </div>
-                  <div class="pigora-inner-label">
-                    <div class="pigora-inner-nama">Sutrismi</div>
-                    <div class="pigora-inner-sub">Kepala Desa Munungkerep</div>
-                    <div class="pigora-inner-periode" style="color:var(--amber);">Periode 2019 - Sekarang</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
+          @endforeach
         </div>
       </div>
     </div>
